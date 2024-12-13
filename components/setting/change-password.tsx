@@ -13,6 +13,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import LoadingIcon from "@/components/shared/loading-icon";
 import { HintTexts } from "@/lib/hint-texts";
+import { useTranslations } from "next-intl";
 
 interface IFormFields {
   password: string;
@@ -20,6 +21,7 @@ interface IFormFields {
 }
 
 export default function ChangePassword() {
+  const T = useTranslations("Common");
   const [showChangeDialog, setShowChangeDialog] = useState(false);
 
   const { register, formState, handleSubmit, trigger, getValues, watch } =
@@ -69,20 +71,20 @@ export default function ChangePassword() {
         onClick={() => setShowChangeDialog(true)}
         variant="outline"
       >
-        Change Password
+        {T("ChangePassword")}
       </Button>
       <Dialog
         open={showChangeDialog}
         onOpenChange={(val) => setShowChangeDialog(val)}
       >
         <DialogContent
-          title="Change Password"
+          title={T("ChangePassword")}
           showClose={true}
           className="w-[320px]"
         >
           <div className="flex flex-col gap-y-5 px-4">
             <div className="flex flex-col gap-y-1">
-              <span className="LabelText">New Password</span>
+              <span className="LabelText">{T("NewPassword")}</span>
               <Input
                 type="password"
                 {...register("password", {
@@ -108,7 +110,7 @@ export default function ChangePassword() {
               </div>
             </div>
             <div className="flex flex-col gap-y-1">
-              <span className="LabelText">Repeat New Password</span>
+              <span className="LabelText">{T("RepeatNewPassword")}</span>
               <Input
                 type="password"
                 {...register("repeatPassword", {
@@ -140,7 +142,7 @@ export default function ChangePassword() {
               onClick={handleSubmit(onSubmit)}
             >
               <LoadingIcon className="text-white" isLoading={isSubmitting} />
-              Change
+              {T("Change")}
             </Button>
           </div>
         </DialogContent>

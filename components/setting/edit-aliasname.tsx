@@ -14,8 +14,10 @@ import useIndexStore from "@/lib/state";
 import { useContext, useRef, useState } from "react";
 import useEffectStore from "@/lib/state/use-store";
 import { HintTexts } from "@/lib/hint-texts";
+import { useTranslations } from "next-intl";
 
 export default function EditAliasname() {
+  const T = useTranslations("Common");
   const activeUser = useEffectStore(useIndexStore, (state) =>
     state.activeUser(),
   );
@@ -84,7 +86,7 @@ export default function EditAliasname() {
   const [errorMsg, setErrorMsg] = useState("");
 
   return (
-    <DetailItem title="User Alias">
+    <DetailItem title={T("UserAlias")}>
       <div className="relative flex w-full flex-col justify-center">
         {activeUser ? (
           <div className="flex items-center gap-x-3">

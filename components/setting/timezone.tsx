@@ -21,8 +21,10 @@ import fetcher from "@/lib/fetcher";
 import useSWRMutation from "swr/mutation";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import { UserInfoContext } from "@/lib/providers/user-info-provider";
+import { useTranslations } from "next-intl";
 
 export default function ChangeTimezone() {
+  const T = useTranslations("Common");
   const { refreshUser } = useContext(UserInfoContext);
 
   const [showChangeDialog, setShowChangeDialog] = useState(false);
@@ -58,7 +60,7 @@ export default function ChangeTimezone() {
   };
 
   return (
-    <DetailItem title="Timezone">
+    <DetailItem title={T("Timezone")}>
       <div className="relative flex w-full flex-col justify-center">
         <div
           className="flex items-center gap-x-3"
@@ -78,7 +80,7 @@ export default function ChangeTimezone() {
           onOpenChange={(val) => setShowChangeDialog(val)}
         >
           <DialogContent
-            title="Timezone"
+            title={T("Timezone")}
             showClose={true}
             className="w-[320px] outline-none"
           >

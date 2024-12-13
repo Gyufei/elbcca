@@ -11,6 +11,9 @@ import SWRConfigProvider from "@/lib/providers/swr-config-provider";
 import MuiPickerProvider from "@/lib/providers/mui-picker-provider";
 import GlobalRedirect from "@/components/shared/global-redirect";
 import GlobalInit from "@/components/shared/global-init";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from "next-intl/server";
+
 
 export const metadata: Metadata = {
   title: "mm-tafect-ui",
@@ -30,6 +33,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const messages = await getMessages();
+  
   return (
     <html lang="en" className={cn(chesna.variable, "h-full w-full")}>
       <body className="h-screen w-full overflow-x-hidden overflow-y-hidden md:overflow-x-auto">
@@ -40,13 +45,15 @@ export default async function RootLayout({
             </div>
           }
         >
-          <GlobalInit>
-            <GlobalRedirect>
-              <SWRConfigProvider>
-                <MuiPickerProvider>{children}</MuiPickerProvider>
-              </SWRConfigProvider>
-            </GlobalRedirect>
-          </GlobalInit>
+          <NextIntlClientProvider messages={messages}>
+            <GlobalInit>
+              <GlobalRedirect>
+                <SWRConfigProvider>
+                  <MuiPickerProvider>{children}</MuiPickerProvider>
+                </SWRConfigProvider>
+              </GlobalRedirect>
+            </GlobalInit>
+          </NextIntlClientProvider>
         </Suspense>
         <Analytics />
         <Toaster />

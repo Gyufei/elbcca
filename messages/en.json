@@ -1,0 +1,18 @@
+{
+  "Common": {
+    "Close": "Close",
+    "ChangePassword": "Change Password",
+    "ChangeLanguage": "Change Language",
+    "Setting": "Setting",
+    "Dashboard": "Dashboard",
+    "TokenSwap": "TokenSwap",
+    "KeyStore": "KeyStore",
+    "EmailAddress": "Email Address",
+    "ServiceEndpoint": "Service Endpoint",
+    "UserAlias": "User Alias",
+    "Timezone": "Timezone",
+    "NewPassword": "New Password",
+    "RepeatNewPassword": "Repeat New Password",
+    "Change": "Change"
+  }
+}

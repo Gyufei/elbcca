@@ -13,8 +13,10 @@ module.exports = nextConfig;
 // Injected content via Sentry wizard below
 
 const { withSentryConfig } = require("@sentry/nextjs");
+const createNextIntlPlugin = require('next-intl/plugin');
+const withNextIntl = createNextIntlPlugin();
 
-module.exports = withSentryConfig(
+module.exports =  withNextIntl(withSentryConfig(
   module.exports,
   {
     // For all available options, see:
@@ -44,4 +46,4 @@ module.exports = withSentryConfig(
     // Automatically tree-shake Sentry logger statements to reduce bundle size
     disableLogger: true,
   }
-);
+));

@@ -1,5 +1,13 @@
+const ProdHost = process.env.NEXT_PUBLIC_API_URL;
+const DevHost = "https://tafect-auth.aggregation.top";
+export const isPreview = process.env.NEXT_PUBLIC_IS_PREVIEW === "1";
+export const isProduction = process.env.NODE_ENV === "production";
+
+export const ApiHost = isProduction ? ProdHost : DevHost;
+// process.env.NEXT_PUBLIC_API_URL
+
 function WithHost(path: string) {
-  return `${process.env.NEXT_PUBLIC_API_URL}${path}`;
+  return `${ApiHost}${path}`;
 }
 
 export const SystemEndPointPathMap = {

@@ -3,9 +3,11 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { LINKS } from "@/lib/constants/global";
+import { useTranslations } from "next-intl";
 
 export function SideNav() {
   const pathname = usePathname();
+  const T = useTranslations("Common");
 
   return (
     <div className="flex flex-1 flex-col justify-start px-4 py-3">
@@ -19,7 +21,7 @@ export function SideNav() {
           )}
           href={link.href}
         >
-          {link.name}
+          {T(link.name)}
         </Link>
       ))}
     </div>

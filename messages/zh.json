@@ -1,0 +1,18 @@
+{
+  "Common": {
+    "Close": "关闭",
+    "ChangePassword": "修改密码",
+    "ChangeLanguage": "切换语言",
+    "Setting": "设置",
+    "Dashboard": "仪表板",
+    "TokenSwap": "代币交换",
+    "KeyStore": "密钥库",
+    "EmailAddress": "邮箱",
+    "ServiceEndpoint": "服务端点",
+    "UserAlias": "用户别名",
+    "Timezone": "时区",
+    "NewPassword": "新密码",
+    "RepeatNewPassword": "重复新密码",
+    "Change": "修改密码"
+  }
+}

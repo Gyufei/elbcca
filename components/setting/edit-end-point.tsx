@@ -15,11 +15,13 @@ import { UserInfoContext } from "@/lib/providers/user-info-provider";
 import useIndexStore from "@/lib/state";
 import useEffectStore from "@/lib/state/use-store";
 import { HintTexts } from "@/lib/hint-texts";
+import { useTranslations } from "next-intl";
 
 const URL_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/;
 
 export default function EditEndPoint() {
+  const T = useTranslations("Common");
   const userEndPoint = useEffectStore(useIndexStore, (state) =>
     state.endpoint(),
   );
@@ -100,7 +102,7 @@ export default function EditEndPoint() {
   const [errorMsg, setErrorMsg] = useState("");
 
   return (
-    <DetailItem title={`Service Endpoint ${networkDisplay}`}>
+    <DetailItem title={`${T("ServiceEndpoint")} ${networkDisplay}`}>
       <div className="relative flex w-full flex-col justify-center">
         {userEndPoint ? (
           <div className="flex items-center gap-x-3">

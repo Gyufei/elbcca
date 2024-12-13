@@ -1,4 +1,5 @@
 import AvatarCard from "@/components/setting/avatar-card";
+import ChangeLanguage from "@/components/setting/change-language";
 import ChangePassword from "@/components/setting/change-password";
 import UserOption from "@/components/setting/user-option";
 
@@ -9,6 +10,7 @@ export default async function Setting() {
         <div className="flex flex-col">
           <AvatarCard />
           <ChangePassword />
+          <ChangeLanguage />
         </div>
         <UserOption />
       </div>
