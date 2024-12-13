@@ -16,6 +16,7 @@ import { useMemo, useState } from "react";
 import { ITask } from "@/lib/types/task";
 import { formatPercentNum } from "@/lib/utils";
 import numbro from "numbro";
+import { useTranslations } from "next-intl";
 
 export default function CalendarDay({
   day,
@@ -32,6 +33,7 @@ export default function CalendarDay({
   firstDayCurrentMonth: Date;
   onClick: () => void;
 }) {
+  const T = useTranslations("Common");
   const today = startOfToday();
 
   const isSelected = isEqual(day, selectedDay);
@@ -164,6 +166,7 @@ export default function CalendarDay({
 }
 
 function NewPlanText() {
+  const T = useTranslations("Common");
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
@@ -187,7 +190,7 @@ function NewPlanText() {
         className="mx-1"
       />
       <div className="text-xs text-[#0E56E6]">
-        {isHovered ? "Not Set" : "New Plan"}
+        {isHovered ? T("NotSet") : T("NewPlan")}
       </div>
     </div>
   );

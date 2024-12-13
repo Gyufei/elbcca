@@ -1,6 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 export default function RandomInput({
   isRandom,
@@ -29,6 +30,7 @@ export default function RandomInput({
   btnDisabled: boolean;
   onConfirm: () => void;
 }) {
+  const T = useTranslations("Common");
   return (
     <div className="flex flex-col gap-y-[10px] px-4">
       <div className="flex items-center">
@@ -38,7 +40,7 @@ export default function RandomInput({
           id="random"
         />
         <label className="LabelText ml-2 cursor-pointer" htmlFor="random">
-          Random
+          {T("Random")}
         </label>
       </div>
 
@@ -48,7 +50,7 @@ export default function RandomInput({
 
       {isRandom ? (
         <div>
-          <div className="LabelText mb-1">Value</div>
+          <div className="LabelText mb-1">{T("Value")}</div>
           <div className="flex items-center justify-between">
             <Input
               value={minValue}
@@ -86,7 +88,7 @@ export default function RandomInput({
         onClick={onConfirm}
         className="mt-[10px] w-full rounded-full bg-primary text-white disabled:border disabled:border-[#bfbfbf] disabled:bg-[#F6F7F8] disabled:text-[#999]"
       >
-        Confirm
+        {T("Confirm")}
       </Button>
     </div>
   );

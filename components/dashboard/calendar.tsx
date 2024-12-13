@@ -21,8 +21,10 @@ import { useDashboardData } from "@/lib/hooks/use-dashboard-data";
 import { useDashboardReset } from "@/lib/hooks/use-dashboard-reset";
 import { useMonthHistory } from "@/lib/hooks/use-month-history";
 import DayOperation from "./day-operation";
+import { useTranslations } from "next-intl";
 
 export default function Calendar() {
+  const T = useTranslations("Common");
   const { resetAction } = useDashboardReset();
   const selectedDay = useIndexStore((state) => state.selectedDay);
   const setSelectedDay = useIndexStore((state) => state.setSelectedDay);
@@ -106,7 +108,7 @@ export default function Calendar() {
                   key={i}
                   className="LabelText flex w-full items-center justify-center"
                 >
-                  {day}
+                  {T(day)}
                 </div>
               );
             })}

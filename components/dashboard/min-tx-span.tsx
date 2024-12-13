@@ -15,8 +15,10 @@ import { useMemo, useState } from "react";
 import useIndexStore from "@/lib/state";
 import { replaceStrNum } from "@/lib/hooks/use-str-num";
 import { TxSpanUnitOptions } from "@/lib/constants/dashboard-const";
+import { useTranslations } from "next-intl";
 
 export function MinTxSpan() {
+  const T = useTranslations("Common");
   const minTxSpanValue = useIndexStore((state) => state.minTxSpanValue);
   const minTxSpanUnit = useIndexStore((state) => state.minTxSpanUnit);
   const setMinTxSpanValue = useIndexStore((state) => state.setMinTxSpanValue);
@@ -24,7 +26,7 @@ export function MinTxSpan() {
 
   return (
     <div className="flex flex-1 flex-col rounded-md border border-[#bfbfbf] p-3">
-      <div className="LabelText">Min Tx Span</div>
+      <div className="LabelText">{T("MinTxSpan")}</div>
       <BaseDialog
         minTxSpanValue={minTxSpanValue}
         minTxSpanUnit={minTxSpanUnit}
@@ -41,6 +43,7 @@ function BaseDialog(props: {
   minTxSpanUnit: string;
   setMinTxSpanUnit: (val: string) => void;
 }) {
+  const T = useTranslations("Common");
   const [open, setOpen] = useState(false);
   const [minTxSpanValue, setMinTxSpanValue] = useState(props.minTxSpanValue);
   const [minTxSpanUnit, setMinTxSpanUnit] = useState(props.minTxSpanUnit);
@@ -86,7 +89,7 @@ function BaseDialog(props: {
           />
         </div>
       </DialogTrigger>
-      <DialogContent title="Title" className="w-[320px]" showClose="Cancel">
+      <DialogContent title={T("MinTxSpan")} className="w-[320px]" showClose={T("Cancel")}>
         <div className="flex flex-col gap-y-[10px] px-4">
           <div className="flex w-[280px] items-center justify-between gap-3">
             <Input
@@ -117,7 +120,7 @@ function BaseDialog(props: {
             onClick={handleConfirm}
             className="mt-[10px] w-full rounded-full bg-primary text-white disabled:border disabled:border-[#bfbfbf] disabled:bg-[#F6F7F8] disabled:text-[#999]"
           >
-            Confirm
+            {T("Confirm")}
           </Button>
         </div>
       </DialogContent>

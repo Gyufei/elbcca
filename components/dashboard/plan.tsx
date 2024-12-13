@@ -9,14 +9,16 @@ import Candle from "./candle";
 import RandomBtnDialog from "./random-btn-dialog";
 import TradingTx from "./trading-tx";
 import TradingVol from "./trading-vol";
+import { useTranslations } from "next-intl";
 
 export default function Plan() {
+  const T = useTranslations("Common");
   const upOrDown = useIndexStore((state) => state.upOrDown);
   const setUpOrDown = useIndexStore((state) => state.setUpOrDown);
 
   return (
     <div className="mb-[17px]">
-      <div className="LabelText mb-1">Plan</div>
+      <div className="LabelText mb-1">{T("Plan")}</div>
       <div className="flex gap-x-3">
         <div className="w-[182px] rounded-md border border-[#bfbfbf] bg-[#f6f7f8] p-3">
           <LabelRadio
@@ -52,6 +54,7 @@ function LabelRadio({
   value: IUpDownValue;
   onChange: (value: IUpDownValue) => void;
 }) {
+  const T = useTranslations("Common");
   return (
     <RadioGroup
       className="flex items-center"
@@ -62,7 +65,7 @@ function LabelRadio({
         <div key={opt} className="flex items-center space-x-2">
           <RadioGroupItem className="h-[14px] w-[14px]" value={opt} id={opt} />
           <Label htmlFor={opt} className="text-sm text-[#333]">
-            {opt}
+            {T(opt)}
           </Label>
         </div>
       ))}

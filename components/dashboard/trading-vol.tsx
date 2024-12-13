@@ -8,8 +8,10 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { replaceStrNum } from "@/lib/hooks/use-str-num";
 import useIndexStore from "@/lib/state";
 import RandomInput from "./random-input";
+import { useTranslations } from "next-intl";
 
 export default function TradingVol() {
+  const T = useTranslations("Common");
   const totalTradingRandom = useIndexStore((state) => state.totalTradingRandom);
   const totalTradingVolumeAcc = useIndexStore(
     (state) => state.totalTradingVolumeAcc,
@@ -35,7 +37,7 @@ export default function TradingVol() {
 
   return (
     <div className="flex flex-col rounded-md border border-[#bfbfbf]  bg-[#f6f7f8] p-3">
-      <div className="LabelText">Total Trading Vol.</div>
+      <div className="LabelText">{T("TotalTradingVol")}</div>
       <VolDialog
         isRandom={totalTradingRandom}
         accValue={totalTradingVolumeAcc}
@@ -60,6 +62,7 @@ function VolDialog(props: {
   setAccValue: (val: string) => void;
   setMaxValue: (val: string) => void;
 }) {
+  const T = useTranslations("Common");
   const [open, setOpen] = useState(false);
   const [isRandom, setIsRandom] = useState(props.isRandom);
   const [minValue, setMinValue] = useState(props.minValue);
@@ -158,7 +161,7 @@ function VolDialog(props: {
           />
         </div>
       </DialogTrigger>
-      <DialogContent title="Title" className="w-[320px]" showClose="Cancel">
+      <DialogContent title={T("Title")} className="w-[320px]" showClose={T("Cancel")}>
         <RandomInput
           isRandom={isRandom}
           accValue={accValue}

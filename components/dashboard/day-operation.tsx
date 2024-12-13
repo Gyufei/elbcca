@@ -13,6 +13,7 @@ import { useDashboardReset } from "@/lib/hooks/use-dashboard-reset";
 import { ITask } from "@/lib/types/task";
 import useIndexStore from "@/lib/state";
 import { IDayData } from "@/lib/hooks/use-dashboard-data";
+import { useTranslations } from "next-intl";
 
 export default function DayOperation({
   dayData,
@@ -23,6 +24,7 @@ export default function DayOperation({
   tasks: Array<ITask>;
   onCancel: () => void;
 }) {
+  const T = useTranslations("Common");
   const isBeforeDay = useIndexStore((state) => state.isBeforeDay());
 
   const { saveLoading, saveAction } = useDashboardDaySave();
@@ -51,7 +53,7 @@ export default function DayOperation({
             onClick={() => resetAction()}
             className="w-[100px] border border-primary bg-white text-primary hover:brightness-95"
           >
-            Reset
+            {T("Reset")}
           </Button>
           <Button
             onClick={saveAction}
@@ -59,7 +61,7 @@ export default function DayOperation({
             className="w-[100px] border border-primary bg-white text-primary hover:brightness-95"
           >
             <LoadingIcon isLoading={saveLoading} />
-            Save
+            {T("Save")}
           </Button>
           <Button
             onClick={handleApply}
@@ -67,14 +69,14 @@ export default function DayOperation({
             className="w-[152px] border border-primary bg-primary text-white hover:brightness-95"
           >
             <LoadingIcon className="text-white" isLoading={applyLoading} />
-            {isApply ? "Cancel apply" : "Apply"}
+            {T(isApply ? "CancelApply" : "Apply")}
           </Button>
         </div>
       </div>
 
       <div className="relative border-t">
         <div className="px-3 py-1 text-sm text-[#707070]  shadow-md">
-          Transactions
+          {T("Transactions")}
         </div>
         <div className="flex h-[calc(100vh-455px)] flex-col justify-stretch gap-y-3 overflow-y-auto px-3 pb-2">
           {tasks?.length ? (

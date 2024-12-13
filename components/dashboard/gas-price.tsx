@@ -8,8 +8,10 @@ import { Input } from "../ui/input";
 
 import { replaceStrNum } from "@/lib/hooks/use-str-num";
 import useIndexStore from "@/lib/state";
+import { useTranslations } from "next-intl";
 
 export function GasPrice() {
+  const T = useTranslations("Common");
   const isAvgGas = useIndexStore((state) => state.isAvgGas);
   const setIsAvgGas = useIndexStore((state) => state.setIsAvgGas);
   const gasValue = useIndexStore((state) => state.gasValue);
@@ -17,7 +19,7 @@ export function GasPrice() {
 
   return (
     <div className="flex flex-1 flex-col rounded-md border border-[#bfbfbf] p-3">
-      <div className="LabelText">Gas Price</div>
+      <div className="LabelText">{T("GasPrice")}</div>
       <BaseDialog
         isAvgGas={isAvgGas}
         setIsAvgGas={setIsAvgGas}
@@ -34,6 +36,7 @@ function BaseDialog(props: {
   gasValue: string;
   setGasValue: (val: string) => void;
 }) {
+  const T = useTranslations("Common");
   const [open, setOpen] = useState(false);
   const [isAvgGas, setIsAvgGas] = useState(props.isAvgGas);
   const [gasValue, setGasValue] = useState(props.gasValue);
@@ -78,9 +81,9 @@ function BaseDialog(props: {
         </div>
       </DialogTrigger>
       <DialogContent
-        title="Gas Price Threshold"
+        title={T("GasPriceThreshold")}
         className="w-[320px]"
-        showClose="Cancel"
+        showClose={T("Cancel")}
       >
         <div className="flex flex-col gap-y-[10px] px-4">
           <div className="flex items-center">
@@ -90,7 +93,7 @@ function BaseDialog(props: {
               id="online"
             />
             <label className="LabelText ml-2 cursor-pointer" htmlFor="online">
-              Onchain Average
+              {T("OnchainAverage")}
             </label>
           </div>
 
@@ -98,12 +101,12 @@ function BaseDialog(props: {
             <>
               <div className="flex items-center">
                 <div className="h-[1px] flex-1 bg-[#99999966]" />
-                <div className="LabelText mx-1">OR</div>
+                <div className="LabelText mx-1">{T("OR")}</div>
                 <div className="h-[1px] flex-1 bg-[#99999966]" />
               </div>
 
               <div>
-                <div className="LabelText mb-1">Customize a Max Value</div>
+                <div className="LabelText mb-1">{T("CustomizeMaxValue")}</div>
                 <div className="flex items-center justify-between">
                   <Input
                     value={gasValue}
@@ -121,7 +124,7 @@ function BaseDialog(props: {
             onClick={handleConfirm}
             className="mt-[10px] w-full rounded-full bg-primary text-white disabled:border disabled:border-[#bfbfbf] disabled:bg-[#F6F7F8] disabled:text-[#999]"
           >
-            Confirm
+            {T("Confirm")}
           </Button>
         </div>
       </DialogContent>

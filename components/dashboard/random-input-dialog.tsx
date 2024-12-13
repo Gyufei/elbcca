@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import CandleOpRow from "./candle-op-row";
 import { replaceStrNum } from "@/lib/hooks/use-str-num";
 import RandomInput from "./random-input";
+import { useTranslations } from "next-intl";
 
 export default function RandomInputDialog(props: {
   isRandom: boolean;
@@ -15,6 +16,7 @@ export default function RandomInputDialog(props: {
   setAccValue: (val: string) => void;
   setMaxValue: (val: string) => void;
 }) {
+  const T = useTranslations("Common");
   const [open, setOpen] = useState(false);
   const [isRandom, setIsRandom] = useState(props.isRandom);
   const [minValue, setMinValue] = useState(props.minValue);
@@ -104,7 +106,7 @@ export default function RandomInputDialog(props: {
       <DialogTrigger>
         <CandleOpRow text={nowShowText} />
       </DialogTrigger>
-      <DialogContent title="Title" className="w-[320px]" showClose="Cancel">
+      <DialogContent title={T("Title")} className="w-[320px]" showClose={T("Cancel")}>
         <RandomInput
           isRandom={isRandom}
           accValue={accValue}

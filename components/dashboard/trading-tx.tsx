@@ -7,8 +7,10 @@ import { replaceStrNum } from "@/lib/hooks/use-str-num";
 import useIndexStore from "@/lib/state";
 import RandomInput from "./random-input";
 import numbro from "numbro";
+import { useTranslations } from "next-intl";
 
 export default function TradingTx() {
+  const T = useTranslations("Common");
   const tradingTxRandom = useIndexStore((state) => state.tradingTxRandom);
   const tradingTxAcc = useIndexStore((state) => state.tradingTxAcc);
   const tradingTxMin = useIndexStore((state) => state.tradingTxMin);
@@ -20,7 +22,7 @@ export default function TradingTx() {
 
   return (
     <div className="flex flex-col rounded-md border border-[#bfbfbf] bg-[#f6f7f8] p-3">
-      <div className="LabelText">Trading Tx</div>
+      <div className="LabelText">{T("TradingTx")}</div>
       <TxDialog
         isRandom={tradingTxRandom}
         accValue={tradingTxAcc}
@@ -45,6 +47,7 @@ function TxDialog(props: {
   setAccValue: (val: string) => void;
   setMaxValue: (val: string) => void;
 }) {
+  const T = useTranslations("Common");
   const [open, setOpen] = useState(false);
   const [isRandom, setIsRandom] = useState(props.isRandom);
   const [minValue, setMinValue] = useState(props.minValue);
@@ -136,7 +139,7 @@ function TxDialog(props: {
           />
         </div>
       </DialogTrigger>
-      <DialogContent title="Title" className="w-[320px]" showClose="Cancel">
+      <DialogContent title={T("Title")} className="w-[320px]" showClose={T("Cancel")}>
         <RandomInput
           isRandom={isRandom}
           accValue={accValue}
