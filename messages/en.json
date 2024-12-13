@@ -55,6 +55,25 @@
     "NoItemsYet": "No items yet",
     "Random": "Random",
     "Value": "Value",
-    "Title": "Title"
+    "Title": "Title",
+    "LoadKeyStore": "Load KeyStore",
+    "Address": "Address",
+    "GasAvailable": "Gas Available",
+    "Tx": "Tx",
+    "DefaultNetwork": "Default Network",
+    "WorksFor": "Works for",
+    "Tokenswap": "Tokenswap",
+    "Schedule": "Schedule",
+    "Search": "Search",
+    "Gas": "Gas",
+    "Name": "Name",
+    "NameLowUpper": "name",
+    "RootAddresses": "Root Addresses",
+    "Load": "Load",
+    "From": "From",
+    "To": "To",
+    "Yes": "Yes",
+    "No": "No",
+    "AreYouSureToDelete": "Are you sure to delete"
   }
 }

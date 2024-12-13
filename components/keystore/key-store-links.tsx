@@ -14,6 +14,7 @@ import {
 import TruncateText from "../shared/trunc-text";
 import { has } from "lodash";
 import { UNIT32_MAX } from "@/lib/constants/global";
+import { useTranslations } from "next-intl";
 
 export default function KeyStoreLinks({
   keyStores,
@@ -34,6 +35,7 @@ export default function KeyStoreLinks({
   onDelete: () => void;
   onSubmitted: () => void;
 }) {
+  const T = useTranslations("Common");
   const [showLoadDialog, setLoadDialog] = useState(false);
 
   const handleSubmitLoad = () => {
@@ -151,7 +153,7 @@ export default function KeyStoreLinks({
                 className="flex items-center justify-center whitespace-nowrap rounded-full border border-primary bg-white px-3 py-2 text-base text-primary hover:bg-custom-bg-white md:w-full md:rounded md:px-0"
               >
                 <PlusCircle className="mb-[2px] mr-2 h-4 w-4" />
-                Load KeyStore
+                {T("LoadKeyStore")}
               </button>
             </div>
           </>

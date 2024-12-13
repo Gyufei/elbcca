@@ -16,6 +16,7 @@ import { toast } from "../ui/use-toast";
 import { UNIT32_MAX } from "@/lib/constants/global";
 import { parseToAddress } from "@/lib/utils";
 import { HintTexts } from "@/lib/hint-texts";
+import { useTranslations } from "next-intl";
 
 const EmptyRow = {
   root_account: "",
@@ -41,6 +42,7 @@ export function LoadKeyStoreDialog({
   setShow: (val: boolean) => void;
   onSubmitted: (val: IFormFields) => void;
 }) {
+  const T = useTranslations("Common");
   const { handleSubmit, control, register, setValue } = useForm({
     defaultValues: {
       keystore_name: "",
@@ -100,16 +102,16 @@ export function LoadKeyStoreDialog({
   return (
     <Dialog open={show} onOpenChange={(val) => setShow(val)}>
       <DialogContent
-        title="Load KeyStore"
+        title={T("LoadKeyStore")}
         showClose={true}
         className="w-[600px]"
       >
         <div className="flex flex-col gap-y-4 px-4">
           <div className="flex flex-col gap-y-1">
-            <span className="LabelText">Name</span>
+            <span className="LabelText">{T("Name")}</span>
             <Input
               type="text"
-              placeholder="name"
+              placeholder={T("NameLowUpper")}
               {...register("keystore_name", {
                 required: true,
                 onChange: (e) => {
@@ -123,7 +125,7 @@ export function LoadKeyStoreDialog({
           <div className="w-max">
             <div className="mb-2 flex items-center gap-x-4">
               <label htmlFor="root" className="LabelText">
-                Root Addresses
+                {T("RootAddresses")}
               </label>
               <Checkbox
                 id="root"
@@ -135,11 +137,11 @@ export function LoadKeyStoreDialog({
             {rootAddress && (
               <>
                 <div className="LabelText mb-1 grid grid-cols-[256px_150px_40px_40px] gap-x-3 text-xs">
-                  <div>Address</div>
+                  <div>{T("Address")}</div>
                   <div className="flex items-center gap-x-[2px]">
-                    <div className="flex-1">From</div>
+                    <div className="flex-1">{T("From")}</div>
                     <div className="w-10"></div>
-                    <div className="flex-1">To</div>
+                    <div className="flex-1">{T("To")}</div>
                   </div>
                 </div>
 
@@ -212,7 +214,7 @@ export function LoadKeyStoreDialog({
             onClick={handleSubmit(onSubmit)}
           >
             <LoadingIcon className="text-white" isLoading={isSubmitting} />
-            Load
+            {T("Load")}
           </Button>
         </div>
       </DialogContent>

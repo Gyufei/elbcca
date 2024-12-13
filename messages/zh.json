@@ -55,6 +55,25 @@
     "NoItemsYet": "没有内容",
     "Random": "随机",
     "Value": "值",
-    "Title": "标题"
+    "Title": "标题",
+    "LoadKeyStore": "加载钱包文件",
+    "Address": "地址",
+    "GasAvailable": "可用 Gas",
+    "Tx": "交易",
+    "DefaultNetwork": "默认网络",
+    "WorksFor": "适用于",
+    "Tokenswap": "代币交换",
+    "Schedule": "计划",
+    "Search": "搜索",
+    "Gas": "Gas",
+    "Name": "名称",
+    "NameLowUpper": "名称",
+    "RootAddresses": "根地址",
+    "Load": "加载",
+    "From": "从",
+    "To": "到",
+    "Yes": "是",
+    "No": "否",
+    "AreYouSureToDelete": "你确定要删除"
   }
 }

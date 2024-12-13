@@ -15,6 +15,7 @@ import Empty from "@/components/shared/empty";
 import { TruncateTextNoProvider } from "@/components/shared/trunc-text";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { Loader } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export interface IAccountGas {
   account: string;
@@ -30,6 +31,7 @@ export default function KeyStoreAccountsTable({
   isLoading: boolean;
   accounts: Array<IAccountGas>;
 }) {
+  const T = useTranslations("Common");
   const [filterText, setFilterText] = useState<string>("");
   const [filterTextDebounce] = useDebounce(filterText, 500);
 
@@ -64,7 +66,7 @@ export default function KeyStoreAccountsTable({
             <Input
               className="rounded-3xl bg-custom-bg-white"
               type="text"
-              placeholder="Search"
+              placeholder={T("Search")}
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
             />
@@ -77,6 +79,7 @@ export default function KeyStoreAccountsTable({
 }
 
 const AccTable = memo(function AccTable({ acc }: { acc: Array<IAccountGas> }) {
+  const T = useTranslations("Common");
   const [showAcc, setShowAcc] = useState<Array<IAccountGas>>([]);
 
   useEffect(() => {
@@ -97,9 +100,9 @@ const AccTable = memo(function AccTable({ acc }: { acc: Array<IAccountGas> }) {
             #
           </TableHead>
           <TableHead className="w-[230px] font-normal md:w-auto">
-            Address
+            {T("Address")}
           </TableHead>
-          <TableHead className="font-normal">Gas</TableHead>
+          <TableHead className="font-normal">{T("Gas")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody className="text-base">

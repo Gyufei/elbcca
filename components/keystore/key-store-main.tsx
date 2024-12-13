@@ -23,8 +23,10 @@ import useSWRMutation from "swr/mutation";
 import { useUserKeystores } from "@/lib/hooks/use-user-keystores";
 import { uniqBy } from "lodash";
 import useIndexStore from "@/lib/state";
+import { useTranslations } from "next-intl";
 
 export default function KeyStoreMain() {
+  const T = useTranslations("Common");
   const { network } = useContext(NetworkContext);
   const userPathMap = useIndexStore((state) => state.userPathMap());
 
@@ -284,14 +286,14 @@ export default function KeyStoreMain() {
             </div>
           ) : (
             <div className="flex flex-col justify-stretch">
-              <DetailItem title="Address">{accounts.length}</DetailItem>
-              <DetailItem title="Gas Available">{gasAvailable}</DetailItem>
-              <DetailItem title="Tx">{tx}</DetailItem>
-              <DetailItem title="Default Network">
+              <DetailItem title={T("Address")}>{accounts.length}</DetailItem>
+              <DetailItem title={T("GasAvailable")}>{gasAvailable}</DetailItem>
+              <DetailItem title={T("Tx")}>{tx}</DetailItem>
+              <DetailItem title={T("DefaultNetwork")}>
                 {network?.network_name}
               </DetailItem>
               {!selectedRange && (
-                <DetailItem title="Works for">
+                <DetailItem title={T("WorksFor")}>
                   {selectedKeyStoreName ? (
                     <KeyStorePageSelect
                       keyStoreName={selectedKeyStoreName || null}

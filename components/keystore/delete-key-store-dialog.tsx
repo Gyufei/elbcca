@@ -4,6 +4,7 @@ import LoadingIcon from "@/components/shared/loading-icon";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import fetcher from "@/lib/fetcher";
 import useSWRMutation from "swr/mutation";
+import { useTranslations } from "next-intl";
 
 export default function DeleteKeyStoreDialog({
   keyStoreName,
@@ -16,6 +17,7 @@ export default function DeleteKeyStoreDialog({
   onOpenChange: (_val: boolean) => void;
   onDeleted: () => void;
 }) {
+  const T = useTranslations("Common");
   const deleteFetcher = async () => {
     if (!keyStoreName) return null;
 
@@ -44,10 +46,10 @@ export default function DeleteKeyStoreDialog({
       <DialogContent className="w-[320px]">
         <div className="flex flex-col justify-center">
           <div className="flex justify-center text-2xl text-title-color">
-            Title
+            {T("Title")}
           </div>
           <div className="mb-5 mt-2 text-center text-base max-w-[260px] break-words">
-            {`Are you sure to delete "${keyStoreName}" ?`}
+            {`${T("AreYouSureToDelete")} "${keyStoreName}" ?`}
           </div>
           <Button
             variant="destructive"
@@ -56,14 +58,14 @@ export default function DeleteKeyStoreDialog({
             onClick={() => deleteMutate()}
           >
             <LoadingIcon isLoading={deleting} />
-            Yes
+            {T("Yes")}
           </Button>
           <Button
             className="rounded-md"
             variant="outline"
             onClick={() => onOpenChange(false)}
           >
-            No
+            {T("No")}
           </Button>
         </div>
       </DialogContent>
