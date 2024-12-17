@@ -20,8 +20,10 @@ import { ITask } from "@/lib/types/task";
 import fetcher from "@/lib/fetcher";
 import useIndexStore from "@/lib/state";
 import { useParseTasks } from "@/lib/hooks/use-parse-task";
+import { useTranslations } from "next-intl";
 
 const SwapHistory = forwardRef((props: any, ref: any) => {
+  const T = useTranslations("Common");
   const userPathMap = useIndexStore((state) => state.userPathMap());
 
   const [filterTaskDate, setFilterTaskDate] = useState<{
@@ -137,7 +139,7 @@ const SwapHistory = forwardRef((props: any, ref: any) => {
           onChange={(e) => setSearchText(e.target.value)}
           className="rounded-3xl bg-custom-bg-white"
           type="text"
-          placeholder="Search"
+          placeholder={T("Search")}
         />
       </div>
       <div className="flex items-center justify-between gap-x-1 px-3 pb-8 pt-3">
@@ -169,7 +171,7 @@ const SwapHistory = forwardRef((props: any, ref: any) => {
           className="disabled:opacity-1 absolute top-[-20px] mx-3 flex w-[95%] items-center justify-center rounded border bg-white py-2 text-title-color hover:bg-custom-bg-white"
         >
           <LoadingIcon isLoading={filtering} />
-          Filter Task
+          {T("FilterTask")}
         </Button>
         <div className="flex h-[calc(100vh-190px)] flex-col justify-stretch gap-y-3 overflow-y-auto px-3 pb-2 md:h-[calc(100vh-245px)]">
           {filteredTasks?.length ? (

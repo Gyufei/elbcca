@@ -23,6 +23,7 @@ import useIndexStore from "@/lib/state";
 import { useAccountBalance } from "@/lib/hooks/use-account-balance";
 import { useGasPrice } from "@/lib/hooks/use-gas-price";
 import { useNonce } from "@/lib/hooks/use-nonce";
+import { useTranslations } from "next-intl";
 
 export default function QueryAccountBalance({
   gas,
@@ -31,6 +32,7 @@ export default function QueryAccountBalance({
   gas: number | null;
   setGas: (_gas: number) => void;
 }) {
+  const T = useTranslations("Common");
   const { network } = useContext(NetworkContext);
   const {
     token: userToken,
@@ -116,7 +118,7 @@ export default function QueryAccountBalance({
   return (
     <>
       <div className="p-3 pt-0">
-        <div className="LabelText mb-1">FromAddress</div>
+        <div className="LabelText mb-1">{T("FromAddress")}</div>
         <div className="flex justify-between">
           <Input
             value={fromAddress}
@@ -130,7 +132,7 @@ export default function QueryAccountBalance({
             onClick={() => handleQuery()}
             className="rounded-md border border-border-color bg-white px-3 text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Query
+            {T("Query")}
           </button>
         </div>
       </div>

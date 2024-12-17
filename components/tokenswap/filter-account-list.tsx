@@ -22,7 +22,7 @@ import { GAS_TOKEN_ADDRESS, UNIT256_MAX } from "@/lib/constants/global";
 import { TokenContext } from "@/lib/providers/token-provider";
 import useIndexStore from "@/lib/state";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
-
+import { useTranslations } from "next-intl";
 import TruncateText from "../shared/trunc-text";
 import LoadingIcon from "../shared/loading-icon";
 
@@ -31,6 +31,7 @@ export default function FilterAccountList({
 }: {
   keyStores: Array<IKeyStoreAccount>;
 }) {
+  const T = useTranslations("Common");
   const userPathMap = useIndexStore((state) => state.userPathMap());
   const { network } = useContext(NetworkContext);
   const networkId = network?.chain_id;
@@ -98,7 +99,6 @@ export default function FilterAccountList({
 
     const newAccount = uniqBy(filteredAccounts, "account");
 
-    return newAccount;
     return newAccount;
   }, [accounts, keyStores]);
 
@@ -175,7 +175,7 @@ export default function FilterAccountList({
             value={tokenMin || ""}
             onChange={(e) => setTokenMin(e.target.value)}
             className="border-border-color bg-white"
-            placeholder="Min"
+            placeholder={T("Min")}
             onKeyDown={handleKeyDown}
           />
           <div className="mx-2">-</div>
@@ -183,7 +183,7 @@ export default function FilterAccountList({
             value={tokenMax || ""}
             onChange={(e) => setTokenMax(e.target.value)}
             className="border-border-color bg-white"
-            placeholder="Max"
+            placeholder={T("Max")}
             onKeyDown={handleKeyDown}
           />
         </div>
@@ -195,7 +195,7 @@ export default function FilterAccountList({
           className="disabled:opacity-1 absolute top-[-20px] mx-3 flex w-[95%] items-center justify-center rounded border bg-white py-2 hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:contrast-[0.9]"
         >
           <LoadingIcon isLoading={filtering} />
-          <span className="text-title-color">Filter Account</span>
+          <span className="text-title-color">{T("FilterAccount")}</span>
         </Button>
         <ScrollArea
           className="pb-2"

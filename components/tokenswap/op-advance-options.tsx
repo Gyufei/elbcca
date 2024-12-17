@@ -18,6 +18,7 @@ import { useGasPrice } from "@/lib/hooks/use-gas-price";
 import { useNonce } from "@/lib/hooks/use-nonce";
 import useIndexStore from "@/lib/state";
 import useEffectStore from "@/lib/state/use-store";
+import { useTranslations } from "next-intl";
 
 export interface IAdvanceOptions {
   schedule: string | null;
@@ -38,6 +39,7 @@ export default function OpAdvanceOptions({
   onChange: (_o: IAdvanceOptions) => void;
   account: string;
 }) {
+  const T = useTranslations("Common");
   const { data: gasPrice } = useGasPrice();
   const { data: nonce } = useNonce(account);
 
@@ -98,7 +100,7 @@ export default function OpAdvanceOptions({
       <div className="flex flex-col gap-y-3 px-3">
         <div className="flex justify-between gap-x-3">
           <div className="flex flex-1 flex-col">
-            <div className="LabelText mb-1">Timeout(s)</div>
+            <div className="LabelText mb-1">{T("Timeout(s)")}</div>
             <Input
               value={options.timeout || ""}
               onChange={(e) =>
@@ -109,7 +111,7 @@ export default function OpAdvanceOptions({
             />
           </div>
           <div className="flex flex-1 flex-col">
-            <div className="LabelText mb-1">Slippage</div>
+            <div className="LabelText mb-1">{T("Slippage")}</div>
             <div className="relative">
               <Input
                 className="rounded-md border-border-color"
@@ -129,7 +131,7 @@ export default function OpAdvanceOptions({
         <div className="flex items-end justify-between gap-x-3">
           <div className="flex flex-1 justify-between gap-x-3">
             <div className="flex-1">
-              <div className="LabelText mb-1">Nonce</div>
+              <div className="LabelText mb-1">{T("Nonce")}</div>
               <Input
                 value={options.nonce != null ? options.nonce : ""}
                 onChange={(e) =>
@@ -185,7 +187,7 @@ export default function OpAdvanceOptions({
         </div>
 
         <div className="flex flex-col">
-          <div className="LabelText mb-1">Schedule Time</div>
+          <div className="LabelText mb-1">{T("ScheduleTime")}</div>
           <div className="flex justify-between gap-x-3">
             <DateTimePicker
               ampm={false}
@@ -213,12 +215,13 @@ export default function OpAdvanceOptions({
 }
 
 function AdvanceCollapsible({ children }: { children?: React.ReactNode }) {
+  const T = useTranslations("Common");
   const [open, setOpen] = useState(true);
 
   return (
     <Collapsible className="mt-6 w-full" open={open} onOpenChange={setOpen}>
       <div className="mb-4 flex items-center pl-3">
-        <div className="mr-3 text-xs font-medium text-title-color">Advance</div>
+        <div className="mr-3 text-xs font-medium text-title-color">{T("Advance")}</div>
         <div className="h-[1px] flex-1 bg-shadow-color" />
         <CollapsibleTrigger asChild>
           <ChevronDownCircle

@@ -74,6 +74,23 @@
     "To": "到",
     "Yes": "是",
     "No": "否",
-    "AreYouSureToDelete": "你确定要删除"
+    "AreYouSureToDelete": "你确定要删除",
+    "Network": "网络",
+    "FromAddress": "发送地址",
+    "Query": "查询",
+    "OP": "操作",
+    "ToAddress": "接收地址",
+    "Advance": "高级",
+    "Timeout(s)": "超时(秒)",
+    "Slippage": "滑点",
+    "Nonce": "随机数",
+    "Gas(gwei)": "Gas(单位: gwei)",
+    "ScheduleTime": "预定时间",
+    "TestTx": "测试交易",
+    "Min": "最小值",
+    "Max": "最大值",
+    "FilterAccount": "过滤账户",
+    "FilterTask": "过滤任务",
+    "AvailableKeyStores": "可用的 KeyStores"
   }
 }

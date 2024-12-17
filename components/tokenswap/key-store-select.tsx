@@ -11,6 +11,7 @@ import {
 import { useKeyStoreAccounts } from "@/lib/hooks/use-key-store-accounts";
 import { NetworkContext } from "@/lib/providers/network-provider";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
+import { useTranslations } from "next-intl";
 
 export default function KeyStoreSelect({
   keyStores,
@@ -25,6 +26,7 @@ export default function KeyStoreSelect({
       | ((_ks: Array<IKeyStoreAccount>) => Array<IKeyStoreAccount>),
   ) => void;
 }) {
+  const T = useTranslations("Common");
   const { network } = useContext(NetworkContext);
   const networkId = network?.chain_id || null;
 
@@ -89,7 +91,7 @@ export default function KeyStoreSelect({
         <div className="w-[340px] rounded-md bg-white">
           <div className="flex flex-col">
             <div className="LabelText mb-1 flex items-center">
-              Available KeyStores
+              {T("AvailableKeyStores")}
             </div>
             <div className="flex flex-wrap">
               {!keyStoreOptions.length && <div>No Available KeyStores</div>}

@@ -11,8 +11,10 @@ import SwapHistory from "@/components/tokenswap/swap-history";
 import { NetworkContext } from "@/lib/providers/network-provider";
 import MobileFoldBtn from "@/components/tokenswap/mobile-fold-btn";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
+import { useTranslations } from "next-intl";
 
 export default function TokenSwap() {
+  const T = useTranslations("Common");
   const { network } = useContext(NetworkContext);
 
   const [selectedKeyStores, setSelectedKeyStore] = useState<
@@ -52,8 +54,8 @@ export default function TokenSwap() {
       >
         <SwiperHandlerBox />
         <div className="flex flex-col px-4 pb-4 md:pt-4">
-          <DetailItem title="Network">{network?.network_name}</DetailItem>
-          <DetailItem title="KeyStore">
+          <DetailItem title={T("Network")}>{network?.network_name}</DetailItem>
+          <DetailItem title={T("KeyStore")}>
             <KeyStoreSelect
               page="Tokenswap"
               keyStores={selectedKeyStores}

@@ -25,6 +25,7 @@ import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { useGasPrice } from "@/lib/hooks/use-gas-price";
 import useEffectStore from "@/lib/state/use-store";
 import { HintTexts } from "@/lib/hint-texts";
+import { useTranslations } from "next-intl";
 
 export default function Op({
   keyStores,
@@ -35,6 +36,7 @@ export default function Op({
   children?: React.ReactNode;
   afterAction: () => void;
 }) {
+  const T = useTranslations("Common");
   const { network } = useContext(NetworkContext);
   const { gasToken } = useContext(TokenContext);
 
@@ -347,7 +349,7 @@ export default function Op({
     <>
       <div className="flex flex-col">
         <div className="p-3">
-          <div className="LabelText mb-1">OP</div>
+          <div className="LabelText mb-1">{T("OP")}</div>
           <OpSelect
             op={selectedOp}
             handleOpSelect={(op) => setSelectedOp(op)}
@@ -380,7 +382,7 @@ export default function Op({
 
         {!isApproveOp && (
           <div className="col mt-3 flex flex-col px-3">
-            <div className="LabelText mb-1">ToAddress</div>
+            <div className="LabelText mb-1">{T("ToAddress")}</div>
             <Input
               value={toAddress}
               onChange={(e: any) => setToAddress(e.target.value)}
@@ -406,7 +408,7 @@ export default function Op({
           onClick={() => handleSign()}
         >
           <div className="flex items-center">
-            <span>Test Tx</span>
+            <span>{T("TestTx")}</span>
             {testLoading && <Loader2 className="ml-1 h-4 w-4 animate-spin" />}
           </div>
         </Button>
@@ -432,7 +434,7 @@ export default function Op({
           className="h-10 w-32 rounded-md border border-primary text-primary hover:bg-primary hover:text-white"
         >
           <div className="flex items-center">
-            <span>Schedule</span>
+            <span>{T("Schedule")}</span>
             {sendLoading && <Loader2 className="ml-1 h-4 w-4 animate-spin" />}
           </div>
         </Button>

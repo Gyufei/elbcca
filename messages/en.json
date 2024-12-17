@@ -74,6 +74,23 @@
     "To": "To",
     "Yes": "Yes",
     "No": "No",
-    "AreYouSureToDelete": "Are you sure to delete"
+    "AreYouSureToDelete": "Are you sure to delete",
+    "Network": "Network",
+    "FromAddress": "FromAddress",
+    "Query": "Query",
+    "OP": "OP",
+    "ToAddress": "ToAddress",
+    "Advance": "Advance",
+    "Timeout(s)": "Timeout(s)",
+    "Slippage": "Slippage",
+    "Nonce": "Nonce",
+    "Gas(gwei)": "Gas(gwei)",
+    "ScheduleTime": "Schedule Time",
+    "TestTx": "Test Tx",
+    "Min": "Min",
+    "Max": "Max",
+    "FilterAccount": "Filter Account",
+    "FilterTask": "Filter Task",
+    "AvailableKeyStores": "Available KeyStores"
   }
 }

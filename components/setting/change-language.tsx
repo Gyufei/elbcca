@@ -7,15 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useParams } from "next/navigation";
 import { usePathname, useRouter } from "@/app/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 // import { setLocale } from '@/i18n';
+import Image from 'next/image';
 
 const localList = [
   { title: 'English', local: 'en'},
   { title: '简体中文', local: 'zh'},
 ]
 export default function ChangeLanguage() {
+  const local = useLocale();
   const [showChangeDialog, setShowChangeDialog] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -30,6 +32,10 @@ export default function ChangeLanguage() {
       { pathname, params },
       { locale: value },
     );
+    // 强制重新渲染
+    setTimeout(() => {
+      window.location.reload();
+    }, 400)
     setShowChangeDialog(false);
   };
 
@@ -51,13 +57,24 @@ export default function ChangeLanguage() {
           showClose={true}
           className="w-[320px]"
         >
-          <div className="flex flex-col gap-y-5 px-4">
+          <div className="flex flex-col">
             {
               localList.map((item) => (
                 <div
                   key={item.local}
-                  className="flex flex-col gap-y-1 cursor-pointer" onClick={() => changeLanguage(item.local)}>
+                  className="flex flex-row justify-between items-center h-[48px] px-5 cursor-pointer hover:bg-[#F6F7F8]" onClick={() => changeLanguage(item.local)}>
                   {item.title}
+                  {
+                    item.local === local && (
+                      <Image 
+                        src={"/icons/choose-right.svg"}
+                        width={20}
+                        height={20}
+                        alt="choose"
+                      />
+                    )
+                  }
+                  
                 </div>
               ))
             }
