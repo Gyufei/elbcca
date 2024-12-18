@@ -91,6 +91,11 @@
     "Max": "Max",
     "FilterAccount": "Filter Account",
     "FilterTask": "Filter Task",
-    "AvailableKeyStores": "Available KeyStores"
+    "AvailableKeyStores": "Available KeyStores",
+    "NetworkSettings": "Network Settings",
+    "LearnMore": "Learn More",
+    "Back": "Back",
+    "TokenList": "Token List",
+    "Symbol": "Symbol"
   }
 }

@@ -9,7 +9,6 @@ import { useParams } from "next/navigation";
 import { usePathname, useRouter } from "@/app/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
-// import { setLocale } from '@/i18n';
 import Image from 'next/image';
 
 const localList = [

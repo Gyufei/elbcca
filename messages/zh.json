@@ -91,6 +91,11 @@
     "Max": "最大值",
     "FilterAccount": "过滤账户",
     "FilterTask": "过滤任务",
-    "AvailableKeyStores": "可用的 KeyStores"
+    "AvailableKeyStores": "可用的 KeyStores",
+    "NetworkSettings": "网络设置",
+    "LearnMore": "更多",
+    "Back": "返回",
+    "TokenList": "Token列表",
+    "Symbol": "代币符号"
   }
 }

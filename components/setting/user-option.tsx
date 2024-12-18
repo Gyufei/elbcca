@@ -7,6 +7,7 @@ import ChangeTimezone from "./timezone";
 import useIndexStore from "@/lib/state";
 import EditAliasname from "./edit-aliasname";
 import { useTranslations } from "next-intl";
+import NetworkSetting from "./network-setting";
 
 export default function UserOption() {
   const T = useTranslations("Common");
@@ -20,6 +21,7 @@ export default function UserOption() {
       <EditEndPoint />
       <EditAliasname />
       <ChangeTimezone />
+      <NetworkSetting />
     </div>
   );
 }

@@ -11,4 +11,5 @@ export const HintTexts = {
   NotUrlError: "Not a valid URL",
   LoadKeyStoreSuccess: "Add KeyStore Success",
   GlobalError: "Something went wrong",
+  AddressError: "Address is error"
 };
