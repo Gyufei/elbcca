@@ -4,12 +4,12 @@ import { useSwipeable } from "react-swipeable";
 
 import DetailItem from "@/components/shared/detail-item";
 
-import FilterAccountList from "@/components/tokenswap/filter-account-list";
-import KeyStoreSelect from "@/components/tokenswap/key-store-select";
-import Op from "@/components/tokenswap/op";
-import SwapHistory from "@/components/tokenswap/swap-history";
+import FilterAccountList from "@/components/workflow/filter-account-list";
+import KeyStoreSelect from "@/components/workflow/key-store-select";
+import Op from "@/components/workflow/op";
+import SwapHistory from "@/components/workflow/swap-history";
 import { NetworkContext } from "@/lib/providers/network-provider";
-import MobileFoldBtn from "@/components/tokenswap/mobile-fold-btn";
+import MobileFoldBtn from "@/components/workflow/mobile-fold-btn";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { useTranslations } from "next-intl";
 

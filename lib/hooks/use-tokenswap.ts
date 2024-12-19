@@ -5,7 +5,7 @@ import fetcher from "@/lib/fetcher";
 import useIndexStore from "@/lib/state";
 import { NetworkContext } from "@/lib/providers/network-provider";
 import { IToken } from "../types/token";
-import { ITokenNumDesc } from "@/components/tokenswap/token-select-and-input";
+import { ITokenNumDesc } from "@/components/workflow/token-select-and-input";
 
 export function useTokenSwap(
   swapRouter: string,

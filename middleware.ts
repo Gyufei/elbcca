@@ -11,7 +11,7 @@ const validRoutes = [
   "dashboard",
   "keystore",
   "setting",
-  "tokenswap",
+  "workflow",
   "layout",
   "setting",
   "signin",

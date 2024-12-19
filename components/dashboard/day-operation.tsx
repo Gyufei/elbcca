@@ -3,7 +3,7 @@
 import { useDashboardDayApply } from "@/lib/hooks/use-dashboard-day-apply";
 import { Button } from "../ui/button";
 import Empty from "../shared/empty";
-import SwapHistoryItem from "../tokenswap/swap-history-item";
+import SwapHistoryItem from "../workflow/swap-history-item";
 
 import Plan from "./plan";
 import Rules from "./rules";

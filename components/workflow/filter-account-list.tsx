@@ -6,7 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
-import TokenSelect from "@/components/tokenswap/token-select";
+import TokenSelect from "@/components/workflow/token-select";
 import {
   Tooltip,
   TooltipContent,

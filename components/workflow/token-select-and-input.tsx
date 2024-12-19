@@ -1,4 +1,4 @@
-import TokenSelect from "@/components/tokenswap/token-select";
+import TokenSelect from "@/components/workflow/token-select";
 import { Input } from "@/components/ui/input";
 import { replaceStrNum } from "@/lib/hooks/use-str-num";
 import { IToken } from "@/lib/types/token";

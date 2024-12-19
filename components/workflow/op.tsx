@@ -1,14 +1,14 @@
 import { useContext, useMemo, useState } from "react";
 
-import QueryAccountBalance from "@/components/tokenswap/query-account-balance";
-import OpSelect from "@/components/tokenswap/op-select";
+import QueryAccountBalance from "@/components/workflow/query-account-balance";
+import OpSelect from "@/components/workflow/op-select";
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { ITokenNumDesc } from "@/components/tokenswap/token-select-and-input";
+import { ITokenNumDesc } from "@/components/workflow/token-select-and-input";
 import fetcher from "@/lib/fetcher";
 import OpAdvanceOptions, {
   IAdvanceOptions,
-} from "@/components/tokenswap/op-advance-options";
+} from "@/components/workflow/op-advance-options";
 import { TestTxResult } from "./test-tx-result";
 import ActionTip, { IActionType } from "../shared/action-tip";
 import { NetworkContext } from "@/lib/providers/network-provider";

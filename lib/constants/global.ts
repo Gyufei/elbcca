@@ -8,8 +8,8 @@ export const LINKS = [
     href: "/keystore",
   },
   {
-    name: "TokenSwap",
-    href: "/tokenswap",
+    name: "WorkFlow",
+    href: "/workflow",
   },
   {
     name: "Setting",
