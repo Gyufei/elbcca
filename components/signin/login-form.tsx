@@ -94,7 +94,7 @@ export default function LoginForm({
         ) : (
           <>
             <div className="mb-4 text-lg font-bold text-title-color">
-              Sign in to your Tafect account
+              Sign in to your Detake account
             </div>
           </>
         )}

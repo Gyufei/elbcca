@@ -1,4 +1,4 @@
-## mm-tafect-ui
+## mm-detake-ui
 
 [next.js](https://nextjs.org)
 [Precedent](https://precedent.dev/)
