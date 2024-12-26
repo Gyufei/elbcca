@@ -4,8 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tab";
 import { useTranslations } from "next-intl";
 import {  useSearchParams } from "next/navigation";
 import TokenList from "@/components/network/token-list";
-import Rpc from "@/components/network/rpc";
-import { useState } from "react";
+import Rpc, { RpcMethods } from "@/components/network/rpc";
+import { useRef, useState } from "react";
+import { NetworkChainType } from "@/lib/types/network";
+import { networkConfigs } from "@/lib/constants/network-config";
 
 enum NetTabsEnum  {
   network = 'network',
@@ -15,16 +17,18 @@ enum NetTabsEnum  {
 export default async function Networks() {
   const searchParams = useSearchParams();
   const T = useTranslations("Common");
-  const netType = searchParams.get("type");
-  const netName = netType && networkMap[netType];
-  const [tabValue, setTabValue] = useState<string>(NetTabsEnum.tokenList)
+  const netName = searchParams.get("name");
+  const chainId = searchParams.get("chainId") || '';
+  const netInfo = netName && networkConfigs[netName as NetworkChainType];
+  const [tabValue, setTabValue] = useState<string>(NetTabsEnum.network)
+  const rpcRef = useRef<RpcMethods>(null);
 
   const netOptions = [
     { name: 'Network', value: NetTabsEnum.network },
     { name: 'TokenList', value: NetTabsEnum.tokenList },
   ]
 
-  if (!netName) return null;
+  if (!netInfo) return null;
 
   const goBack = () => {
     window.history.back();
@@ -33,10 +37,12 @@ export default async function Networks() {
   return (
     <div className="relative w-full h-full bg-[#fafafa] md:static md:overflow-y-hidden p-5">
       <div className="relative border border-[#BFBFBF] bg-[#FFFFFF] w-full h-full rounded-[12px] p-8 min-h-[300px]">
-        <div className="text-2xl text-[#333333] font-bold mb-[10px]">{netName}</div>
+        <div className="text-2xl text-[#333333] font-bold mb-[10px]">{netInfo.name}</div>
         <Tabs 
           value={tabValue} 
-          onValueChange={(v) => setTabValue(v)}
+          onValueChange={(v) => {
+            setTabValue(v)
+          }}
           className="pd-[88] h-[calc(100%-120px)] overflow-y-auto"
         >
           <TabsList className="grid grid-cols-2 gap-5 w-[520px] mb-[40px]">
@@ -48,11 +54,10 @@ export default async function Networks() {
               ))}
           </TabsList>
           <TabsContent value={NetTabsEnum.network}>
-            <Rpc />
-            <div className="h-[800px]"></div>
+            <Rpc ref={rpcRef} chainId={chainId}/>
           </TabsContent>
           <TabsContent value={NetTabsEnum.tokenList}>
-            <TokenList />
+            <TokenList chainId={chainId} />
           </TabsContent>
         </Tabs>
         <div className="absolute rounded-[12px]  bottom-0 left-0 right-0 px-8 pb-8 bg-[#FFFFFF]">
@@ -62,7 +67,10 @@ export default async function Networks() {
             </div>
             {
               tabValue === NetTabsEnum.network && (
-                <div className="absolute bottom-0 right-0 w-[70px] h-10 rounded-lg bg-[#0572EC] cursor-pointer text-base text-white flex items-center justify-center">{T("Save")}</div>
+                <div 
+                  className="absolute bottom-0 right-0 w-[70px] h-10 rounded-lg bg-[#0572EC] cursor-pointer text-base text-white flex items-center justify-center"
+                  onClick={() => rpcRef.current?.onSubmit()}
+                >{T("Save")}</div>
               )
             }
           </div>

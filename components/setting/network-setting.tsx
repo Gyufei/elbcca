@@ -1,8 +1,13 @@
 "use client";
 
 import { useRouter } from "@/app/navigation";
+import { networkConfigs, networkList } from "@/lib/constants/network-config";
+import { SystemEndPointPathMap } from "@/lib/end-point";
+import fetcher from "@/lib/fetcher";
+import { NetworkChainType } from "@/lib/types/network";
 import { useTranslations } from "next-intl";
 import Image from 'next/image';
+import useSWR from "swr";
 
 export const networkMap = {
   "Solana": "Solana",
@@ -10,15 +15,11 @@ export const networkMap = {
   "Ethereum": "Ethereum",
 }
 
-const networkList = [
-  { name: 'Solana', icon: '/icons/Solana.svg', link: 'Solana'},
-  { name: 'BNB Chain', icon: '/icons/BNBChain.svg', link: 'BNBChain'},
-  { name: 'Ethereum', icon: '/icons/eth.svg', link: 'Ethereum'},
-]
-
 export default function NetworkSetting() {
   const T = useTranslations("Common");
   const router = useRouter();
+  const {data: networkList  } = useSWR(SystemEndPointPathMap.networks, fetcher);
+  console.log(networkList, "networkList");
   
   return (
     <div className="flex flex-col mt-6 gap-y-3">
@@ -37,20 +38,21 @@ export default function NetworkSetting() {
       </div>
       <div className="flex flex-row gap-3 flex-wrap">
         {
-           networkList.map((item) => {
+           (networkList || []).map((item) => {
             return (
               <div 
-                key={item.name} className="cursor-pointer h-[40px] rounded-[6px] text-base flex flex-row items-center px-3 border border-[#BFBFBF]"
-                onClick={() => router.push(`/setting/networks?type=${item.link}`)}
+                key={item.chain_id} 
+                className="cursor-pointer h-[40px] rounded-[6px] text-base flex flex-row items-center px-3 border border-[#BFBFBF]"
+                onClick={() => router.push(`/setting/networks?name=${item.currency_name}&chainId=${item.chain_id}`)}
               >
                 <Image 
-                  src={item.icon}
+                  src={networkConfigs[item.currency_name as NetworkChainType].logo}
                   width={16}
                   height={16}
                   alt="choose"
                   className="mr-1"
                 />
-                {item.name}
+                {item.chain_name}
                 <Image 
                   src={"/icons/share-blue.svg"}
                   width={16}

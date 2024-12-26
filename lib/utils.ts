@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { AddressRegex } from "./constants/global";
+import { AddressRegex, httpRegex } from "./constants/global";
 import numbro from "numbro";
 
 export function cn(...inputs: ClassValue[]) {
@@ -24,6 +24,10 @@ export function toNonExponential(num: number | string) {
 
 export function isAddress(address: string): boolean {
   return AddressRegex.test(address);
+}
+
+export function isUrl(url: string): boolean {
+  return httpRegex.test(url);
 }
 
 export function parseToAddress(v: string) {

@@ -25,6 +25,7 @@ export const UNIT256_MAX =
 export const UNIT32_MAX = "4294967295";
 
 export const AddressRegex = /^0x[a-fA-F0-9]{40}$/;
+export const httpRegex = /^https?:\/\/([a-zA-Z0-9]+\.)+[a-zA-Z0-9]+/;
 
 export const TimezonesMap: Record<string, any> = {
   "-12": "Pacific/Wake",

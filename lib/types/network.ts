@@ -5,3 +5,9 @@ export interface INetwork {
   network_name: string;
   rpc_url: string;
 }
+
+export enum NetworkChainType {
+  SOLANA = "SOL",
+  BNB = "BNB",
+  ETH = "ETH",
+}

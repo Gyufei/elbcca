@@ -33,6 +33,12 @@ export const SystemEndPointPathMap = {
 
   networks: WithHost("/setting/networks"),
   ops: WithHost("/setting/op"),
+  deleteToken: WithHost("/setting/delete_token"),
+  upTopToken: WithHost("/setting/token_top_up"),
+  addToken: WithHost("/setting/add_token"),
+  getTokenList: WithHost("/setting/account_token_list"),
+  updateRpc: WithHost("/setting/private_rpc"),
+  getRPC: WithHost("/setting/private_rpc"),
 };
 
 export const UserEndPointPathMap = {
@@ -61,4 +67,5 @@ export const UserEndPointPathMap = {
   scheduleList: "/schedule/list",
   scheduleSave: "/schedule/save",
   scheduleApply: "/schedule/apply",
+
 };

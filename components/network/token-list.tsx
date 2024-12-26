@@ -1,4 +1,5 @@
 
+"use client";
 import { useRef, useState } from "react";
 
 import { Input } from "@/components/ui/input";
@@ -19,58 +20,29 @@ export interface IAccountGas {
   index: number;
 }
 
-const list: TokenItem[] = [
-  {
-      symbol: "BTC",
-      name: "Bitcoin",
-      address: "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
-      index: 0
-  },
-  {
-      symbol: "ETH",
-      name: "Ethereum",
-      address: "0x5AEDA5626294BE852C00FD6603ESCUE263D37B1f",
-      index: 1
-  },
-  {
-      symbol: "USDT",
-      name: "Tether",
-      address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-      index: 2
-  },
-  {
-      symbol: "BNB",
-      name: "Binance Coin",
-      address: "bnb1y7t6d8lq8xv46w35mzjg8c66xk54j89h86x74s",
-      index: 3
-  },
-  {
-      symbol: "ADA",
-      name: "Cardano",
-      address: "addr1q9p84r79q9r8q9r8q9r8q9r8q9r8q9r8q9r8q9",
-      index: 4
-  }
-];
-
-export default function TokenList() {
-  const {data,  mutate } = useSWR(SystemEndPointPathMap.allPages, fetcher);
+interface TokenListProps {
+  chainId: string;
+}
+export default function TokenList({ chainId }: TokenListProps) {
+  const {data: list,  mutate } = useSWR(SystemEndPointPathMap.getTokenList + `?chain_id=${chainId}`, fetcher);
 
   const onRefresh = () => {
     mutate()
   }
   return (
     <div className="flex flex-1 flex-col justify-stretch">
-      <AddTokenTnput onRefresh={onRefresh} />
+      <AddTokenTnput onRefresh={onRefresh} chainId={chainId}/>
       <TokenTable 
         list={list}
         onRefresh={onRefresh}
+        chainId={chainId}
       />
      </div>
   );
 }
 
 
-function AddTokenTnput({ onRefresh }: { onRefresh: () => void}) {
+function AddTokenTnput({ onRefresh, chainId }: { onRefresh: () => void; chainId: string;}) {
   const T = useTranslations("Common");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -79,6 +51,11 @@ function AddTokenTnput({ onRefresh }: { onRefresh: () => void}) {
   const [loading, setLoading] = useState<boolean>(false)
 
   const onChange = (val: string) => {
+    if (val && !isAddress(val)) {
+      setErrorMsg(HintTexts.AddressError);
+    } else {
+      setErrorMsg("");
+    }
     setInputValue(val);
   };
 
@@ -95,11 +72,11 @@ function AddTokenTnput({ onRefresh }: { onRefresh: () => void}) {
     if (errorMsg) return;
     setLoading(true)
     const params = {
-      address: inputValue,
+      token_address: inputValue,
     };
 
     try {
-      await fetcher(SystemEndPointPathMap.keyStoreAddPage, {
+      await fetcher(SystemEndPointPathMap.addToken + `?chain_id=${chainId}`, {
         method: "POST",
         body: JSON.stringify(params),
       });

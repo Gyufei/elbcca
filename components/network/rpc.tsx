@@ -1,28 +1,71 @@
 "use client";
 
-
 import DetailItem from "../shared/detail-item";
 import { Input } from "../ui/input";
-import useIndexStore from "@/lib/state";
-import { useRef, useState } from "react";
-import useEffectStore from "@/lib/state/use-store";
+import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { HintTexts } from "@/lib/hint-texts";
+import fetcher from "@/lib/fetcher";
+import { SystemEndPointPathMap } from "@/lib/end-point";
+import useSWR from "swr";
+import { isUrl } from "@/lib/utils";
+ 
+interface RpcProps {
+  chainId: string;
+}
+ 
+export interface RpcMethods {
+  onSubmit: () => void;
+}
 
-export default function Rpc() {
-  const activeUser = useEffectStore(useIndexStore, (state) =>
-    state.activeUser(),
-  );
-  const aliasname = activeUser?.aliasname;
+const Rpc = forwardRef(
+  function Rpc({ chainId }: RpcProps, ref: ForwardedRef<RpcMethods>){
+
   const [errorMsg, setErrorMsg] = useState("");
-
-  const [inputValue, setInputValue] = useState(aliasname);
+  const [inputValue, setInputValue] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [RPCLoading, setRPCLoading] = useState<boolean>(false)
+  const { data } = useSWR(SystemEndPointPathMap.getRPC + `?chain_id=${chainId}`, fetcher);
+
+  useEffect(() => {
+    setInputValue(data?.rpc_url || '')
+  }, [data])
+  
+  // 使用 useImperativeHandle 自定义暴露给父组件的方法
+  useImperativeHandle(ref, () => ({
+    onSubmit: onSubmit,
+  }));
+
+
+  const onSubmit = async () => {
+    if (errorMsg) return;
+    if (!isUrl(inputValue || '')) {
+      setErrorMsg(HintTexts.RPCError);
+      return;
+    }
+    if (RPCLoading) return;
+    setRPCLoading(true)
+    const params = {
+      'chain_id': chainId,
+      'rpc_url': inputValue,
+    };
+
+    try {
+      await fetcher(SystemEndPointPathMap.updateRpc + `?chain_id=${chainId}`, {
+        method: "POST",
+        body: JSON.stringify(params),
+      });
+    } catch (err) {
+        console.error('Error Add RPC', err);
+    } finally {
+      setRPCLoading(false)
+    }
+  }
 
   const onChange = (val: string) => {
     setInputValue(val);
 
-    if (!val) {
-      setErrorMsg(HintTexts.ChangeAliasnameEmptyError);
+    if (val && !isUrl(val)) {
+      setErrorMsg(HintTexts.RPCError);
       return;
     }
 
@@ -37,7 +80,7 @@ export default function Rpc() {
   };
 
   return (
-    <DetailItem title={"RPC"} className={"border-none"}>
+    <DetailItem title={"RPC"} className={"border-none p-0"}>
       <div className="relative flex w-full flex-col justify-center">
       <Input
         data-state={errorMsg ? "error" : ""}
@@ -55,4 +98,6 @@ export default function Rpc() {
       </div>
     </DetailItem>
   );
-}
+});
+
+export default Rpc;

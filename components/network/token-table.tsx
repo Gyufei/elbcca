@@ -1,5 +1,5 @@
 
-import { memo, useState } from "react";
+import { useState } from "react";
 
 import {
   Table,
@@ -19,13 +19,15 @@ import fetcher from "@/lib/fetcher";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 
 export interface TokenItem {
-  symbol: string;
-  name: string;
-  address: string;
+  chain_id: number;
+  token_id: number;
+  token_symbol: string;
+  token_name: string;
+  token_address: string;
   index: number;
 }
 
-export const TokenTable = memo(function TokenTable({ list = [], onRefresh}: { list: Array<TokenItem>;  onRefresh: () => void}) {
+export const TokenTable = function TokenTable({ chainId, list = [], onRefresh}: { chainId: string; list: Array<TokenItem>;  onRefresh: () => void}) {
   const T = useTranslations("Common");
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false)
   const [upLoading, setUpLoading] = useState<boolean>(false)
@@ -34,11 +36,11 @@ export const TokenTable = memo(function TokenTable({ list = [], onRefresh}: { li
     if (upLoading) return;
     setUpLoading(true)
     const params = {
-      address: item.address,
+      token_id: item.token_id,
     };
 
     try {
-      await fetcher(SystemEndPointPathMap.keyStoreAddPage, {
+      await fetcher(SystemEndPointPathMap.upTopToken + `?chain_id=${chainId}`, {
         method: "POST",
         body: JSON.stringify(params),
       });
@@ -54,11 +56,11 @@ export const TokenTable = memo(function TokenTable({ list = [], onRefresh}: { li
     if (deleteLoading) return;
     setDeleteLoading(true)
     const params = {
-      address: item.address,
+      token_id: item.token_id,
     };
 
     try {
-      await fetcher(SystemEndPointPathMap.keyStoreAddPage, {
+      await fetcher(SystemEndPointPathMap.deleteToken + `?chain_id=${chainId}`, {
         method: "POST",
         body: JSON.stringify(params),
       });
@@ -94,19 +96,18 @@ export const TokenTable = memo(function TokenTable({ list = [], onRefresh}: { li
           {list.length ? (
             (list || []).map((item, index) => (
               <TableRow
-                key={item.address}
+                key={item.token_address}
                 className="h-[56px] border-b border-shadow-color"
               >
                 <TableCell className="p-2 text-center">{index + 1}</TableCell>
                 <TableCell className="p-2">
-                  {item.symbol}
+                  {item.token_symbol}
                 </TableCell>
                 <TableCell className="p-2">
-                  {item.name}
+                  {item.token_name}
                 </TableCell>
                 <TableCell className="p-2">
-                  {item.symbol}
-                  <TruncateTextNoProvider text={item.symbol} showCopy={true} />
+                  <TruncateTextNoProvider text={item.token_address} showCopy={true} />
                 </TableCell>
                 <TableCell className="h-[56px] p-2 flex flex-row justify-end items-center">
                   <Image
@@ -139,4 +140,4 @@ export const TokenTable = memo(function TokenTable({ list = [], onRefresh}: { li
       </TableBody>
     </Table>
   );
-});
+};
