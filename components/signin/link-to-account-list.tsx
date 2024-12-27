@@ -1,10 +1,11 @@
 import useIndexStore from "@/lib/state";
 import useEffectStore from "@/lib/state/use-store";
 import { ChevronLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function LinkToAccountList({ onShow }: { onShow: () => void }) {
   const allUsers = useEffectStore(useIndexStore, (state) => state.users);
-
+  const T = useTranslations("Common");
   return (
     <>
       {allUsers && allUsers?.length > 0 && (
@@ -13,7 +14,7 @@ export default function LinkToAccountList({ onShow }: { onShow: () => void }) {
           onClick={onShow}
         >
           <ChevronLeft className="mr-2 h-4 w-4" />
-          <span className="text-primary">Account List</span>
+          <span className="text-primary">{T("AccountList")}</span>
         </div>
       )}
     </>

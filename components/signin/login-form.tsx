@@ -22,6 +22,7 @@ import { signInAction } from "@/lib/auth/auth-api";
 import LoadingIcon from "../shared/loading-icon";
 import { IUser } from "@/lib/auth/user";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -35,6 +36,7 @@ export default function LoginForm({
   user: IUser | null;
   showAccountCb: () => void;
 }) {
+  const T = useTranslations("Common");
   const showUserForLogin = !!user?.name;
 
   const [showLoginFailTip, setShowLoginFailTip] = useState(false);
@@ -85,7 +87,7 @@ export default function LoginForm({
               </Avatar>
               <div className="flex flex-col items-start justify-around">
                 <div className="text-lg font-bold text-title-color">
-                  Sign in to {name}
+                  {T("SignInTo")}{name}
                 </div>
                 <div className="LabelText">{user?.email}</div>
               </div>
@@ -94,7 +96,7 @@ export default function LoginForm({
         ) : (
           <>
             <div className="mb-4 text-lg font-bold text-title-color">
-              Sign in to your Detake account
+             {T("SignInToYourDetakeAccount")}
             </div>
           </>
         )}
@@ -139,7 +141,7 @@ export default function LoginForm({
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{T("Password")}</FormLabel>
                   <FormControl>
                     <Input
                       className="rounded hover:border-blue-500 focus:bg-[#e9f0fd]"
@@ -159,7 +161,7 @@ export default function LoginForm({
                 type="submit"
               >
                 <div className="flex items-center">
-                  <span className="whitespace-nowrap">sign in</span>
+                  <span className="whitespace-nowrap">{T("SignIn")}</span>
                   <LoadingIcon
                     className="ml-1 text-white"
                     isLoading={isLogging}
@@ -167,7 +169,7 @@ export default function LoginForm({
                 </div>
               </button>
               <div className="cursor-pointer text-center text-sm text-primary">
-                Having trouble signing in?
+                {T("HavingTroubleSigningIn")}
               </div>
             </div>
           </form>

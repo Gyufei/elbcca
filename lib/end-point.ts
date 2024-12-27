@@ -1,5 +1,5 @@
 function WithHost(path: string) {
-  return `${process.env.NEXT_PUBLIC_API_URL}${path}`;
+  return `${process.env.NEXT_PUBLIC_API_URL || 'https://tafect-auth.aggregation.top'}${path}`;
 }
 
 export const SystemEndPointPathMap = {

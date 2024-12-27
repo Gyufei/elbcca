@@ -12,5 +12,5 @@ export default function TopBarTitle() {
     (link) => link.href === pathname || pathname.includes(link.href),
   )?.name;
 
-  return <>{T(title)}</>;
+  return <>{title && T(title)}</>;
 }

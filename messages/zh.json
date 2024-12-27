@@ -97,6 +97,13 @@
     "LearnMore": "更多",
     "Back": "返回",
     "TokenList": "Token列表",
-    "Symbol": "代币符号"
+    "Symbol": "代币符号",
+    "AccountList": "账户列表",
+    "SignInTo": "登录到",
+    "SignInToYourDetakeAccount": "登录到您的 Detake 账户",
+    "Password": "密码",
+    "SignIn": "登录",
+    "HavingTroubleSigningIn": "登录时遇到问题？",
+    "PickUpOneAccount": "选择一个账户"
   }
 }

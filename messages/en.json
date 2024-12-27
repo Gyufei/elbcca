@@ -97,6 +97,13 @@
     "LearnMore": "Learn More",
     "Back": "Back",
     "TokenList": "Token List",
-    "Symbol": "Symbol"
+    "Symbol": "Symbol",
+    "AccountList": "Account List",
+    "SignInTo": "Sign in to ",
+    "SignInToYourDetakeAccount": "Sign in to your Detake account",
+    "Password": "Password",
+    "SignIn": "sign in",
+    "HavingTroubleSigningIn": "Having trouble signing in?",
+    "PickUpOneAccount": "Pick up one account"
   }
 }

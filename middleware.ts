@@ -20,10 +20,14 @@ const validRoutes = [
 export default function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const validLocales = ["en", "zh"];
+  // 获取用户的首选语言
+  const preferredLanguage = request.headers.get('accept-language')?.split(',')[0] || 'en';
+  const defaultLocale = ['zh-CN', 'zh'].includes(preferredLanguage) ? 'zh' : 'en';
+  
 
   // 处理根路径
   if (pathname === "/") {
-    return NextResponse.redirect(new URL("/en/dashboard", request.url));
+    return NextResponse.redirect(new URL(`/${defaultLocale}/dashboard`, request.url));
   }
 
   const checkIsFilePath = (path: string) => {
@@ -40,7 +44,7 @@ export default function middleware(request: NextRequest) {
 
   // 处理无效的语言路径
   if (!validLocales.includes(locale)) {
-    return NextResponse.redirect(new URL(`/en${pathname}`, request.url));
+    return NextResponse.redirect(new URL(`/${defaultLocale}${pathname}`, request.url));
   }
 
   // 处理 /en 或 /zh 路径

@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSwipeable } from "react-swipeable";
 import useIndexStore from "@/lib/state";
 import useEffectStore from "@/lib/state/use-store";
+import { useTranslations } from "next-intl";
 
 export default function AccountList({
   onAdd,
@@ -16,6 +17,7 @@ export default function AccountList({
   onAdd: () => void;
   onSelect: (ac: IUser) => void;
 }) {
+  const T = useTranslations("Common");
   const activeUser = useEffectStore(useIndexStore, (state) => state.activeUser);
   const allUsers = useIndexStore((state) => state.users);
   const removeUser = useIndexStore((state) => state.removeUser);
@@ -31,7 +33,7 @@ export default function AccountList({
   return (
     <div className="w-full pt-20 md:max-w-md md:pt-[24vh]">
       <div className="mb-4 px-4 text-lg font-bold text-title-color">
-        Pick up one account
+        {T("PickUpOneAccount")}
       </div>
 
       {allUsers.map((ac) => {
