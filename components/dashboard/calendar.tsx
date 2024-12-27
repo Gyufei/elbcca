@@ -21,10 +21,11 @@ import { useDashboardData } from "@/lib/hooks/use-dashboard-data";
 import { useDashboardReset } from "@/lib/hooks/use-dashboard-reset";
 import { useMonthHistory } from "@/lib/hooks/use-month-history";
 import DayOperation from "./day-operation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function Calendar() {
   const T = useTranslations("Common");
+  const locale = useLocale();
   const { resetAction } = useDashboardReset();
   const selectedDay = useIndexStore((state) => state.selectedDay);
   const setSelectedDay = useIndexStore((state) => state.setSelectedDay);
@@ -81,6 +82,12 @@ export default function Calendar() {
     return tasks?.filter((t) => isSameDay(new Date(t.date), selectedDay));
   }, [tasks, selectedDay]);
 
+  const transMonth = useMemo(() => {
+    const arr = format(firstDayCurrentMonth, "MMMM yyyy").split(" ");
+
+    return T(arr[0]) + " " + arr[1]
+  }, [firstDayCurrentMonth])
+
   return (
     <>
       <div className="flex h-full min-w-[800px] flex-1 flex-col">
@@ -90,7 +97,7 @@ export default function Calendar() {
               <ChevronLeft size={20} />
             </button>
             <h2 className="mx-3 text-lg">
-              {format(firstDayCurrentMonth, "MMMM yyyy")}
+              {transMonth}
             </h2>
             <button
               type="button"
