@@ -1,9 +1,16 @@
 export interface INetwork {
   block_explorer_url: string;
-  chain_id: string;
   currency_symbol: string;
   network_name: string;
+  chain_id: number;
+  chain_name: string;
+  create_time: string;
+  currency_name: string;
+  explorer_url: string;
+  id: string;
   rpc_url: string;
+  stable_token_address: string;
+  wrapped_token_address: string;
 }
 
 export enum NetworkChainType {
@@ -11,3 +18,14 @@ export enum NetworkChainType {
   BNB = "BNB",
   ETH = "ETH",
 }
+// export interface NetworkItem {
+//   chain_id: number;
+//   chain_name: string;
+//   create_time: string;
+//   currency_name: string;
+//   explorer_url: string;
+//   id: string;
+//   rpc_url: string;
+//   stable_token_address: string;
+//   wrapped_token_address: string;
+// }

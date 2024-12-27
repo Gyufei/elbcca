@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext } from "react";
+import { createContext, useEffect, useState } from "react";
 import useSWR from "swr";
 
 import { INetwork } from "@/lib/types/network";
@@ -10,10 +10,14 @@ import useIndexStore from "../state";
 
 interface INetworkContext {
   network: INetwork | null;
+  onNetworkChange: (
+    value: INetwork
+  ) => void;
 }
 
 export const NetworkContext = createContext<INetworkContext>({
   network: null,
+  onNetworkChange: () => {}
 });
 
 export default function NetworkProvider({
@@ -21,6 +25,7 @@ export default function NetworkProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const [network, setNetwork] = useState<INetwork | null>(null);
   const userPathMap = useIndexStore((state) => state.userPathMap());
 
   const { data: userWeb3Info } = useSWR(
@@ -32,15 +37,26 @@ export default function NetworkProvider({
     fetcher,
   );
 
-  const network =
+  const networkDefault =
     (networks || []).find(
       (n) => String(n.chain_id) === String(userWeb3Info?.chain_id),
     ) || null;
+
+
+    useEffect(() => {
+      setNetwork(networkDefault)
+    }, [networkDefault])
+
+  
+  const onNetworkChange = (value: INetwork) => {
+    setNetwork(value)
+  }
 
   return (
     <NetworkContext.Provider
       value={{
         network,
+        onNetworkChange
       }}
     >
       {children}

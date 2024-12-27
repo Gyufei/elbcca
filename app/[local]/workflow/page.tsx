@@ -12,10 +12,11 @@ import { NetworkContext } from "@/lib/providers/network-provider";
 import MobileFoldBtn from "@/components/workflow/mobile-fold-btn";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { useTranslations } from "next-intl";
+import NetworkSelect from "@/components/workflow/network-select";
 
-export default function TokenSwap() {
+export default function WorkFlow() {
   const T = useTranslations("Common");
-  const { network } = useContext(NetworkContext);
+  const { network, onNetworkChange } = useContext(NetworkContext);
 
   const [selectedKeyStores, setSelectedKeyStore] = useState<
     Array<IKeyStoreAccount>
@@ -54,7 +55,13 @@ export default function TokenSwap() {
       >
         <SwiperHandlerBox />
         <div className="flex flex-col px-4 pb-4 md:pt-4">
-          <DetailItem title={T("Network")}>{network?.network_name}</DetailItem>
+          <DetailItem title={T("Network")}>
+            <NetworkSelect
+              curretNetwork={network}
+              handleSelect={onNetworkChange}
+            />
+            {/* <{network?.network_name} */}
+          </DetailItem>
           <DetailItem title={T("KeyStore")}>
             <KeyStoreSelect
               page="Tokenswap"
