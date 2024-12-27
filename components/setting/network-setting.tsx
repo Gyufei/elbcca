@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "@/app/navigation";
-import { networkConfigs, networkList } from "@/lib/constants/network-config";
+import { networkConfigs } from "@/lib/constants/network-config";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import fetcher from "@/lib/fetcher";
 import { NetworkChainType } from "@/lib/types/network";
@@ -19,7 +19,6 @@ export default function NetworkSetting() {
   const T = useTranslations("Common");
   const router = useRouter();
   const {data: networkList  } = useSWR(SystemEndPointPathMap.networks, fetcher);
-  console.log(networkList, "networkList");
   
   return (
     <div className="flex flex-col mt-6 gap-y-3">
@@ -38,7 +37,7 @@ export default function NetworkSetting() {
       </div>
       <div className="flex flex-row gap-3 flex-wrap">
         {
-           (networkList || []).map((item) => {
+           (networkList || []).map((item: any) => {
             return (
               <div 
                 key={item.chain_id} 
