@@ -78,7 +78,7 @@ export default function KeyStoreSelect({
               <div className="Tag mr-2 bg-[#e9eaee]">{keyStores.length}</div>
             </>
           ) : (
-            <div className="text-sm text-content-color">Select KeyStore</div>
+            <div className="text-sm text-content-color">{T("SelectKeyStore")}</div>
           )}
           <ChevronDown
             className={`h-4 w-4 text-gray-600 transition-all ${

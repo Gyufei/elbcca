@@ -90,7 +90,7 @@ export default function ChangeTimezone() {
                 onValueChange={(e) => handleSelect(e)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select OP" />
+                  <SelectValue placeholder={T("SelectOP")} />
                 </SelectTrigger>
                 <SelectContent className="w-[286px]">
                   <div className="h-[180px] overflow-y-scroll">

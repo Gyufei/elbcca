@@ -6,6 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IToken } from "@/lib/types/token";
+import { useTranslations } from "next-intl";
 
 export default function TokenSelect({
   tokens,
@@ -16,6 +17,7 @@ export default function TokenSelect({
   token: IToken | null;
   handleTokenSelect: (_t: IToken | null) => void;
 }) {
+  const T = useTranslations("Common");
   const handleSelect = (add: string) => {
     const token = tokens.find((token: IToken) => token.address === add);
     handleTokenSelect(token || null);
@@ -27,7 +29,7 @@ export default function TokenSelect({
       onValueChange={(e) => handleSelect(e)}
     >
       <SelectTrigger>
-        <SelectValue placeholder="Select Token" />
+        <SelectValue placeholder={T("SelectToken")} />
       </SelectTrigger>
       <SelectContent>
         {(tokens || []).map((t) => (

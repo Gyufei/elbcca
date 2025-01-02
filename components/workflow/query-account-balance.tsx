@@ -130,7 +130,7 @@ export default function QueryAccountBalance({
           <button
             disabled={!fromAddress || !isAddress(fromAddress)}
             onClick={() => handleQuery()}
-            className="rounded-md border border-border-color bg-white px-3 text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-[64px] rounded-md border border-border-color bg-white px-3 text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             {T("Query")}
           </button>

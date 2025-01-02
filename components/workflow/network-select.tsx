@@ -11,6 +11,7 @@ import { INetwork } from "@/lib/types/network";
 import useSWR from "swr";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import fetcher from "@/lib/fetcher";
+import { useTranslations } from "next-intl";
 
 export default function NetworkSelect({
   curretNetwork,
@@ -21,6 +22,7 @@ export default function NetworkSelect({
     value: INetwork
   ) => void;
 }) {
+  const T = useTranslations("Common");
   const {data: networkList  } = useSWR(SystemEndPointPathMap.networks, fetcher);
   const [popOpen, setPopOpen] = useState(false);
 
@@ -46,7 +48,7 @@ export default function NetworkSelect({
               </div>
             </>
           ) : (
-            <div className="text-sm text-content-color">Select Network</div>
+            <div className="text-sm text-content-color">{T("SelectNetwork")}</div>
           )}
           <ChevronDown
             className={`h-4 w-4 text-gray-600 transition-all ${

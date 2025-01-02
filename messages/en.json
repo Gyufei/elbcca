@@ -116,6 +116,10 @@
     "September": "September",
     "October": "October",
     "November": "November",
-    "December": "December"
+    "December": "December",
+    "SelectToken": "Select Token",
+    "SelectNetwork": "Select Network",
+    "SelectKeyStore": "Select KeyStore",
+    "SelectOP": "Select OP"
   }
 }

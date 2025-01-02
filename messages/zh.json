@@ -116,6 +116,10 @@
     "September": "九月",
     "October": "十月",
     "November": "十一月",
-    "December": "十二月"
+    "December": "十二月",
+    "SelectToken": "选择Token",
+    "SelectNetwork": "选择网络",
+    "SelectKeyStore": "选择KeyStore",
+    "SelectOP": "选择操作方式"
   }
 }

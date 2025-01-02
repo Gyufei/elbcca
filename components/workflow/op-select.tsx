@@ -16,6 +16,7 @@ import { NetworkContext } from "@/lib/providers/network-provider";
 import { IOp } from "@/lib/types/op";
 import { DexImgMap } from "@/lib/constants/global";
 import { ArrowLeftRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function OpSelect({
   op,
@@ -24,6 +25,7 @@ export default function OpSelect({
   op: IOp | null;
   handleOpSelect: (_o: IOp) => void;
 }) {
+   const T = useTranslations("Common");
   const { network } = useContext(NetworkContext);
   const networkId = network?.chain_id;
 
@@ -52,7 +54,7 @@ export default function OpSelect({
   return (
     <Select value={op?.op_name} onValueChange={(e) => handleSelect(e)}>
       <SelectTrigger>
-        <SelectValue placeholder="Select OP">
+        <SelectValue placeholder={T("SelectOP")}>
           {op ? (
             <div className="flex items-center">
               <OpLogo op={op} />
