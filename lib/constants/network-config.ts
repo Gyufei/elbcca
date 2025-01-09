@@ -20,3 +20,51 @@ export const networkConfigs = {
     chainId: '3'
   },
 }
+
+export const networkAdvanceParams = {
+  [NetworkChainType.SOLANA]: {
+    schedule: null,
+    slippage: "0.02",
+    priority_fee: 0,
+    routing: null,
+  },
+  [NetworkChainType.BNB]: {
+    routing: null,
+    minimum_received: null,
+    schedule: null,
+    timeout: 1800,
+    slippage: "0.02",
+    nonce: null,
+    gas: null,
+    fixed_gas: false,
+    no_check_gas: false,
+  },
+  [NetworkChainType.ETH]: {
+    routing: null,
+    minimum_received: null,
+    schedule: null,
+    timeout: 1800,
+    slippage: "0.02",
+    nonce: null,
+    gas: null,
+    fixed_gas: false,
+    no_check_gas: false,
+  },
+}
+
+export const networkRouting = {
+  [NetworkChainType.SOLANA]: [
+    "Jupiter",
+    "Raydium"
+  ],
+  [NetworkChainType.BNB]: [
+    "Optimized",
+    "V3",
+    "V2"
+  ],
+  [NetworkChainType.ETH]: [
+    "Optimized",
+    "V3",
+    "V2"
+  ],
+}

@@ -36,7 +36,7 @@ export const SystemEndPointPathMap = {
 export const UserEndPointPathMap = {
   keyStoreAccounts: "/keystore/accounts",
   web3Info: "/tokenswap/info",
-  tokenList: "/tokenswap/token_list",
+  tokenList: "/setting/account_token_list",
   filterAccount: "/tokenswap/filter_account",
   estimateToken: "/tokenswap/estimate_token_amount",
   signTransfer: "/tokenswap/transfer/sign",

@@ -60,7 +60,6 @@ export default function WorkFlow() {
               curretNetwork={network}
               handleSelect={onNetworkChange}
             />
-            {/* <{network?.network_name} */}
           </DetailItem>
           <DetailItem title={T("KeyStore")}>
             <KeyStoreSelect

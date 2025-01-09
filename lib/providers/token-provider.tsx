@@ -9,6 +9,7 @@ import { NetworkContext } from "./network-provider";
 import { uniqBy } from "lodash";
 import { GAS_TOKEN_ADDRESS } from "../constants/global";
 import useIndexStore from "../state";
+import { SystemEndPointPathMap } from "../end-point";
 
 interface ITokenContext {
   tokens: Array<IToken>;
@@ -36,8 +37,7 @@ export default function TokenProvider({
   children: React.ReactNode;
 }) {
   const userPathMap = useIndexStore((state) => state.userPathMap());
-  const { network } = useContext(NetworkContext);
-  const networkId = network?.chain_id || null;
+  const { network, networkId } = useContext(NetworkContext);
 
   const { data: userWeb3Info } = useSWR(
     () => userPathMap.web3Info || null,
@@ -48,19 +48,19 @@ export default function TokenProvider({
     if (!networkId) return [];
 
     const resTokens = await fetcher(url);
-    const uniqueT = uniqBy(resTokens || [], "address") as any;
+    const uniqueT = uniqBy(resTokens || [], "token_address") as any;
     return uniqueT;
   };
 
   const { data: tokens } = useSWR(() => {
     if (!networkId) return null;
-    return `${userPathMap.tokenList}?chain_id=${networkId}`;
+    return `${SystemEndPointPathMap.getTokenList}?chain_id=${networkId}`;
   }, tokenFetcher);
 
   const token = useMemo(() => {
     if (tokens && userWeb3Info?.token_address) {
       const curToken = tokens.find(
-        (t) => t.address === userWeb3Info?.token_address,
+        (t) => t.token_address === userWeb3Info?.token_address,
       );
       return curToken || null;
     }
@@ -74,7 +74,7 @@ export default function TokenProvider({
     return (
       (tokens || []).find(
         (t: IToken) =>
-          t.symbol === currencySymbol && t.address === GAS_TOKEN_ADDRESS,
+          t.token_symbol === currencySymbol && t.token_address === GAS_TOKEN_ADDRESS,
       ) || null
     );
   }, [tokens, currencySymbol]);
@@ -90,13 +90,13 @@ export default function TokenProvider({
     return (
       (tokens || []).find(
         (t: IToken) =>
-          t.symbol === currencySymbol && t.address !== GAS_TOKEN_ADDRESS,
+          t.token_symbol === currencySymbol && t.token_address !== GAS_TOKEN_ADDRESS,
       ) || null
     );
   }, [tokens, currencySymbol]);
 
   if (stableTokens.length > 0 && !stableToken) {
-    const st = stableTokens.find((t) => t.symbol === "USDT") || null;
+    const st = stableTokens.find((t) => t.token_symbol === "USDT") || null;
     setStableToken(st);
   }
 

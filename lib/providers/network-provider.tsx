@@ -1,15 +1,16 @@
 "use client";
 
-import { createContext, useEffect, useState } from "react";
+import { createContext,  useEffect, useState } from "react";
 import useSWR from "swr";
 
-import { INetwork } from "@/lib/types/network";
+import { INetwork, NetworkChainType } from "@/lib/types/network";
 import fetcher from "@/lib/fetcher";
 import { SystemEndPointPathMap } from "../end-point";
-import useIndexStore from "../state";
 
 interface INetworkContext {
   network: INetwork | null;
+  networkId: number | undefined,
+  networkName: NetworkChainType | undefined,
   onNetworkChange: (
     value: INetwork
   ) => void;
@@ -17,6 +18,8 @@ interface INetworkContext {
 
 export const NetworkContext = createContext<INetworkContext>({
   network: null,
+  networkId: undefined,
+  networkName: undefined,
   onNetworkChange: () => {}
 });
 
@@ -26,26 +29,19 @@ export default function NetworkProvider({
   children: React.ReactNode;
 }) {
   const [network, setNetwork] = useState<INetwork | null>(null);
-  const userPathMap = useIndexStore((state) => state.userPathMap());
+  const networkId = network?.chain_id;
+  const networkName = network?.currency_name as NetworkChainType;
 
-  const { data: userWeb3Info } = useSWR(
-    () => userPathMap.web3Info || null,
-    fetcher,
-  );
-  const { data: networks }: { data: Array<INetwork> } = useSWR(
+  const { data: networks = [] }: { data: Array<INetwork> } = useSWR(
     SystemEndPointPathMap.networks,
     fetcher,
   );
 
-  const networkDefault =
-    (networks || []).find(
-      (n) => String(n.chain_id) === String(userWeb3Info?.chain_id),
-    ) || null;
+  const networkDefault = networks?.[0];
 
-
-    useEffect(() => {
-      setNetwork(networkDefault)
-    }, [networkDefault])
+  useEffect(() => {
+    setNetwork(networkDefault)
+  }, [networkDefault])
 
   
   const onNetworkChange = (value: INetwork) => {
@@ -56,6 +52,8 @@ export default function NetworkProvider({
     <NetworkContext.Provider
       value={{
         network,
+        networkId,
+        networkName,
         onNetworkChange
       }}
     >

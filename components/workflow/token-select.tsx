@@ -19,13 +19,13 @@ export default function TokenSelect({
 }) {
   const T = useTranslations("Common");
   const handleSelect = (add: string) => {
-    const token = tokens.find((token: IToken) => token.address === add);
+    const token = tokens.find((token: IToken) => token.token_address === add);
     handleTokenSelect(token || null);
   };
 
   return (
     <Select
-      value={token?.address || undefined}
+      value={token?. token_address || undefined}
       onValueChange={(e) => handleSelect(e)}
     >
       <SelectTrigger>
@@ -33,8 +33,8 @@ export default function TokenSelect({
       </SelectTrigger>
       <SelectContent>
         {(tokens || []).map((t) => (
-          <SelectItem key={t.address} value={t.address}>
-            {t.symbol}
+          <SelectItem key={t.token_address} value={t.token_address}>
+            {t.token_symbol}
           </SelectItem>
         ))}
       </SelectContent>

@@ -29,7 +29,7 @@ export default function OpSelect({
   const { network } = useContext(NetworkContext);
   const networkId = network?.chain_id;
 
-  const { data: opList } = useSWR(() => {
+  const { data: opList = [] } = useSWR(() => {
     return networkId
       ? `${SystemEndPointPathMap.ops}?chain_id=${networkId}`
       : null;
@@ -40,11 +40,18 @@ export default function OpSelect({
     return opList.filter((op: Record<string, any>) => op.op_id !== 3);
   }, [opList]);
 
+
   useEffect(() => {
-    if (opList?.length && !op) {
-      handleOpSelect(opList.find((op: Record<string, any>) => op.op_id === 1));
+    const opIndex = (opList || []).findIndex((item: Record<string, any>) => {
+      const { op_id, op_name } = item;
+      if (!op) return false
+      return op.op_id===op_id && op.op_name===op_name;
+    })
+    if (opList?.length && opIndex === -1) {
+      const defaultOp = opList.find((op: Record<string, any>) => op.op_id === 1) || opList.find((op: Record<string, any>, index: number) => index === 0 && op.op_id !== 3)
+      handleOpSelect(defaultOp);
     }
-  }, [opList, op, handleOpSelect]);
+  }, [opList, JSON.stringify(op)]);
 
   const handleSelect = (opName: string) => {
     const op = opList.find((op: Record<string, any>) => op.op_name === opName);
@@ -55,12 +62,12 @@ export default function OpSelect({
     <Select value={op?.op_name} onValueChange={(e) => handleSelect(e)}>
       <SelectTrigger>
         <SelectValue placeholder={T("SelectOP")}>
-          {op ? (
+          {op && (
             <div className="flex items-center">
               <OpLogo op={op} />
               <span className="ml-1">{op.op_name}</span>
             </div>
-          ) : null}
+          )}
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
@@ -87,6 +94,10 @@ function OpLogo({ op }: { op: IOp }) {
       }
 
       if (op.op_name.includes("Uniswap")) {
+        return DexImgMap.uniswap;
+      }
+
+      if (op.op_name.includes("Swap")) {
         return DexImgMap.uniswap;
       }
     }

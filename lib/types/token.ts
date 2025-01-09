@@ -1,10 +1,10 @@
 export interface IToken {
   is_stable_token: boolean;
-  address: string;
+  token_address: string;
   chain_id: number;
-  decimals: number;
-  id: number;
-  logo_url: string;
-  name: string;
-  symbol: string;
+  token_decimals: number;
+  token_id: number;
+  token_logo_url: string;
+  token_name: string;
+  token_symbol: string;
 }

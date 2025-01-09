@@ -88,7 +88,7 @@ export function useTokenSwap(
       return;
     }
 
-    const isSameToken = t?.address === token1.token?.address;
+    const isSameToken = t?.token_address === token1.token?.token_address;
     if (isSameToken) {
       if (token1.num) {
         setToken0((prev: ITokenNumDesc) => ({ ...prev, num: token1.num }));
@@ -100,9 +100,9 @@ export function useTokenSwap(
     }
 
     if (token1.num) {
-      estimateAction(t.address, token1.token.address, token1.num, false);
+      estimateAction(t.token_address, token1.token.token_address, token1.num, false);
     } else if (token0.num) {
-      estimateAction(t.address, token1.token.address, token0.num, true);
+      estimateAction(t.token_address, token1.token.token_address, token0.num, true);
     }
   };
 
@@ -116,14 +116,14 @@ export function useTokenSwap(
     }
 
     if (token0.token && token1.token) {
-      const isSameToken = token0?.token?.address === token1.token?.address;
+      const isSameToken = token0?.token?.token_address === token1.token?.token_address;
 
       if (isSameToken) {
         setToken1((prev: ITokenNumDesc) => ({ ...prev, num: n }));
       } else {
         estimateAction(
-          token0?.token?.address || "",
-          token1?.token?.address || "",
+          token0?.token?.token_address || "",
+          token1?.token?.token_address || "",
           n,
           true,
         );
@@ -144,7 +144,7 @@ export function useTokenSwap(
       return;
     }
 
-    const isSameToken = t?.address === token0.token?.address;
+    const isSameToken = t?.token_address === token0.token?.token_address;
     if (isSameToken) {
       if (token0.num) {
         setToken1((prev: ITokenNumDesc) => ({ ...prev, num: token0.num }));
@@ -156,9 +156,9 @@ export function useTokenSwap(
     }
 
     if (token0.num) {
-      estimateAction(token0.token.address, t?.address, token0.num, true);
+      estimateAction(token0.token.token_address, t?.token_address, token0.num, true);
     } else if (token1.num) {
-      estimateAction(token0.token.address, t?.address || "", token1.num, false);
+      estimateAction(token0.token.token_address, t?.token_address || "", token1.num, false);
     }
   };
 
@@ -172,14 +172,14 @@ export function useTokenSwap(
     }
 
     if (token0.token && token1.token) {
-      const isSameToken = token0?.token?.address === token1.token?.address;
+      const isSameToken = token0?.token?.token_address === token1.token?.token_address;
 
       if (isSameToken) {
         setToken0((prev: ITokenNumDesc) => ({ ...prev, num: n }));
       } else {
         estimateAction(
-          token0.token?.address || "",
-          token1?.token?.address || "",
+          token0.token?.token_address || "",
+          token1?.token?.token_address || "",
           n,
           false,
         );

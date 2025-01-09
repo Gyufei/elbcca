@@ -17,21 +17,9 @@ export default function SelectSwapToken({
   setToken0: (_t: ITokenNumDesc | any) => void;
   setToken1: (_t: ITokenNumDesc | any) => void;
 }) {
+  const { tokens } = useContext(TokenContext);
   const { token: userToken, gasToken, stableToken } = useContext(TokenContext);
 
-  const tokens = useMemo(() => {
-    const ts = [];
-    if (gasToken) {
-      ts.push(gasToken);
-    }
-    if (userToken) {
-      ts.push(userToken);
-    }
-    if (stableToken) {
-      ts.push(stableToken);
-    }
-    return ts;
-  }, [userToken, gasToken, stableToken]);
 
   useEffect(() => {
     if (gasToken && !token0.token) {

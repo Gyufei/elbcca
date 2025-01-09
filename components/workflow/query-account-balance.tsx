@@ -34,6 +34,7 @@ export default function QueryAccountBalance({
 }) {
   const T = useTranslations("Common");
   const { network } = useContext(NetworkContext);
+
   const {
     token: userToken,
     gasToken,
@@ -130,7 +131,7 @@ export default function QueryAccountBalance({
           <button
             disabled={!fromAddress || !isAddress(fromAddress)}
             onClick={() => handleQuery()}
-            className="w-[64px] rounded-md border border-border-color bg-white px-3 text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-[72px] rounded-md border border-border-color bg-white  text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             {T("Query")}
           </button>
@@ -138,11 +139,11 @@ export default function QueryAccountBalance({
       </div>
 
       <div className="mt-1 grid grid-cols-3 gap-x-3 px-3">
-        <SmallTokenCard name={gasToken?.symbol} num={gas || 0} />
-        <SmallTokenCard name={userToken?.symbol} num={accountBalances[0]} />
+        <SmallTokenCard name={gasToken?.token_symbol} num={gas || 0} />
+        <SmallTokenCard name={userToken?.token_symbol} num={accountBalances[0]} />
         <div className="flex flex-col rounded-md border bg-custom-bg-white px-4 pb-[7px] pt-[9px]">
           <Select
-            value={stableToken?.address || undefined}
+            value={stableToken?.token_address || undefined}
             onValueChange={(e: string) => handleStableTokenSelect(e)}
           >
             <SelectTrigger
@@ -155,8 +156,8 @@ export default function QueryAccountBalance({
             </SelectTrigger>
             <SelectContent>
               {(stableTokens || []).map((t) => (
-                <SelectItem key={t.address} value={t.address}>
-                  {t.symbol}
+                <SelectItem key={t.token_address} value={t.token_address}>
+                  {t.token_symbol}
                 </SelectItem>
               ))}
             </SelectContent>

@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import QueryAccountBalance from "@/components/workflow/query-account-balance";
 import OpSelect from "@/components/workflow/op-select";
@@ -26,6 +26,8 @@ import { useGasPrice } from "@/lib/hooks/use-gas-price";
 import useEffectStore from "@/lib/state/use-store";
 import { HintTexts } from "@/lib/hint-texts";
 import { useTranslations } from "next-intl";
+import { networkAdvanceParams } from "@/lib/constants/network-config";
+import { NetworkChainType } from "@/lib/types/network";
 
 export default function Op({
   keyStores,
@@ -37,7 +39,7 @@ export default function Op({
   afterAction: () => void;
 }) {
   const T = useTranslations("Common");
-  const { network } = useContext(NetworkContext);
+  const { network, networkId, networkName } = useContext(NetworkContext);
   const { gasToken } = useContext(TokenContext);
 
   const activeUser = useEffectStore(useIndexStore, (state) =>
@@ -82,21 +84,26 @@ export default function Op({
   const { data: gasPrice } = useGasPrice();
 
   const shouldApproveToken0 = useMemo(() => {
-    if (token0.token?.address === GAS_TOKEN_ADDRESS) return false;
+    if (token0.token?.token_address === GAS_TOKEN_ADDRESS) return false;
     return token0.token && token0.allowance === "0";
   }, [token0]);
 
   const [transferAmount, setTransferAmount] = useState<string>("");
 
   const [advanceOptions, setAdvanceOptions] = useState<IAdvanceOptions>({
-    schedule: null,
-    timeout: 1800,
-    slippage: "0.02",
-    nonce: null,
-    gas: null,
-    fixed_gas: false,
-    no_check_gas: false,
+    ...networkAdvanceParams[NetworkChainType.ETH] as IAdvanceOptions
   });
+
+
+  useEffect(() => {
+    if (networkId) {
+      const defaultParams = networkAdvanceParams[networkName as  NetworkChainType] as IAdvanceOptions;
+      setAdvanceOptions({
+        ...defaultParams
+      })
+    }
+    
+  }, [networkId, networkName])
 
   const handleTransferAmountChange = (e: string) => {
     const reNum = replaceStrNum(e);
@@ -107,6 +114,7 @@ export default function Op({
     const kStore = keyStores.find((ks) =>
       ks.accounts.some((a) => a.account === fromAddress),
     );
+    console.log(keyStores, "keyStores 7777")
 
     const chain_id = network?.chain_id || "";
     const keystore = kStore?.name || "";
@@ -117,13 +125,13 @@ export default function Op({
       chain_id,
       account,
       keystore,
-      ...advanceOptions,
-      gas: advanceOptions.gas
+      ...(advanceOptions || {}),
+      gas: advanceOptions?.gas
         ? (Number(advanceOptions.gas) * 10 ** 9).toFixed()
         : (Number(gasPrice) * 10 ** 9).toFixed(),
     };
 
-    if (!advanceOptions.nonce) {
+    if (!advanceOptions?.nonce) {
       delete params.nonce;
     }
     return params;
@@ -135,7 +143,7 @@ export default function Op({
 
     const params = {
       ...commonParams,
-      token: gasToken?.address || "",
+      token: gasToken?.token_address || "",
       amount: transferAmount || UNIT256_MAX,
       recipient: toAddress,
     };
@@ -146,13 +154,14 @@ export default function Op({
 
   const getSwapParams = () => {
     const commonParams = getCommonParams();
+    console.log(commonParams, "commonParams 9999")
     if (!commonParams) return null;
 
     const params = {
       ...commonParams,
       recipient: toAddress,
-      token_in: token0.token?.address || "",
-      token_out: token1.token?.address || "",
+      token_in: token0.token?.token_address || "",
+      token_out: token1.token?.token_address || "",
       amount: token0.num,
       swap_router_address: selectedOp?.op_detail?.swap_router || "",
       is_exact_input: true,
@@ -203,7 +212,7 @@ export default function Op({
 
   const { data: token0Allowance, mutate: trigger0Allowance } =
     useTokenAllowance(
-      token0.token?.address || null,
+      token0.token?.token_address || null,
       selectedOp?.op_detail?.swap_router || "",
       fromAddress,
     );
@@ -219,7 +228,7 @@ export default function Op({
   async function handleApprove() {
     setApproveLoading(true);
     try {
-      await approveAction(token0.token?.address || "");
+      await approveAction(token0.token?.token_address || "");
 
       trigger0Allowance();
       setApproveLoading(false);
@@ -240,6 +249,7 @@ export default function Op({
 
   async function signAction() {
     const params = getTxParams();
+    console.log(opSignUrl, params, "params")
     if (!opSignUrl || !params) return;
 
     const res = await fetcher(opSignUrl, {
@@ -270,7 +280,7 @@ export default function Op({
 
   function handleShowTxResult(res: Record<string, any>) {
     if (res.gaslimit) {
-      const gp = advanceOptions.gas ? advanceOptions.gas : gasPrice;
+      const gp = advanceOptions?.gas ? advanceOptions.gas : gasPrice;
       res.gas = (Number(res.gaslimit) * Number(gp)) / 10 ** 9;
     }
     setTestResult(res);
@@ -289,9 +299,9 @@ export default function Op({
       }
 
       const gasCost =
-        (Number(res.gaslimit) * Number(advanceOptions.gas)) / 10 ** 9;
+        (Number(res.gaslimit) * Number(advanceOptions?.gas)) / 10 ** 9;
 
-      const isGasToken = token0.token?.address === GAS_TOKEN_ADDRESS;
+      const isGasToken = token0.token?.token_address === GAS_TOKEN_ADDRESS;
       const amountCost = isGasToken ? gasCost + Number(token0.num) : gasCost;
 
       if (Number(amountCost) > Number(gasBalance || 0)) {

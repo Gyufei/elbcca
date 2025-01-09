@@ -82,6 +82,7 @@
     "OP": "操作",
     "ToAddress": "接收地址",
     "Advance": "高级",
+    "AdvanceParameters": "高级参数",
     "Timeout(s)": "超时(秒)",
     "Slippage": "滑点",
     "Nonce": "随机数",
@@ -120,6 +121,9 @@
     "SelectToken": "选择Token",
     "SelectNetwork": "选择网络",
     "SelectKeyStore": "选择KeyStore",
-    "SelectOP": "选择操作方式"
+    "SelectOP": "选择操作方式",
+    "Routing": "路由",
+    "MinimumReceived": "最小接收量 (Token1)",
+    "PriorityFee": "优先费用"
   }
 }

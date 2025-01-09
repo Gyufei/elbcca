@@ -36,7 +36,7 @@ export default function NetworkSelect({
       open={popOpen}
       onOpenChange={(isOpen) => setPopOpen(isOpen)}
     >
-      <PopoverTrigger className="w-[350px]">
+      <PopoverTrigger className="w-full">
         <div
           className="flex items-center transition-all duration-75 active:bg-gray-100"
           onClick={() => setPopOpen(!popOpen)}

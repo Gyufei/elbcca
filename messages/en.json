@@ -82,6 +82,7 @@
     "OP": "OP",
     "ToAddress": "ToAddress",
     "Advance": "Advance",
+    "AdvanceParameters": "Advance Parameters",
     "Timeout(s)": "Timeout(s)",
     "Slippage": "Slippage",
     "Nonce": "Nonce",
@@ -120,6 +121,9 @@
     "SelectToken": "Select Token",
     "SelectNetwork": "Select Network",
     "SelectKeyStore": "Select KeyStore",
-    "SelectOP": "Select OP"
+    "SelectOP": "Select OP",
+    "Routing": "Routing",
+    "MinimumReceived": "Minimum Received (Token1)",
+    "PriorityFee": "PriorityFee"
   }
 }
