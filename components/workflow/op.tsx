@@ -57,6 +57,7 @@ export default function Op({
     opApproveSendUrl,
   } = useOp();
 
+
   const fromAddress = useIndexStore((state) => state.fromAddress);
   const toAddress = useIndexStore((state) => state.toAddress);
   const setToAddress = useIndexStore((state) => state.setToAddress);
@@ -99,7 +100,7 @@ export default function Op({
     if (networkId) {
       const defaultParams = networkAdvanceParams[networkName as  NetworkChainType] as IAdvanceOptions;
       setAdvanceOptions({
-        ...defaultParams
+        ...defaultParams,
       })
     }
     
@@ -114,9 +115,8 @@ export default function Op({
     const kStore = keyStores.find((ks) =>
       ks.accounts.some((a) => a.account === fromAddress),
     );
-    console.log(keyStores, "keyStores 7777")
 
-    const chain_id = network?.chain_id || "";
+    const chain_id = network?.chain_id + "" || "";
     const keystore = kStore?.name || "";
     const account = fromAddress;
 
@@ -163,8 +163,8 @@ export default function Op({
       token_in: token0.token?.token_address || "",
       token_out: token1.token?.token_address || "",
       amount: token0.num,
-      swap_router_address: selectedOp?.op_detail?.swap_router || "",
       is_exact_input: true,
+      priority_fee: commonParams.priority_fee || "",
     };
 
     if (
@@ -176,7 +176,6 @@ export default function Op({
     ) {
       return null;
     }
-
     return params;
   };
 
@@ -249,7 +248,6 @@ export default function Op({
 
   async function signAction() {
     const params = getTxParams();
-    console.log(opSignUrl, params, "params")
     if (!opSignUrl || !params) return;
 
     const res = await fetcher(opSignUrl, {
@@ -366,7 +364,12 @@ export default function Op({
           />
         </div>
 
-        <QueryAccountBalance gas={gasBalance} setGas={setGasBalance} />
+        <QueryAccountBalance 
+          gas={gasBalance} 
+          setGas={setGasBalance} 
+          token0={token0?.token}
+          token1={token1?.token}
+        />
 
         {isSwapOp && (
           <SelectSwapToken
@@ -374,7 +377,7 @@ export default function Op({
             token1={token1}
             setToken0={setToken0}
             setToken1={setToken1}
-            swapRouter={selectedOp?.op_detail?.swap_router || ""}
+            routing={advanceOptions?.routing || ""}
           />
         )}
 

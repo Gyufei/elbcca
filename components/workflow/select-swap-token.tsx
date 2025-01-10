@@ -9,42 +9,42 @@ export default function SelectSwapToken({
   token1,
   setToken0,
   setToken1,
-  swapRouter,
+  routing,
 }: {
-  swapRouter: string;
+  routing: string;
   token0: ITokenNumDesc;
   token1: ITokenNumDesc;
   setToken0: (_t: ITokenNumDesc | any) => void;
   setToken1: (_t: ITokenNumDesc | any) => void;
 }) {
   const { tokens } = useContext(TokenContext);
-  const { token: userToken, gasToken, stableToken } = useContext(TokenContext);
-
 
   useEffect(() => {
-    if (gasToken && !token0.token) {
+    const tokenAddress = (tokens || []).map((item) => item.token_address);
+    if (tokens?.[0] && !tokenAddress.includes(token0?.token?.token_address || '')) {
       setToken0((prev: ITokenNumDesc) => ({
         ...prev,
-        token: gasToken,
+        token: tokens?.[0],
       }));
     }
-  }, [gasToken, token0.token, setToken0]);
+  }, [tokens, token0.token, setToken0]);
 
   useEffect(() => {
-    if (stableToken && !token1.token) {
+    const tokenAddress = (tokens || []).map((item) => item.token_address);
+    if (tokens?.[1] && !tokenAddress.includes(token1?.token?.token_address || '')) {
       setToken1((prev: ITokenNumDesc) => ({
         ...prev,
-        token: stableToken,
+        token: tokens?.[1],
       }));
     }
-  }, [stableToken, token1.token, setToken1]);
+  }, [tokens, token1.token, setToken1]);
 
   const {
     handleToken0Change,
     handleToken0NumChange,
     handleToken1Change,
     handleToken1NumChange,
-  } = useTokenSwap(swapRouter, token0, token1, setToken0, setToken1);
+  } = useTokenSwap(routing, token0, token1, setToken0, setToken1);
 
   return (
     <div className="mt-3 flex items-center justify-between px-3">

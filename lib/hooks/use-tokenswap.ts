@@ -8,14 +8,14 @@ import { IToken } from "../types/token";
 import { ITokenNumDesc } from "@/components/workflow/token-select-and-input";
 
 export function useTokenSwap(
-  swapRouter: string,
+  routing: string,
   token0: ITokenNumDesc,
   token1: ITokenNumDesc,
   setToken0: (_t: any) => void,
   setToken1: (_t: any) => void,
 ) {
   const userPathMap  = useIndexStore((state) => state.userPathMap());
-  const { network } = useContext(NetworkContext);
+  const { networkId } = useContext(NetworkContext);
 
   const estimateAction = async (
     t0Addr: string,
@@ -54,18 +54,18 @@ export function useTokenSwap(
       };
     },
   ) => {
-    if (!swapRouter) return null;
+    if (!routing) return null;
 
     const { token0Addr, token1Addr, amount, exactInput } = arg;
     if (!token0Addr || !token1Addr || !amount) return null;
 
     const query = new URLSearchParams();
-    query.set("chain_id", network?.chain_id || "");
+    query.set("chain_id", networkId + "" || "");
     query.set("token_in", token0Addr || "");
     query.set("token_out", token1Addr || "");
     query.set("token_amount", String(amount) || "");
     query.set("is_exact_input", exactInput ? "true" : "false");
-    query.set("swap_router_address", swapRouter || "");
+    query.set("routing", routing || "");
 
     const queryStr = query.toString();
     const res = await fetcher(`${url}?${queryStr}`);

@@ -36,20 +36,7 @@ export default function FilterAccountList({
   const { network } = useContext(NetworkContext);
   const networkId = network?.chain_id;
 
-  const { token: userToken, gasToken, stableToken } = useContext(TokenContext);
-  const tokens = useMemo(() => {
-    const ts = [];
-    if (gasToken) {
-      ts.push(gasToken);
-    }
-    if (userToken) {
-      ts.push(userToken);
-    }
-    if (stableToken) {
-      ts.push(stableToken);
-    }
-    return ts;
-  }, [userToken, gasToken, stableToken]);
+  const { tokens, gasToken } = useContext(TokenContext);
 
   const setFromAddress = useIndexStore((state) => state.setFromAddress);
 
@@ -57,16 +44,16 @@ export default function FilterAccountList({
   const [tokenMin, setTokenMin] = useStrNum("");
   const [tokenMax, setTokenMax] = useStrNum("");
 
-  if (gasToken && !token) {
-    setToken(gasToken);
-  }
+  // if (gasToken && !token) {
+  //   setToken(gasToken);
+  // }
 
   function handleTokenSelect(token: IToken | null) {
     setToken(token);
     filterResultReset();
   }
 
-  const isFilterGasToken = token?.address === GAS_TOKEN_ADDRESS;
+  const isFilterGasToken = token?.token_address === GAS_TOKEN_ADDRESS;
 
   const {
     data: accounts,
@@ -116,8 +103,8 @@ export default function FilterAccountList({
       );
     }
 
-    if (token?.address) {
-      queryParams.set("token_address", token.address);
+    if (token?.token_address) {
+      queryParams.set("token_address", token.token_address);
     }
 
     let min = tokenMin || "0";
@@ -137,7 +124,7 @@ export default function FilterAccountList({
   }
 
   function handleFilter() {
-    if (!token?.address) {
+    if (!token?.token_address) {
       return;
     }
 
@@ -227,13 +214,13 @@ export default function FilterAccountList({
                 </div>
                 <div className="LabelText flex">
                   <div className="mr-6 flex items-center gap-x-1">
-                    <span>{gasToken?.symbol}</span>
+                    <span>{gasToken?.token_symbol}</span>
                     <AmountTooltipDisplay amount={acc.gas_token_amount} />
                   </div>
 
                   {!isFilterGasToken && (
                     <div className="flex items-center gap-x-1">
-                      <span>{token?.symbol}</span>
+                      <span>{token?.token_symbol}</span>
                       <AmountTooltipDisplay amount={acc.quote_token_amount} />
                     </div>
                   )}

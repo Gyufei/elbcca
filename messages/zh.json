@@ -124,6 +124,10 @@
     "SelectOP": "选择操作方式",
     "Routing": "路由",
     "MinimumReceived": "最小接收量 (Token1)",
-    "PriorityFee": "优先费用"
+    "PriorityFee": "优先费用",
+    "GasInsufficient": "gas余额不足",
+    "TextTx": "文本交易",
+    "InsufficientMessage": "本次任务gas余额不足，确认？",
+    "Sure": "确认"
   }
 }

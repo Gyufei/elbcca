@@ -6,7 +6,7 @@ import { usePageKeystores } from "./use-page-keystores";
 import { IKeyStore, IKeyStoreAccount, IKeyStoreRange } from "../types/keystore";
 import useIndexStore from "../state";
 
-export function useKeyStoreAccounts(networkId: string | null, page: string) {
+export function useKeyStoreAccounts(networkId: number | null, page: string) {
   const userPathMap = useIndexStore((state) => state.userPathMap());
 
   const { data: keyStores } = usePageKeystores(page);

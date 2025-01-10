@@ -17,7 +17,7 @@ export const LINKS = [
   },
 ];
 
-export const GAS_TOKEN_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+export const GAS_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 export const UNIT256_MAX =
   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";

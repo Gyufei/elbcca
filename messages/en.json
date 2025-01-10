@@ -124,6 +124,10 @@
     "SelectOP": "Select OP",
     "Routing": "Routing",
     "MinimumReceived": "Minimum Received (Token1)",
-    "PriorityFee": "PriorityFee"
+    "PriorityFee": "PriorityFee",
+    "GasInsufficient": "Gas Insufficient",
+    "TextTx": "Text Tx",
+    "InsufficientMessage": "insufficient gas for the task, confirm?",
+    "Sure": "Sure"
   }
 }

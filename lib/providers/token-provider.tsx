@@ -13,12 +13,8 @@ import { SystemEndPointPathMap } from "../end-point";
 
 interface ITokenContext {
   tokens: Array<IToken>;
-  token: IToken | null;
   gasToken: IToken | null;
   currencyToken: IToken | null;
-  stableTokens: Array<IToken>;
-  stableToken: IToken | null;
-  setStableToken: (_t: IToken | null) => void;
 }
 
 export const TokenContext = createContext<ITokenContext>({
@@ -26,9 +22,6 @@ export const TokenContext = createContext<ITokenContext>({
   tokens: [],
   gasToken: null,
   currencyToken: null,
-  stableTokens: [],
-  stableToken: null,
-  setStableToken: () => {},
 });
 
 export default function TokenProvider({
@@ -38,11 +31,11 @@ export default function TokenProvider({
 }) {
   const userPathMap = useIndexStore((state) => state.userPathMap());
   const { network, networkId } = useContext(NetworkContext);
-
-  const { data: userWeb3Info } = useSWR(
-    () => userPathMap.web3Info || null,
-    fetcher,
-  );
+  const userWeb3Info = null;
+  // const { data: userWeb3Info } = useSWR(
+  //   () => userPathMap.web3Info || null,
+  //   fetcher,
+  // );
 
   const tokenFetcher = async (url: string): Promise<Array<IToken>> => {
     if (!networkId) return [];
@@ -57,15 +50,6 @@ export default function TokenProvider({
     return `${SystemEndPointPathMap.getTokenList}?chain_id=${networkId}`;
   }, tokenFetcher);
 
-  const token = useMemo(() => {
-    if (tokens && userWeb3Info?.token_address) {
-      const curToken = tokens.find(
-        (t) => t.token_address === userWeb3Info?.token_address,
-      );
-      return curToken || null;
-    }
-    return null;
-  }, [tokens, userWeb3Info]);
 
   const currencySymbol =
     network?.currency_symbol === "SEP" ? "ETH" : network?.currency_symbol;
@@ -74,17 +58,11 @@ export default function TokenProvider({
     return (
       (tokens || []).find(
         (t: IToken) =>
-          t.token_symbol === currencySymbol && t.token_address === GAS_TOKEN_ADDRESS,
+         t.token_address === GAS_TOKEN_ADDRESS,
       ) || null
     );
-  }, [tokens, currencySymbol]);
+  }, [tokens]);
 
-  const stableTokens = useMemo(
-    () => (tokens || []).filter((t: IToken) => t.is_stable_token),
-    [tokens],
-  );
-
-  const [stableToken, setStableToken] = useState<IToken | null>(null);
 
   const currencyToken = useMemo(() => {
     return (
@@ -95,21 +73,12 @@ export default function TokenProvider({
     );
   }, [tokens, currencySymbol]);
 
-  if (stableTokens.length > 0 && !stableToken) {
-    const st = stableTokens.find((t) => t.token_symbol === "USDT") || null;
-    setStableToken(st);
-  }
-
   return (
     <TokenContext.Provider
       value={{
         tokens: tokens || [],
-        token,
         gasToken,
         currencyToken,
-        stableTokens: stableTokens || [],
-        stableToken,
-        setStableToken,
       }}
     >
       {children}

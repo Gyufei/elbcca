@@ -1,5 +1,6 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
+import { useTranslations } from "next-intl";
 
 export function TestTxResult(props: {
   message: Record<string, any>;
@@ -7,6 +8,7 @@ export function TestTxResult(props: {
   onOpenChange: (_o: boolean) => void;
   sureAction: () => void;
 }) {
+  const T = useTranslations("Common");
   const { message, sureAction, ...reset } = props;
 
   const handleSure = () => {
@@ -17,22 +19,22 @@ export function TestTxResult(props: {
   return (
     <Dialog {...reset}>
       <DialogContent
-        title={message?.gasInsufficient ? "Gas Insufficient" : "Text Tx"}
+        title={message?.gasInsufficient ? T("GasInsufficient") : T("TextTx")}
         showClose={true}
         className="md:w-[600px]"
       >
         {message?.gasInsufficient ? (
           <div className="text-center">
             <div className="mt-2 text-lg text-content-color">
-              insufficient gas for the task, confirm?
+              {T("InsufficientMessage")}
             </div>
             <div className="mt-5 flex justify-center gap-x-2">
-              <Button onClick={handleSure}>Sure</Button>
+              <Button onClick={handleSure}>{T("Sure")}</Button>
               <Button
                 variant="outline"
                 onClick={() => props.onOpenChange(false)}
               >
-                Cancel
+               {T("Cancel")}
               </Button>
             </div>
           </div>

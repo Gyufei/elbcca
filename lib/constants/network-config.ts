@@ -21,36 +21,6 @@ export const networkConfigs = {
   },
 }
 
-export const networkAdvanceParams = {
-  [NetworkChainType.SOLANA]: {
-    schedule: null,
-    slippage: "0.02",
-    priority_fee: 0,
-    routing: null,
-  },
-  [NetworkChainType.BNB]: {
-    routing: null,
-    minimum_received: null,
-    schedule: null,
-    timeout: 1800,
-    slippage: "0.02",
-    nonce: null,
-    gas: null,
-    fixed_gas: false,
-    no_check_gas: false,
-  },
-  [NetworkChainType.ETH]: {
-    routing: null,
-    minimum_received: null,
-    schedule: null,
-    timeout: 1800,
-    slippage: "0.02",
-    nonce: null,
-    gas: null,
-    fixed_gas: false,
-    no_check_gas: false,
-  },
-}
 
 export const networkRouting = {
   [NetworkChainType.SOLANA]: [
@@ -67,4 +37,35 @@ export const networkRouting = {
     "V3",
     "V2"
   ],
+}
+
+export const networkAdvanceParams = {
+  [NetworkChainType.SOLANA]: {
+    routing: networkRouting[NetworkChainType.SOLANA][0],
+    schedule: null,
+    slippage: "0.02",
+    priority_fee: 0,
+  },
+  [NetworkChainType.BNB]: {
+    routing: networkRouting[NetworkChainType.BNB][0],
+    minimum_received: null,
+    schedule: null,
+    timeout: 1800,
+    slippage: "0.02",
+    nonce: null,
+    gas: null,
+    fixed_gas: false,
+    no_check_gas: false,
+  },
+  [NetworkChainType.ETH]: {
+    routing: networkRouting[NetworkChainType.ETH][0],
+    minimum_received: null,
+    schedule: null,
+    timeout: 1800,
+    slippage: "0.02",
+    nonce: null,
+    gas: null,
+    fixed_gas: false,
+    no_check_gas: false,
+  },
 }

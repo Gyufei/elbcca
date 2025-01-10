@@ -24,23 +24,24 @@ import { useAccountBalance } from "@/lib/hooks/use-account-balance";
 import { useGasPrice } from "@/lib/hooks/use-gas-price";
 import { useNonce } from "@/lib/hooks/use-nonce";
 import { useTranslations } from "next-intl";
+import { IToken } from "@/lib/types/token";
 
 export default function QueryAccountBalance({
+  token0,
+  token1,
   gas,
   setGas,
 }: {
   gas: number | null;
   setGas: (_gas: number) => void;
+  token0: IToken | null;
+  token1: IToken | null;
 }) {
   const T = useTranslations("Common");
   const { network } = useContext(NetworkContext);
 
   const {
-    token: userToken,
-    gasToken,
-    stableTokens,
-    stableToken,
-    setStableToken,
+    gasToken
   } = useContext(TokenContext);
 
   const fromAddress = useIndexStore((state) => state.fromAddress);
@@ -53,24 +54,16 @@ export default function QueryAccountBalance({
     setFromAddress(addrV);
   };
 
-  const handleStableTokenSelect = (add: string) => {
-    const selected = stableTokens.find(
-      (token: Record<string, any>) => token.address === add,
-    );
-    setStableToken(selected || null);
-  };
-
   const { mutate: getGas } = useGasPrice();
   const { mutate: getNonce } = useNonce(fromAddress);
 
   const {
-    accountBalanceRes,
-    triggerAccountBalance,
-    resetAccountBalance,
+    balances,
+    handleBalanceQuery,
     gasBalanceRes,
     triggerGasBalance,
     resetGasBalance,
-  } = useAccountBalance(fromAddress, userToken, stableToken);
+  } = useAccountBalance(fromAddress, token0, token1);
 
   useEffect(() => {
     if (gasBalanceRes) {
@@ -86,14 +79,12 @@ export default function QueryAccountBalance({
 
   const handleQuery = () => {
     if (
-      gasToken &&
-      userToken &&
-      stableToken &&
+      token0 &&
+      token1 &&
       fromAddress &&
       isAddress(fromAddress)
     ) {
-      triggerGasBalance();
-      triggerAccountBalance();
+      handleBalanceQuery();
     }
 
     if (fromAddress) {
@@ -107,14 +98,10 @@ export default function QueryAccountBalance({
   };
 
   useEffect(() => {
-    resetAccountBalance();
     resetGasBalance();
-  }, [network?.chain_id, resetAccountBalance, resetGasBalance]);
+  }, [network?.chain_id, resetGasBalance]);
 
-  const accountBalances = useMemo(
-    () => accountBalanceRes?.batch_balance_of || [0, 0],
-    [accountBalanceRes],
-  );
+
 
   return (
     <>
@@ -139,29 +126,10 @@ export default function QueryAccountBalance({
       </div>
 
       <div className="mt-1 grid grid-cols-3 gap-x-3 px-3">
-        <SmallTokenCard name={gasToken?.token_symbol} num={gas || 0} />
-        <SmallTokenCard name={userToken?.token_symbol} num={accountBalances[0]} />
-        <div className="flex flex-col rounded-md border bg-custom-bg-white px-4 pb-[7px] pt-[9px]">
-          <Select
-            value={stableToken?.token_address || undefined}
-            onValueChange={(e: string) => handleStableTokenSelect(e)}
-          >
-            <SelectTrigger
-              style={{
-                boxShadow: "none !important",
-              }}
-              className="LabelText h-[20px] max-w-[60px] border-0 bg-transparent p-0 shadow-none outline-none focus:shadow-none"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {(stableTokens || []).map((t) => (
-                <SelectItem key={t.token_address} value={t.token_address}>
-                  {t.token_symbol}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <SmallTokenCard name={gasToken?.token_symbol || 'ETH'} num={gas || 0} />
+        <SmallTokenCard name={token0?.token_symbol} num={balances[0] || 0} />
+        <SmallTokenCard name={token1?.token_symbol} num={balances[1] || 0} />
+        {/* <div className="flex flex-col rounded-md border bg-custom-bg-white px-4 pb-[7px] pt-[9px]">
           {accountBalances[1]?.length > 5 ? (
             <TooltipProvider>
               <Tooltip>
@@ -184,7 +152,7 @@ export default function QueryAccountBalance({
               {accountBalances[1]}
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </>
   );
