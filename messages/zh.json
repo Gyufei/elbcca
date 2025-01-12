@@ -125,9 +125,26 @@
     "Routing": "路由",
     "MinimumReceived": "最小接收量 (Token1)",
     "PriorityFee": "优先费用",
+    "TransferAmount": "转账金额",
     "GasInsufficient": "gas余额不足",
     "TextTx": "文本交易",
     "InsufficientMessage": "本次任务gas余额不足，确认？",
-    "Sure": "确认"
+    "Sure": "确认",
+    "Approve": "批准",
+    "ScheduleSuccess": "您的资金已存入池中",
+    "ApproveSuccess": "授权成功",
+    "ChangePasswordEmptyError": "请输入密码",
+    "ChangePasswordRepeatError": "两次输入的密码不一致",
+    "ChangePasswordSuccess": "修改密码成功",
+    "ChangeEndpointEmptyError": "端点地址不能为空",
+    "ChangeEndpointSuccess": "端点地址更新成功",
+    "ChangeAliasnameEmptyError": "别名不能为空",
+    "ChangeAliasnameSuccess": "别名更新成功",
+    "NotUrlError": "不是一个有效的URL",
+    "LoadKeyStoreSuccess": "导入Keystore成功",
+    "GlobalError": "发生了一些错误",
+    "AddressError": "地址格式错误",
+    "RPCError": "RPC调用失败",
+     "Now": "现在"
   }
 }

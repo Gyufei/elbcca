@@ -85,6 +85,7 @@ export default function QueryAccountBalance({
       isAddress(fromAddress)
     ) {
       handleBalanceQuery();
+      triggerGasBalance();
     }
 
     if (fromAddress) {

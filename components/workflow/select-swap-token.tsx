@@ -10,12 +10,14 @@ export default function SelectSwapToken({
   setToken0,
   setToken1,
   routing,
+  setSpender
 }: {
   routing: string;
   token0: ITokenNumDesc;
   token1: ITokenNumDesc;
   setToken0: (_t: ITokenNumDesc | any) => void;
   setToken1: (_t: ITokenNumDesc | any) => void;
+  setSpender: (_t: string) => void
 }) {
   const { tokens } = useContext(TokenContext);
 
@@ -44,7 +46,7 @@ export default function SelectSwapToken({
     handleToken0NumChange,
     handleToken1Change,
     handleToken1NumChange,
-  } = useTokenSwap(routing, token0, token1, setToken0, setToken1);
+  } = useTokenSwap(routing, token0, token1, setToken0, setToken1, setSpender);
 
   return (
     <div className="mt-3 flex items-center justify-between px-3">

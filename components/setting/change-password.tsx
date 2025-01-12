@@ -48,7 +48,7 @@ export default function ChangePassword() {
     });
 
     toast({
-      description: HintTexts.ChangePasswordSuccess,
+      description: T("ChangePasswordSuccess"),
     });
 
     setShowChangeDialog(false);
@@ -89,7 +89,7 @@ export default function ChangePassword() {
                 type="password"
                 {...register("password", {
                   validate: (value) => {
-                    if (!value) return HintTexts.ChangePasswordEmptyError;
+                    if (!value) return T("ChangePasswordEmptyError");
 
                     const repeat = getValues("repeatPassword");
 
@@ -97,7 +97,7 @@ export default function ChangePassword() {
                       return true;
                     }
                     if (value !== repeat) {
-                      return HintTexts.ChangePasswordRepeatError;
+                      return T("ChangePasswordRepeatError");
                     }
                   },
                   deps: ["repeatPassword"],
@@ -115,7 +115,7 @@ export default function ChangePassword() {
                 type="password"
                 {...register("repeatPassword", {
                   validate: (value) => {
-                    if (!value) return HintTexts.ChangePasswordEmptyError;
+                    if (!value) return T("ChangePasswordEmptyError");
 
                     const pass = getValues("password");
                     if (!pass || !value) {
@@ -123,7 +123,7 @@ export default function ChangePassword() {
                     }
 
                     if (value !== pass) {
-                      return HintTexts.ChangePasswordRepeatError;
+                      return T("ChangePasswordRepeatError");
                     }
                   },
                   deps: ["password"],

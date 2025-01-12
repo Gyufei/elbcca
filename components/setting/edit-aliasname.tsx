@@ -41,7 +41,7 @@ export default function EditAliasname() {
     setInputValue(val);
 
     if (!val) {
-      setErrorMsg(HintTexts.ChangeAliasnameEmptyError);
+      setErrorMsg(T("ChangeAliasnameEmptyError"));
       return;
     }
 
@@ -71,7 +71,7 @@ export default function EditAliasname() {
     });
 
     toast({
-      description: HintTexts.ChangeAliasnameSuccess,
+      description: T("ChangeAliasnameSuccess"),
     });
     refreshUser();
     setEdit(false);

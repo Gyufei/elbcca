@@ -52,7 +52,7 @@ function AddTokenTnput({ onRefresh, chainId }: { onRefresh: () => void; chainId:
 
   const onChange = (val: string) => {
     if (val && !isAddress(val)) {
-      setErrorMsg(HintTexts.AddressError);
+      setErrorMsg(T("AddressError"));
     } else {
       setErrorMsg("");
     }
@@ -61,7 +61,7 @@ function AddTokenTnput({ onRefresh, chainId }: { onRefresh: () => void; chainId:
 
   const onBlur = () => {
     if (inputValue && !isAddress(inputValue)) {
-      setErrorMsg(HintTexts.AddressError);
+      setErrorMsg(T("AddressError"));
       return;
     }
     setErrorMsg("");

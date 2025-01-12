@@ -24,7 +24,6 @@ import useIndexStore from "@/lib/state";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { useGasPrice } from "@/lib/hooks/use-gas-price";
 import useEffectStore from "@/lib/state/use-store";
-import { HintTexts } from "@/lib/hint-texts";
 import { useTranslations } from "next-intl";
 import { networkAdvanceParams } from "@/lib/constants/network-config";
 import { NetworkChainType } from "@/lib/types/network";
@@ -41,6 +40,7 @@ export default function Op({
   const T = useTranslations("Common");
   const { network, networkId, networkName } = useContext(NetworkContext);
   const { gasToken } = useContext(TokenContext);
+  const [spender, setSpender] = useState<string>("");
 
   const activeUser = useEffectStore(useIndexStore, (state) =>
     state.activeUser(),
@@ -88,6 +88,17 @@ export default function Op({
     if (token0.token?.token_address === GAS_TOKEN_ADDRESS) return false;
     return token0.token && token0.allowance === "0";
   }, [token0]);
+
+  const tokenAdvanceInfo = useMemo(() => {
+    if (!token0.token || !token1.token) return;
+    if (!token0.num || !token1.num) return;
+    const tokenRadio = (Number(token0.num) / Number(token1.num))
+    return {
+      symbolName: [token0.token.token_symbol, token1.token.token_symbol],
+      tokenRadio
+    };
+  }, [token0, token1]);
+
 
   const [transferAmount, setTransferAmount] = useState<string>("");
 
@@ -154,7 +165,6 @@ export default function Op({
 
   const getSwapParams = () => {
     const commonParams = getCommonParams();
-    console.log(commonParams, "commonParams 9999")
     if (!commonParams) return null;
 
     const params = {
@@ -164,7 +174,6 @@ export default function Op({
       token_out: token1.token?.token_address || "",
       amount: token0.num,
       is_exact_input: true,
-      priority_fee: commonParams.priority_fee || "",
     };
 
     if (
@@ -192,7 +201,7 @@ export default function Op({
       ...commonParams,
       token: tokenAddr || "",
       amount: UNIT256_MAX,
-      spender: selectedOp?.op_detail?.swap_router || "",
+      spender: spender
     };
 
     if (!params.token || !params.amount) return null;
@@ -212,7 +221,7 @@ export default function Op({
   const { data: token0Allowance, mutate: trigger0Allowance } =
     useTokenAllowance(
       token0.token?.token_address || null,
-      selectedOp?.op_detail?.swap_router || "",
+      spender || "",
       fromAddress,
     );
 
@@ -233,7 +242,7 @@ export default function Op({
       setApproveLoading(false);
       setSendTxResult({
         type: "success",
-        message: HintTexts.ApproveSuccess,
+        message: T("ApproveSuccess")
       });
 
       afterAction();
@@ -328,7 +337,7 @@ export default function Op({
 
       setSendTxResult({
         type: "success",
-        message: HintTexts.ScheduleSuccess,
+        message: T("ScheduleSuccess"),
       });
       afterAction();
     } catch (e: any) {
@@ -377,19 +386,24 @@ export default function Op({
             token1={token1}
             setToken0={setToken0}
             setToken1={setToken1}
+            setSpender={setSpender}
             routing={advanceOptions?.routing || ""}
           />
         )}
 
         {isTransferOp && (
           <div className="col mt-3 flex flex-col px-3">
-            <div className="LabelText mb-1">Transfer Amount</div>
-            <Input
-              value={transferAmount}
-              onChange={(e) => handleTransferAmountChange(e.target.value)}
-              className="rounded-md border-border-color"
-              placeholder="0"
-            />
+            <div className="LabelText mb-1">{T("TransferAmount")}</div>
+            <div className="relative">
+              <Input
+                value={transferAmount}
+                onChange={(e) => handleTransferAmountChange(e.target.value)}
+                className="rounded-md border-border-color"
+                placeholder="0"
+              />
+
+            </div>
+            
           </div>
         )}
 
@@ -409,6 +423,7 @@ export default function Op({
           options={advanceOptions}
           onChange={setAdvanceOptions}
           account={fromAddress}
+          tokenAdvanceInfo={tokenAdvanceInfo}
         />
       </div>
 
@@ -433,7 +448,7 @@ export default function Op({
             onClick={() => handleApprove()}
           >
             <div className="flex items-center">
-              <span>Approve</span>
+              <span>{T("Approve")}</span>
               {approveLoading && (
                 <Loader2 className="ml-1 h-4 w-4 animate-spin" />
               )}

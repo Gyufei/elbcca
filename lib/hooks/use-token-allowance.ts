@@ -9,29 +9,29 @@ import useIndexStore from "../state";
 
 export function useTokenAllowance(
   tokenAddr: string | null,
-  swapRouter: string,
+  spender: string,
   account: string,
 ) {
   const userPathMap = useIndexStore((state) => state.userPathMap());
 
   const { gasToken } = useContext(TokenContext);
-  const { network } = useContext(NetworkContext);
+  const { networkId } = useContext(NetworkContext);
 
   const queryStr = useMemo(() => {
-    if (!tokenAddr || !account || !swapRouter) return null;
+    if (!tokenAddr || !account || !spender) return null;
     if (!isAddress(tokenAddr) || !isAddress(account)) return null;
-    if (tokenAddr === gasToken?.address) return null;
+    if (tokenAddr === gasToken?.token_address) return null;
 
     const query = new URLSearchParams();
-    query.set("chain_id", network?.chain_id || "");
+    query.set("chain_id", networkId + '' || "");
     query.set("token", tokenAddr);
     query.set("account", account);
-    query.set("spender", swapRouter || "");
+    query.set("spender", spender)
 
     const queryStr = query.toString();
 
     return queryStr;
-  }, [tokenAddr, account, swapRouter, network?.chain_id, gasToken?.address]);
+  }, [tokenAddr, account, spender, networkId, gasToken?.token_address]);
 
   const res = useSWR(() => {
     if (!queryStr) return null;

@@ -22,6 +22,7 @@ import { useTranslations } from "next-intl";
 import { NetworkContext } from "@/lib/providers/network-provider";
 import RoutingSelect from "./select-routing";
 import { NetworkChainType } from "@/lib/types/network";
+import { MinimumTip } from "./minimum-tip";
 
 export interface IAdvanceOptions {
   schedule: string | null;
@@ -40,10 +41,15 @@ export default function OpAdvanceOptions({
   options,
   onChange,
   account,
+  tokenAdvanceInfo
 }: {
   options: IAdvanceOptions;
   onChange: (_o: IAdvanceOptions) => void;
   account: string;
+  tokenAdvanceInfo: undefined | {
+    symbolName: string[];
+    tokenRadio: number
+  }
 }) {
   const { networkName } = useContext(NetworkContext);
 
@@ -127,9 +133,9 @@ export default function OpAdvanceOptions({
                   handleAdvanceOptionsChange("minimum_received", e.target.value)
                 }
               />
-              <div className="absolute right-2 top-[20px] select-none text-[12px] text-[#707070]">
-                1 ETH = 0.01 Token1
-              </div>
+              {tokenAdvanceInfo && (
+                <MinimumTip text={`1${tokenAdvanceInfo.symbolName[1] || ''} = ${tokenAdvanceInfo.tokenRadio} ${tokenAdvanceInfo.symbolName[0] || ''}`}/>
+              )}
             </div>
           </div>
         </div>
@@ -259,9 +265,9 @@ export default function OpAdvanceOptions({
             />
             <button
               onClick={() => setNow()}
-              className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-4 text-sm hover:bg-custom-bg-white"
+              className="w-[72px] flex h-10 cursor-pointer items-center justify-center rounded-md border text-sm hover:bg-custom-bg-white"
             >
-              Now
+              {T("Now")}
             </button>
           </div>
         </div>

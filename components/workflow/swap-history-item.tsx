@@ -29,7 +29,8 @@ export default function SwapHistoryItem({
   const taskTxData = task.data;
 
   const handleGoToExplorer = () => {
-    window.open(`${network?.block_explorer_url}tx/${task.txHash}`);
+    if (!network) return;
+    window.open(`${network?.explorer_url}tx/${task.txHash}`);
   };
 
   const cancelFetcher = async () => {
@@ -133,9 +134,11 @@ function OpDisplay({ task, onClick }: { task: ITask; onClick: () => void }) {
 
   return (
     <div className="flex items-center">
-      [{isSwap && <span>Swap</span>}
-      {isApprove && <span>Approve</span>}
-      {imgSrc ? (
+      [
+      {/* {isSwap && <span>Swap</span>}
+      {isApprove && <span>Approve</span>} */}
+      {name}
+      {imgSrc && (
         <Image
           src={imgSrc}
           width={20}
@@ -143,10 +146,8 @@ function OpDisplay({ task, onClick }: { task: ITask; onClick: () => void }) {
           alt="logo"
           className="mx-1"
         />
-      ) : (
-        name
       )}
-      ]{isApprove ? `(${taskTxData.tokenName})` : null}
+      ]{isApprove && taskTxData.tokenName && `(${taskTxData.tokenName})`}
       {task.txHash && (
         <ExternalLink
           className="mb-1 ml-1 h-4 w-4 cursor-pointer text-primary"

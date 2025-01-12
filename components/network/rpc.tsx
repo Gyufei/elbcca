@@ -8,6 +8,7 @@ import fetcher from "@/lib/fetcher";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import useSWR from "swr";
 import { isUrl } from "@/lib/utils";
+import { useTranslations } from "next-intl";
  
 interface RpcProps {
   chainId: string;
@@ -19,7 +20,7 @@ export interface RpcMethods {
 
 const Rpc = forwardRef(
   function Rpc({ chainId }: RpcProps, ref: ForwardedRef<RpcMethods>){
-
+  const T = useTranslations("Common");
   const [errorMsg, setErrorMsg] = useState("");
   const [inputValue, setInputValue] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -39,7 +40,7 @@ const Rpc = forwardRef(
   const onSubmit = async () => {
     if (errorMsg) return;
     if (!isUrl(inputValue || '')) {
-      setErrorMsg(HintTexts.RPCError);
+      setErrorMsg(T("RPCError"));
       return;
     }
     if (RPCLoading) return;
@@ -65,7 +66,7 @@ const Rpc = forwardRef(
     setInputValue(val);
 
     if (val && !isUrl(val)) {
-      setErrorMsg(HintTexts.RPCError);
+      setErrorMsg(T("RPCError"));
       return;
     }
 

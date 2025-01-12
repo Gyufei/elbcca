@@ -48,7 +48,7 @@ export const networkAdvanceParams = {
   },
   [NetworkChainType.BNB]: {
     routing: networkRouting[NetworkChainType.BNB][0],
-    minimum_received: null,
+    minimum_received: 0,
     schedule: null,
     timeout: 1800,
     slippage: "0.02",
@@ -59,7 +59,7 @@ export const networkAdvanceParams = {
   },
   [NetworkChainType.ETH]: {
     routing: networkRouting[NetworkChainType.ETH][0],
-    minimum_received: null,
+    minimum_received: 0,
     schedule: null,
     timeout: 1800,
     slippage: "0.02",

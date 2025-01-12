@@ -68,7 +68,7 @@ export function LoadKeyStoreDialog({
     });
 
     toast({
-      description: HintTexts.LoadKeyStoreSuccess,
+      description: T("LoadKeyStoreSuccess"),
     });
     onSubmitted(arg);
     return res;

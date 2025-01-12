@@ -41,7 +41,7 @@ export default function DayOperation({
       applyAction();
     }
   };
-
+  
   return (
     <div className="w-[400px] border-l border-[#d6d6d6] bg-[#fafafa]">
       <div className="p-3">

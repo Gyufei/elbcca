@@ -52,12 +52,12 @@ export default function EditEndPoint() {
     setInputValue(val);
 
     if (!val) {
-      setErrorMsg(HintTexts.ChangeEndpointEmptyError);
+      setErrorMsg(T("ChangeEndpointEmptyError"));
       return;
     }
 
     if (!URL_REGEX.test(val || "")) {
-      setErrorMsg(HintTexts.NotUrlError);
+      setErrorMsg(T("NotUrlError"));
       return;
     }
 
@@ -87,7 +87,7 @@ export default function EditEndPoint() {
     });
 
     toast({
-      description: HintTexts.ChangeEndpointSuccess,
+      description: T("ChangeEndpointSuccess"),
     });
     setEdit(false);
     refreshUser();

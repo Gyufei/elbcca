@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import useSWRMutation from "swr/mutation";
 
 import fetcher from "@/lib/fetcher";
@@ -13,6 +13,7 @@ export function useTokenSwap(
   token1: ITokenNumDesc,
   setToken0: (_t: any) => void,
   setToken1: (_t: any) => void,
+  setSpender: (_t: string) => void
 ) {
   const userPathMap  = useIndexStore((state) => state.userPathMap());
   const { networkId } = useContext(NetworkContext);
@@ -35,7 +36,9 @@ export function useTokenSwap(
         amount: String(amountNum),
         exactInput: exactInput,
       });
-      setTokenAction((t: any) => ({ ...t, num: String(result || "") }));
+      const amount = result?.amount;
+      setSpender(result?.swap_address || "")
+      setTokenAction((t: any) => ({ ...t, num: String(amount || "") }));
     } catch (e) {
       setTokenAction((t: any) => ({ ...t, num: "" }));
     }
@@ -70,7 +73,10 @@ export function useTokenSwap(
     const queryStr = query.toString();
     const res = await fetcher(`${url}?${queryStr}`);
 
-    return res?.amount;
+    return {
+      amount: res?.amount,
+      swap_address: res?.swap_address
+    };
   };
 
   const { trigger: triggerEstimate } = useSWRMutation(
@@ -132,6 +138,16 @@ export function useTokenSwap(
       return;
     }
   };
+
+  useEffect(() => {
+    if (!token0.num && !token1.num) return;
+    if (!token0.token || !token1.token) return;
+    if (token0.num) {
+      estimateAction(token0.token.token_address, token1.token.token_address, token0.num, true);
+    } else if (token1.num) {
+      estimateAction(token0.token.token_address, token1.token.token_address || "", token1.num, false);
+    }
+  }, [routing])
 
   const handleToken1Change = async (t: IToken | null) => {
     setToken1((prev: ITokenNumDesc) => ({ ...prev, token: t }));
