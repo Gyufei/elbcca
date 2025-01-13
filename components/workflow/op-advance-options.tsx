@@ -35,7 +35,7 @@ export interface IAdvanceOptions {
   fixed_gas: boolean;
   no_check_gas: boolean;
   routing: string | null;
-  minimum_received: number | null;
+  minimum_received: string | null;
   priority_fee: number | null;
 }
 
