@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { AddressRegex, httpRegex, SOLAddressRegex } from "./constants/global";
+import { AddressRegex, GAS_TOKEN_ADDRESS, httpRegex, SOLAddressRegex } from "./constants/global";
 import numbro from "numbro";
 import { NetworkChainType } from "./types/network";
 
@@ -28,6 +28,13 @@ export function isAddress(address: string, networkName: string): boolean {
     return SOLAddressRegex.test(address);
   }
   return AddressRegex.test(address);
+}
+
+export function isTokenAddress(address: string, networkName: string): boolean {
+  if (networkName !== NetworkChainType.SOLANA && (address || "").toLocaleLowerCase === GAS_TOKEN_ADDRESS) {
+    return true
+  }
+  return isAddress(address, networkName)
 }
 
 export function isUrl(url: string): boolean {

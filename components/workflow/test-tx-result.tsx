@@ -43,12 +43,12 @@ export function TestTxResult(props: {
             <div>
               <div className="text-sm text-content-color">transaction_hash</div>
               <div className="break-all">
-                {message?.signed_message?.transaction_hash}
+                {message?.signed_message?.transaction_hash || ""}
               </div>
             </div>
             <div>
               <div className="text-sm text-content-color">estimate_gas</div>
-              <div>{Number(message?.gas)}</div>
+              <div>{Number(message?.gas) || ""}</div>
             </div>
           </div>
         )}

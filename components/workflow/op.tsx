@@ -134,8 +134,8 @@ export default function Op({
         ? (Number(advanceOptions.gas) * 10 ** 9).toFixed()
         : (Number(gasPrice) * 10 ** 9).toFixed(),
       priority_fee: advanceOptions?.priority_fee
-        ? (Number(advanceOptions?.priority_fee) * 10 ** 9).toFixed()
-        : (Number(priorityFee) * 10 ** 9).toFixed(),
+        ? (Number(advanceOptions?.priority_fee)).toFixed()
+        : (Number(priorityFee)).toFixed(),
     };
 
     if (!advanceOptions?.nonce) {
@@ -282,10 +282,18 @@ export default function Op({
   }
 
   function handleShowTxResult(res: Record<string, any>) {
-    if (res.gaslimit) {
-      const gp = advanceOptions?.gas ? advanceOptions.gas : gasPrice;
-      res.gas = (Number(res.gaslimit) * Number(gp)) / 10 ** 9;
+    if (networkName === NetworkChainType.SOLANA) { 
+      if (res.compute_units) {
+        const pf = advanceOptions?.priority_fee ? advanceOptions.priority_fee : priorityFee;
+        res.gas = Math.ceil((Number(res.compute_units) * Number(pf)/10**6)) / 10 ** 9 + 0.000005;
+      }
+    } else {
+      if (res.gaslimit) {
+        const gp = advanceOptions?.gas ? advanceOptions.gas : gasPrice;
+        res.gas = (Number(res.gaslimit) * Number(gp)) / 10 ** 9;
+      }
     }
+    
     setTestResult(res);
     setTestTxDialogOpen(true);
   }

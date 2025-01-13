@@ -143,17 +143,37 @@ export default function OpAdvanceOptions({
           </div>
         </div>
         <div className="flex justify-between gap-x-3">
-          <div className="flex flex-1 flex-col">
-            <div className="LabelText mb-1">{T("Timeout(s)")}</div>
-            <Input
-              value={options.timeout || ""}
-              onChange={(e) =>
-                handleAdvanceOptionsChange("timeout", e.target.value)
-              }
-              className="rounded-md border-border-color"
-              placeholder="0"
-            />
-          </div>
+          {
+            networkName !==  NetworkChainType.SOLANA && (
+              <div className="flex flex-1 flex-col">
+                <div className="LabelText mb-1">{T("Timeout(s)")}</div>
+                <Input
+                  value={options.timeout || ""}
+                  onChange={(e) =>
+                    handleAdvanceOptionsChange("timeout", e.target.value)
+                  }
+                  className="rounded-md border-border-color"
+                  placeholder="0"
+                />
+              </div>
+            )
+          }
+          {
+            networkName ===  NetworkChainType.SOLANA && (
+              <div className="flex flex-1 flex-col">
+                <div className="LabelText mb-1">{T("PriorityFee")}</div>
+                <Input
+                  value={options.priority_fee != null ? options.priority_fee : ""}
+                  onChange={(e) =>
+                    handleAdvanceOptionsChange("priority_fee", e.target.value)
+                  }
+                  className="rounded-md border-border-color"
+                  placeholder={String(priorityFee) || "0"}
+                />
+              </div>
+            )
+          }
+          
           <div className="flex flex-1 flex-col">
             <div className="LabelText mb-1">{T("Slippage")}</div>
             <div className="relative">
@@ -231,26 +251,6 @@ export default function OpAdvanceOptions({
             </div>
           </div>)
         }
-        {
-          networkName ===  NetworkChainType.SOLANA && (
-          <div className="flex items-end justify-between gap-x-3">
-            <div className="flex flex-1 justify-between gap-x-3">
-              <div className="flex-1">
-                <div className="LabelText mb-1">{T("PriorityFee")}</div>
-                <Input
-                  value={options.priority_fee != null ? options.priority_fee : ""}
-                  onChange={(e) =>
-                    handleAdvanceOptionsChange("priority_fee", e.target.value)
-                  }
-                  className="rounded-md border-border-color"
-                  placeholder={String(priorityFee) || "0"}
-                />
-              </div>
-            </div>
-          </div>)
-        }
-       
-
         <div className="flex flex-col">
           <div className="LabelText mb-1">{T("ScheduleTime")}</div>
           <div className="flex justify-between gap-x-3">

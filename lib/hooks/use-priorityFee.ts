@@ -27,7 +27,7 @@ export function usePriorityFee() {
   return {
     ...res,
     data: res.data?.priority_fee
-      ? (Number(res.data.priority_fee) / 10 ** 9).toFixed(9)
+      ? Number(res.data.priority_fee)
       : "",
   };
 }

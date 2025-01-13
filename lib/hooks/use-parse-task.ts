@@ -44,7 +44,7 @@ export function useParseTasks() {
 
           const opType = opList.find((op: Record<string, any>) => {
             return op.op_id === t.op;
-          }).op_name;
+          })?.op_name || "";
 
           if (t.op === 1) {
             data.tokenInName = tokens.find(
@@ -68,7 +68,7 @@ export function useParseTasks() {
             txHash: t.tx_hash,
             memo: t.memo,
             op: t.op,
-            opName: opType,
+            opName: opType || "",
             date,
             data,
           };

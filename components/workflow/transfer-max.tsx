@@ -32,7 +32,7 @@ export function TransferMax({
         if (networkName === NetworkChainType.SOLANA) {
           const pf = advanceOptions?.priority_fee ? advanceOptions.priority_fee : priorityFee;
           if (!gasBalance || !pf) return;
-          const pfFee = ( 540 * Number(pf)) / 10 ** 15;
+          const pfFee = Math.ceil((540 * Number(pf)/10**6)) / 10 ** 9 + 0.000005;
           handleTransferAmountChange(
             numbro((Number(gasBalance) - pfFee)).format({
               mantissa: 18,

@@ -9,7 +9,7 @@ import useSWR from "swr";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import fetcher from "@/lib/fetcher";
 import DetailItem from "../shared/detail-item";
-import { isAddress } from "@/lib/utils";
+import {  isTokenAddress } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { NetworkChainType } from "@/lib/types/network";
 
@@ -24,6 +24,8 @@ interface TokenListProps {
   chainId: string;
   networkName: string;
 }
+
+
 export default function TokenList({ chainId, networkName }: TokenListProps) {
   const {data: list,  mutate } = useSWR(SystemEndPointPathMap.getTokenList + `?chain_id=${chainId}`, fetcher);
 
@@ -51,8 +53,10 @@ function AddTokenTnput({ onRefresh, chainId, networkName }: { onRefresh: () => v
   const inputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState<boolean>(false)
 
+ 
+
   const onChange = (val: string) => {
-    if (val && !isAddress(val, networkName)) {
+    if (val && !isTokenAddress(val, networkName)) {
       setErrorMsg(T("AddressError"));
     } else {
       setErrorMsg("");
@@ -61,7 +65,7 @@ function AddTokenTnput({ onRefresh, chainId, networkName }: { onRefresh: () => v
   };
 
   const onBlur = () => {
-    if (inputValue && !isAddress(inputValue, networkName)) {
+    if (inputValue && !isTokenAddress(inputValue, networkName)) {
       setErrorMsg(T("AddressError"));
       return;
     }
@@ -104,7 +108,7 @@ function AddTokenTnput({ onRefresh, chainId, networkName }: { onRefresh: () => v
             className="w-[400px] focus-visible:ring-0 data-[state=error]:border-destructive"
           />
           <button
-            disabled={!isAddress(inputValue, networkName)}
+            disabled={!isTokenAddress(inputValue, networkName)}
             onClick={handleAdd}
             className="ml-[10px] rounded-md border border-border-color bg-white px-3 text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -119,6 +123,6 @@ function AddTokenTnput({ onRefresh, chainId, networkName }: { onRefresh: () => v
           )
         }
     </div>
-</DetailItem>
+  </DetailItem>
   )
 }
