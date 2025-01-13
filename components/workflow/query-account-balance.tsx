@@ -109,8 +109,6 @@ export default function QueryAccountBalance({
     handleQuery();
   }, [token0?.token_id, token1?.token_id])
 
-
-
   return (
     <>
       <div className="p-3 pt-0">

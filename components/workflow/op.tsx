@@ -88,9 +88,10 @@ export default function Op({
   const { data: priorityFee } = usePriorityFee();
 
   const shouldApproveToken0 = useMemo(() => {
+    if (networkName === NetworkChainType.SOLANA) return false;
     if (token0.token?.token_address === GAS_TOKEN_ADDRESS) return false;
     return token0.token && token0.allowance === "0";
-  }, [token0]);
+  }, [token0, networkName]);
 
 
   const [transferAmount, setTransferAmount] = useState<string>("");
