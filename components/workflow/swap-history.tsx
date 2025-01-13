@@ -1,6 +1,7 @@
 import {
   forwardRef,
   useCallback,
+  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -21,10 +22,12 @@ import fetcher from "@/lib/fetcher";
 import useIndexStore from "@/lib/state";
 import { useParseTasks } from "@/lib/hooks/use-parse-task";
 import { useTranslations } from "next-intl";
+import { NetworkContext } from "@/lib/providers/network-provider";
 
 const SwapHistory = forwardRef((props: any, ref: any) => {
   const T = useTranslations("Common");
   const userPathMap = useIndexStore((state) => state.userPathMap());
+  const { networkId } = useContext(NetworkContext);
 
   const [filterTaskDate, setFilterTaskDate] = useState<{
     min: Date | null;
@@ -58,7 +61,7 @@ const SwapHistory = forwardRef((props: any, ref: any) => {
     if (max < min) {
       [max, min] = [min, max];
     }
-    return `execute_time_maximum=${max}&execute_time_minimum=${min}`;
+    return `chainId=${networkId || ""}&execute_time_maximum=${max}&execute_time_minimum=${min}`;
   };
 
   const fetchTasks = async (): Promise<Array<ITask> | undefined> => {

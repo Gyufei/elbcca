@@ -48,10 +48,15 @@ export function useAccountBalance(
   };
 
   const accountBalanceFetch = async (queryTokens: string[]) => {
-    const res = await fetcher(`${SystemEndPointPathMap.accountTokensBalance}?${getAccountBalanceQuery(queryTokens)}`, {
-      method: "GET",
-    });
-    return res.batch_balance_of || queryTokens.map(() => 0);
+    try {
+      const res = await fetcher(`${SystemEndPointPathMap.accountTokensBalance}?${getAccountBalanceQuery(queryTokens)}`, {
+        method: "GET",
+      });
+      return res.batch_balance_of || queryTokens.map(() => 0);
+    } catch {
+      return queryTokens.map(() => 0)
+    }
+    
   }
 
   const gasBalanceFetch = async () => {
