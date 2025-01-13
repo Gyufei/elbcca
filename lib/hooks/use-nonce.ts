@@ -5,6 +5,7 @@ import fetcher from "../fetcher";
 import { NetworkContext } from "../providers/network-provider";
 import { isAddress } from "../utils";
 import useIndexStore from "../state";
+import { SystemEndPointPathMap } from "../end-point";
 
 export function useNonce(queryAccount: string) {
   const { network, networkName } = useContext(NetworkContext);
@@ -15,7 +16,7 @@ export function useNonce(queryAccount: string) {
   const res = useSWR(
     () => {
       if (chain_id && queryAccount && isAddress(queryAccount, networkName || "")) {
-        return `${userPathMap.nonceNum}?chain_id=${chain_id}&account=${queryAccount}`;
+        return `${SystemEndPointPathMap.nonceNum}?chain_id=${chain_id}&account=${queryAccount}`;
       } else {
         return null;
       }

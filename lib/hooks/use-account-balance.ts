@@ -5,6 +5,7 @@ import useSWRMutation from "swr/mutation";
 import fetcher from "../fetcher";
 import useIndexStore from "../state";
 import { GAS_TOKEN_ADDRESS } from "../constants/global";
+import { SystemEndPointPathMap } from "../end-point";
 
 type BalanceType = number;
 export function useAccountBalance(
@@ -49,14 +50,14 @@ export function useAccountBalance(
   };
 
   const accountBalanceFetch = async (queryTokens: string[]) => {
-    const res = await fetcher(`${userPathMap.accountTokensBalance}?${getAccountBalanceQuery(queryTokens)}`, {
+    const res = await fetcher(`${SystemEndPointPathMap.accountTokensBalance}?${getAccountBalanceQuery(queryTokens)}`, {
       method: "GET",
     });
     return res.batch_balance_of || queryTokens.map(() => 0);
   }
 
   const gasBalanceFetch = async () => {
-    const res = await fetcher( `${userPathMap.accountTokenBalance}?${getGasBalanceQuery()}`, {
+    const res = await fetcher( `${SystemEndPointPathMap.accountTokenBalance}?${getGasBalanceQuery()}`, {
       method: "GET",
     });
     return [res.balance_of || 0];
@@ -68,7 +69,7 @@ export function useAccountBalance(
     trigger: triggerGasBalance,
     reset: resetGasBalance,
   } = useSWRMutation(
-    `${userPathMap.accountTokenBalance}?${getGasBalanceQuery()}`,
+    `${SystemEndPointPathMap.accountTokenBalance}?${getGasBalanceQuery()}`,
     fetcher as any,
   );
 

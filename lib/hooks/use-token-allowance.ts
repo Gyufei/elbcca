@@ -6,6 +6,7 @@ import fetcher from "../fetcher";
 import { isAddress } from "../utils";
 import { TokenContext } from "../providers/token-provider";
 import useIndexStore from "../state";
+import { SystemEndPointPathMap } from "../end-point";
 
 export function useTokenAllowance(
   tokenAddr: string | null,
@@ -35,7 +36,7 @@ export function useTokenAllowance(
 
   const res = useSWR(() => {
     if (!queryStr) return null;
-    return `${userPathMap.accountTokenAllowance}?${queryStr}`;
+    return `${SystemEndPointPathMap.accountTokenAllowance}?${queryStr}`;
   }, fetcher);
 
   return {

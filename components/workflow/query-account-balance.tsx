@@ -90,6 +90,7 @@ export default function QueryAccountBalance({
       fromAddress &&
       isAddress(fromAddress, networkName || "")
     ) {
+      console.log("可以查询")
       handleBalanceQuery();
       triggerGasBalance();
     }

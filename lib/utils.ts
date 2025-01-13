@@ -25,7 +25,6 @@ export function toNonExponential(num: number | string) {
 
 export function isAddress(address: string, networkName: string): boolean {
   if (networkName === NetworkChainType.SOLANA ) {
-    console.log(address, SOLAddressRegex.test(address))
     return SOLAddressRegex.test(address);
   }
   return AddressRegex.test(address);
