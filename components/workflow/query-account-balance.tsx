@@ -25,6 +25,7 @@ import { useGasPrice } from "@/lib/hooks/use-gas-price";
 import { useNonce } from "@/lib/hooks/use-nonce";
 import { useTranslations } from "next-intl";
 import { IToken } from "@/lib/types/token";
+import { NetworkChainType } from "@/lib/types/network";
 
 export default function QueryAccountBalance({
   token0,
@@ -38,7 +39,7 @@ export default function QueryAccountBalance({
   token1: IToken | null;
 }) {
   const T = useTranslations("Common");
-  const { network } = useContext(NetworkContext);
+  const { network, networkName } = useContext(NetworkContext);
 
   const {
     gasToken
@@ -50,8 +51,13 @@ export default function QueryAccountBalance({
   const setToAddress = useIndexStore((state) => state.setToAddress);
 
   const handleAccountChange = (v: string) => {
-    const addrV = parseToAddress(v);
-    setFromAddress(addrV);
+    if (networkName ===  NetworkChainType.SOLANA) {
+      setFromAddress(v);
+    } else {
+      const addrV = parseToAddress(v);
+      setFromAddress(addrV);
+    }
+   
   };
 
   const { mutate: getGas } = useGasPrice();
@@ -82,7 +88,7 @@ export default function QueryAccountBalance({
       token0 &&
       token1 &&
       fromAddress &&
-      isAddress(fromAddress)
+      isAddress(fromAddress, networkName || "")
     ) {
       handleBalanceQuery();
       triggerGasBalance();
@@ -113,11 +119,11 @@ export default function QueryAccountBalance({
             value={fromAddress}
             onChange={(e: any) => handleAccountChange(e.target.value)}
             className="mr-3 border-border-color bg-white"
-            placeholder="0x11111111111"
+            placeholder={networkName ===  NetworkChainType.SOLANA ? "" : "0x11111111111"}
             onKeyDown={handleKeyDown}
           />
           <button
-            disabled={!fromAddress || !isAddress(fromAddress)}
+            disabled={!fromAddress || !isAddress(fromAddress, networkName || "")}
             onClick={() => handleQuery()}
             className="w-[72px] rounded-md border border-border-color bg-white  text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
           >

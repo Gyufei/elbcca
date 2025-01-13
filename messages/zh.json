@@ -123,9 +123,10 @@
     "SelectKeyStore": "选择KeyStore",
     "SelectOP": "选择操作方式",
     "Routing": "路由",
-    "MinimumReceived": "最小接收量 (Token1)",
+    "MinimumReceived": "最小接收量",
     "PriorityFee": "优先费用",
     "TransferAmount": "转账金额",
+    "TransferMAX": "最大值",
     "GasInsufficient": "gas余额不足",
     "TextTx": "文本交易",
     "InsufficientMessage": "本次任务gas余额不足，确认？",
@@ -145,6 +146,7 @@
     "GlobalError": "发生了一些错误",
     "AddressError": "地址格式错误",
     "RPCError": "RPC调用失败",
-     "Now": "现在"
+     "Now": "现在",
+    "AddToken": "添加Token"
   }
 }

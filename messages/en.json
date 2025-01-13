@@ -123,7 +123,7 @@
     "SelectKeyStore": "Select KeyStore",
     "SelectOP": "Select OP",
     "Routing": "Routing",
-    "MinimumReceived": "Minimum Received (Token1)",
+    "MinimumReceived": "Minimum Received",
     "PriorityFee": "PriorityFee",
     "GasInsufficient": "Gas Insufficient",
     "TextTx": "Text Tx",
@@ -131,6 +131,7 @@
     "Sure": "Sure",
     "Approve": "Approve",
     "TransferAmount": "Transfer Amount",
+    "TransferMAX": "MAX",
     "ScheduleSuccess": "Your funds have been staked in the pool",
     "ApproveSuccess": "Approve successfully",
     "ChangePasswordEmptyError": "Please input",
@@ -145,6 +146,7 @@
     "GlobalError": "Something went wrong",
     "AddressError": "Address is error",
     "RPCError": "RPC is error",
-    "Now": "Now"
+    "Now": "Now",
+    "AddToken": "AddToken"
   }
 }

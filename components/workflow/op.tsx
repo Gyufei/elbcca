@@ -27,6 +27,9 @@ import useEffectStore from "@/lib/state/use-store";
 import { useTranslations } from "next-intl";
 import { networkAdvanceParams } from "@/lib/constants/network-config";
 import { NetworkChainType } from "@/lib/types/network";
+import numbro from "numbro";
+import { usePriorityFee } from "@/lib/hooks/use-priorityFee";
+import { TransferMax } from "./transfer-max";
 
 export default function Op({
   keyStores,
@@ -83,21 +86,12 @@ export default function Op({
   });
 
   const { data: gasPrice } = useGasPrice();
+  const { data: priorityFee } = usePriorityFee();
 
   const shouldApproveToken0 = useMemo(() => {
     if (token0.token?.token_address === GAS_TOKEN_ADDRESS) return false;
     return token0.token && token0.allowance === "0";
   }, [token0]);
-
-  const tokenAdvanceInfo = useMemo(() => {
-    if (!token0.token || !token1.token) return;
-    if (!token0.num || !token1.num) return;
-    const tokenRadio = (Number(token0.num) / Number(token1.num))
-    return {
-      symbolName: [token0.token.token_symbol, token1.token.token_symbol],
-      tokenRadio
-    };
-  }, [token0, token1]);
 
 
   const [transferAmount, setTransferAmount] = useState<string>("");
@@ -401,7 +395,11 @@ export default function Op({
                 className="rounded-md border-border-color"
                 placeholder="0"
               />
-
+              <TransferMax 
+                gasBalance={gasBalance}
+                advanceOptions={advanceOptions}
+                handleTransferAmountChange={handleTransferAmountChange}
+              />
             </div>
             
           </div>
@@ -414,7 +412,7 @@ export default function Op({
               value={toAddress}
               onChange={(e: any) => setToAddress(e.target.value)}
               className="mr-3 border-border-color bg-white"
-              placeholder="0x11111111111"
+              placeholder={networkName ===  NetworkChainType.SOLANA ? "" : "0x11111111111"}
             />
           </div>
         )}
@@ -423,7 +421,8 @@ export default function Op({
           options={advanceOptions}
           onChange={setAdvanceOptions}
           account={fromAddress}
-          tokenAdvanceInfo={tokenAdvanceInfo}
+          token0={token0}
+          token1={token1}
         />
       </div>
 

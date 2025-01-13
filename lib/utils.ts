@@ -1,7 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { AddressRegex, httpRegex } from "./constants/global";
+import { AddressRegex, httpRegex, SOLAddressRegex } from "./constants/global";
 import numbro from "numbro";
+import { NetworkChainType } from "./types/network";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -22,7 +23,10 @@ export function toNonExponential(num: number | string) {
   return num.toFixed(fixedDig);
 }
 
-export function isAddress(address: string): boolean {
+export function isAddress(address: string, networkName: string): boolean {
+  if (networkName === NetworkChainType.SOLANA ) {
+    return SOLAddressRegex.test(address);
+  }
   return AddressRegex.test(address);
 }
 
@@ -36,6 +40,10 @@ export function parseToAddress(v: string) {
   if (v.length > 42) return v.substring(0, 42);
 
   return v.replace(/[^0-9a-fA-FxX]/g, "");
+}
+
+export function parseToSolAddress(v: string) {
+  if (v.length > 64) return v.substring(0, 64);
 }
 
 export function formatPercentNum(num: number | string) {

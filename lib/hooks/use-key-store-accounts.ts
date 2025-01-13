@@ -36,10 +36,8 @@ export function useKeyStoreAccounts(networkId: number | null, page: string) {
     try {
       const url = `${userPathMap.keyStoreAccounts}?keystore=${name}&chain_id=${networkId}`;
       const res: Array<IKeyStoreAccount> = await fetcher(url);
-
       const ks = keyStores.find((k) => k.keystore_name === name);
       if (!ks) throw new Error("keystore not found");
-
       let targetAcc = [];
 
       if (!ks.range.length) {

@@ -44,7 +44,7 @@ export const networkAdvanceParams = {
     routing: networkRouting[NetworkChainType.SOLANA][0],
     schedule: null,
     slippage: "0.02",
-    priority_fee: 0,
+    priority_fee: "",
   },
   [NetworkChainType.BNB]: {
     routing: networkRouting[NetworkChainType.BNB][0],

@@ -12,6 +12,7 @@ import DetailItem from "../shared/detail-item";
 import { HintTexts } from "@/lib/hint-texts";
 import { isAddress } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import { NetworkChainType } from "@/lib/types/network";
 
 export interface IAccountGas {
   account: string;
@@ -22,8 +23,9 @@ export interface IAccountGas {
 
 interface TokenListProps {
   chainId: string;
+  networkName: string;
 }
-export default function TokenList({ chainId }: TokenListProps) {
+export default function TokenList({ chainId, networkName }: TokenListProps) {
   const {data: list,  mutate } = useSWR(SystemEndPointPathMap.getTokenList + `?chain_id=${chainId}`, fetcher);
 
   const onRefresh = () => {
@@ -31,7 +33,7 @@ export default function TokenList({ chainId }: TokenListProps) {
   }
   return (
     <div className="flex flex-1 flex-col justify-stretch">
-      <AddTokenTnput onRefresh={onRefresh} chainId={chainId}/>
+      <AddTokenTnput networkName={networkName} onRefresh={onRefresh} chainId={chainId}/>
       <TokenTable 
         list={list}
         onRefresh={onRefresh}
@@ -42,7 +44,7 @@ export default function TokenList({ chainId }: TokenListProps) {
 }
 
 
-function AddTokenTnput({ onRefresh, chainId }: { onRefresh: () => void; chainId: string;}) {
+function AddTokenTnput({ onRefresh, chainId, networkName }: { onRefresh: () => void; chainId: string; networkName: string;}) {
   const T = useTranslations("Common");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -51,7 +53,7 @@ function AddTokenTnput({ onRefresh, chainId }: { onRefresh: () => void; chainId:
   const [loading, setLoading] = useState<boolean>(false)
 
   const onChange = (val: string) => {
-    if (val && !isAddress(val)) {
+    if (val && !isAddress(val, networkName)) {
       setErrorMsg(T("AddressError"));
     } else {
       setErrorMsg("");
@@ -60,7 +62,7 @@ function AddTokenTnput({ onRefresh, chainId }: { onRefresh: () => void; chainId:
   };
 
   const onBlur = () => {
-    if (inputValue && !isAddress(inputValue)) {
+    if (inputValue && !isAddress(inputValue, networkName)) {
       setErrorMsg(T("AddressError"));
       return;
     }
@@ -89,7 +91,7 @@ function AddTokenTnput({ onRefresh, chainId }: { onRefresh: () => void; chainId:
   }
   
   return (
-    <DetailItem title={"AddToken"} className={"border-none p-0 mb-9"}>
+    <DetailItem title={T("AddToken")} className={"border-none p-0 mb-9"}>
       <div className="relative flex w-full flex-col justify-center">
         <div className="flex flex-row">
           <Input
@@ -97,13 +99,13 @@ function AddTokenTnput({ onRefresh, chainId }: { onRefresh: () => void; chainId:
             ref={inputRef}
             type="text"
             value={inputValue || ""}
-            placeholder="0x11111111111"
+            placeholder={networkName ===  NetworkChainType.SOLANA ? "" : "0x11111111111"}
             onBlur={onBlur}
             onChange={(e) => onChange(e.target.value)}
             className="w-[400px] focus-visible:ring-0 data-[state=error]:border-destructive"
           />
           <button
-            disabled={!isAddress(inputValue)}
+            disabled={!isAddress(inputValue, networkName)}
             onClick={handleAdd}
             className="ml-[10px] rounded-md border border-border-color bg-white px-3 text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
           >

@@ -7,14 +7,14 @@ import { isAddress } from "../utils";
 import useIndexStore from "../state";
 
 export function useNonce(queryAccount: string) {
-  const { network } = useContext(NetworkContext);
+  const { network, networkName } = useContext(NetworkContext);
   const userPathMap = useIndexStore((state) => state.userPathMap());
 
   const chain_id = network?.chain_id || "";
 
   const res = useSWR(
     () => {
-      if (chain_id && queryAccount && isAddress(queryAccount)) {
+      if (chain_id && queryAccount && isAddress(queryAccount, networkName || "")) {
         return `${userPathMap.nonceNum}?chain_id=${chain_id}&account=${queryAccount}`;
       } else {
         return null;

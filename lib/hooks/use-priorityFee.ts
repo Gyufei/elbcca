@@ -6,7 +6,7 @@ import { NetworkContext } from "../providers/network-provider";
 import useIndexStore from "../state";
 import { SystemEndPointPathMap } from "../end-point";
 
-export function useGasPrice() {
+export function usePriorityFee() {
   const { network } = useContext(NetworkContext);
   const userPathMap = useIndexStore((state) => state.userPathMap());
 
@@ -15,7 +15,7 @@ export function useGasPrice() {
   const res = useSWR(
     () => {
       if (chainId) {
-        return `${SystemEndPointPathMap.gasPrice}?chain_id=${chainId}`;
+        return `${SystemEndPointPathMap.priorityFee}?chain_id=${chainId}`;
       } else {
         return null;
       }
@@ -25,11 +25,11 @@ export function useGasPrice() {
       refreshInterval: 12000,
     },
   );
-
+  
   return {
     ...res,
-    data: res.data?.gas_price
-      ? (Number(res.data.gas_price) / 10 ** 9).toFixed(9)
+    data: res.data?.priority_fee
+      ? (Number(res.data.priority_fee) / 10 ** 9).toFixed(9)
       : "",
   };
 }

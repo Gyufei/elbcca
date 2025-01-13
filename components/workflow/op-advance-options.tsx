@@ -23,6 +23,8 @@ import { NetworkContext } from "@/lib/providers/network-provider";
 import RoutingSelect from "./select-routing";
 import { NetworkChainType } from "@/lib/types/network";
 import { MinimumTip } from "./minimum-tip";
+import { ITokenNumDesc } from "./token-select-and-input";
+import { usePriorityFee } from "@/lib/hooks/use-priorityFee";
 
 export interface IAdvanceOptions {
   schedule: string | null;
@@ -41,20 +43,20 @@ export default function OpAdvanceOptions({
   options,
   onChange,
   account,
-  tokenAdvanceInfo
+  token0,
+  token1
 }: {
   options: IAdvanceOptions;
   onChange: (_o: IAdvanceOptions) => void;
   account: string;
-  tokenAdvanceInfo: undefined | {
-    symbolName: string[];
-    tokenRadio: number
-  }
+  token0: ITokenNumDesc;
+  token1: ITokenNumDesc;
 }) {
   const { networkName } = useContext(NetworkContext);
 
   const T = useTranslations("Common");
   const { data: gasPrice } = useGasPrice();
+  const { data: priorityFee } = usePriorityFee();
   const { data: nonce } = useNonce(account);
 
   const timezone = useEffectStore(useIndexStore, (state) => state.timezone);
@@ -133,9 +135,10 @@ export default function OpAdvanceOptions({
                   handleAdvanceOptionsChange("minimum_received", e.target.value)
                 }
               />
-              {tokenAdvanceInfo && (
-                <MinimumTip text={`1${tokenAdvanceInfo.symbolName[1] || ''} = ${tokenAdvanceInfo.tokenRadio} ${tokenAdvanceInfo.symbolName[0] || ''}`}/>
-              )}
+              <MinimumTip
+                token0={token0}
+                token1={token1}
+              />
             </div>
           </div>
         </div>
@@ -235,12 +238,12 @@ export default function OpAdvanceOptions({
               <div className="flex-1">
                 <div className="LabelText mb-1">{T("PriorityFee")}</div>
                 <Input
-                  value={options.nonce != null ? options.nonce : ""}
+                  value={options.priority_fee != null ? options.priority_fee : ""}
                   onChange={(e) =>
-                    handleAdvanceOptionsChange("nonce", e.target.value)
+                    handleAdvanceOptionsChange("priority_fee", e.target.value)
                   }
                   className="rounded-md border-border-color"
-                  placeholder={String(nonce) || "0"}
+                  placeholder={String(priorityFee) || "0"}
                 />
               </div>
             </div>

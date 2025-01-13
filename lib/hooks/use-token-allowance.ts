@@ -15,11 +15,11 @@ export function useTokenAllowance(
   const userPathMap = useIndexStore((state) => state.userPathMap());
 
   const { gasToken } = useContext(TokenContext);
-  const { networkId } = useContext(NetworkContext);
+  const { networkId, networkName } = useContext(NetworkContext);
 
   const queryStr = useMemo(() => {
     if (!tokenAddr || !account || !spender) return null;
-    if (!isAddress(tokenAddr) || !isAddress(account)) return null;
+    if (!isAddress(tokenAddr, networkName || "") || !isAddress(account, networkName || "")) return null;
     if (tokenAddr === gasToken?.token_address) return null;
 
     const query = new URLSearchParams();

@@ -58,7 +58,7 @@ export default function NetworkMain() {
             <Rpc ref={rpcRef} chainId={chainId}/>
           </TabsContent>
           <TabsContent value={NetTabsEnum.tokenList}>
-            <TokenList chainId={chainId} />
+            <TokenList chainId={chainId} networkName={netName}/>
           </TabsContent>
         </Tabs>
         <div className="absolute rounded-[12px]  bottom-0 left-0 right-0 px-8 pb-8 bg-[#FFFFFF]">
