@@ -1,8 +1,16 @@
-import { defaultLocale, locales, pathnames, localePrefix } from "../i18n/request";
-
 import {defineRouting} from 'next-intl/routing';
 import {createNavigation} from 'next-intl/navigation';
+import { Pathnames, LocalePrefix } from "next-intl/routing";
  
+export const defaultLocale = "en" as const;
+export const locales = ["en", "zh"];
+
+export const pathnames: Pathnames<typeof locales> = {
+  "/": "/",
+};
+
+export const localePrefix: LocalePrefix<typeof locales> = "always";
+
 export const routing = defineRouting({
   // A list of all locales that are supported
   locales: locales,
