@@ -50,7 +50,6 @@ export default function QueryAccountBalance({
       const addrV = parseToAddress(v);
       setFromAddress(addrV);
     }
-   
   };
 
   const { mutate: getGas } = useGasPrice();
@@ -63,6 +62,11 @@ export default function QueryAccountBalance({
     triggerGasBalance,
     resetGasBalance,
   } = useAccountBalance(fromAddress, token0, token1);
+
+  useEffect(() => {
+    setFromAddress("");
+    setToAddress("")
+  }, [networkName])
 
   useEffect(() => {
     if (gasBalanceRes) {
@@ -83,7 +87,6 @@ export default function QueryAccountBalance({
       fromAddress &&
       isAddress(fromAddress, networkName || "")
     ) {
-      console.log("可以查询")
       handleBalanceQuery();
       triggerGasBalance();
     }
@@ -101,6 +104,10 @@ export default function QueryAccountBalance({
   useEffect(() => {
     resetGasBalance();
   }, [network?.chain_id, resetGasBalance]);
+
+  useEffect(() => {
+    handleQuery();
+  }, [token0?.token_id, token1?.token_id])
 
 
 

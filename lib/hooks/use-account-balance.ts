@@ -74,7 +74,7 @@ export function useAccountBalance(
   const handleBalanceQuery = async () => {
     const tokenAddressList = [token0?.token_address, token1?.token_address];
     let result = [0, 0];
-    if (!tokenAddressList.includes(GAS_TOKEN_ADDRESS)) {
+    if (tokenAddressList.includes(GAS_TOKEN_ADDRESS)) {
       const res = await Promise.all(tokenAddressList.map((key) => {
         if (!key) return null;
         if (key === GAS_TOKEN_ADDRESS) {

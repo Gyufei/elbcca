@@ -168,6 +168,8 @@ export default function Op({
       recipient: toAddress,
       token_in: token0.token?.token_address || "",
       token_out: token1.token?.token_address || "",
+      tokenInName: token0.token?.token_symbol || "",
+      tokenOutName: token0.token?.token_symbol || "",
       amount: token0.num,
       is_exact_input: true,
     };
