@@ -33,6 +33,12 @@ export const SystemEndPointPathMap = {
   getRPC: WithHost("/setting/private_rpc"),
   gasPrice: WithHost("/web3/gas_price"),
   priorityFee: WithHost("/web3/priority_fee"),
+
+  accountTokensBalance: WithHost("/web3/batch_token_balanceof"),
+  accountTokenBalance: WithHost("/web3/balanceof"),
+
+  accountTokenAllowance: WithHost("/web3/token_allowance"),
+  nonceNum: WithHost("/web3/nonce"),
 };
 
 export const UserEndPointPathMap = {
@@ -50,12 +56,6 @@ export const UserEndPointPathMap = {
   sendSwap: "/tokenswap/swap/send",
   swapHistory: "/tokenswap/history",
   cancelTask: "/tokenswap/cancel",
-
-  accountTokensBalance: "/web3/batch_token_balanceof",
-  accountTokenBalance: "/web3/balanceof",
-
-  accountTokenAllowance: "/web3/token_allowance",
-  nonceNum: "/web3/nonce",
   
   scheduleXYZ: "/schedule/xyz",
   scheduleList: "/schedule/list",
