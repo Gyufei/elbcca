@@ -31,7 +31,7 @@ export function isAddress(address: string, networkName: string): boolean {
 }
 
 export function isTokenAddress(address: string, networkName: string): boolean {
-  if (networkName !== NetworkChainType.SOLANA && (address || "").toLocaleLowerCase === GAS_TOKEN_ADDRESS) {
+  if (networkName !== NetworkChainType.SOLANA && (address || "").toLocaleLowerCase() === GAS_TOKEN_ADDRESS) {
     return true
   }
   return isAddress(address, networkName)
