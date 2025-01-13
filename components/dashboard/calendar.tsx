@@ -21,7 +21,7 @@ import { useDashboardData } from "@/lib/hooks/use-dashboard-data";
 import { useDashboardReset } from "@/lib/hooks/use-dashboard-reset";
 import { useMonthHistory } from "@/lib/hooks/use-month-history";
 import DayOperation from "./day-operation";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 export default function Calendar() {
   const T = useTranslations("Common");

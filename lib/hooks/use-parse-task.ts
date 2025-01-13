@@ -48,16 +48,16 @@ export function useParseTasks() {
 
           if (t.op === 1) {
             data.tokenInName = tokens.find(
-              (tk) => tk.address === data.token_in,
-            )?.symbol;
+              (tk) => tk.token_address === data.token_in,
+            )?.token_symbol;
             data.tokenOutName = tokens.find(
-              (tk) => tk.address === data.token_out,
-            )?.symbol;
+              (tk) => tk.token_address === data.token_out,
+            )?.token_symbol;
           }
 
           if (t.op === 3) {
             data.tokenName =
-              tokens.find((tk) => tk.address === data.token)?.symbol || "";
+              tokens.find((tk) => tk.token_address === data.token)?.token_symbol || "";
           }
 
           return {

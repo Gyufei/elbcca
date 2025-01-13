@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 
 import { Input } from "@/components/ui/input";
 
-import { TokenItem, TokenTable } from "./token-table";
+import { TokenTable } from "./token-table";
 import useSWR from "swr";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import fetcher from "@/lib/fetcher";
