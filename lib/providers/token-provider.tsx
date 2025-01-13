@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useMemo } from "react";
 import useSWR from "swr";
 
 import fetcher from "@/lib/fetcher";
@@ -8,7 +8,6 @@ import { IToken } from "@/lib/types/token";
 import { NetworkContext } from "./network-provider";
 import { uniqBy } from "lodash";
 import { GAS_TOKEN_ADDRESS } from "../constants/global";
-import useIndexStore from "../state";
 import { SystemEndPointPathMap } from "../end-point";
 
 interface ITokenContext {
@@ -18,7 +17,6 @@ interface ITokenContext {
 }
 
 export const TokenContext = createContext<ITokenContext>({
-  token: null,
   tokens: [],
   gasToken: null,
   currencyToken: null,
@@ -29,13 +27,7 @@ export default function TokenProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const userPathMap = useIndexStore((state) => state.userPathMap());
   const { network, networkId } = useContext(NetworkContext);
-  const userWeb3Info = null;
-  // const { data: userWeb3Info } = useSWR(
-  //   () => userPathMap.web3Info || null,
-  //   fetcher,
-  // );
 
   const tokenFetcher = async (url: string): Promise<Array<IToken>> => {
     if (!networkId) return [];

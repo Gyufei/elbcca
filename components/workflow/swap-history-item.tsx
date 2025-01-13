@@ -119,7 +119,7 @@ export default function SwapHistoryItem({
 
 function OpDisplay({ task, onClick }: { task: ITask; onClick: () => void }) {
   const name = task.opName;
-  const isSwap = task.op === 1;
+  // const isSwap = task.op === 1;
   const isApprove = task.op === 3;
   const taskTxData = task.data;
 

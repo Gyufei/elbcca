@@ -27,7 +27,6 @@ import useEffectStore from "@/lib/state/use-store";
 import { useTranslations } from "next-intl";
 import { networkAdvanceParams } from "@/lib/constants/network-config";
 import { NetworkChainType } from "@/lib/types/network";
-import numbro from "numbro";
 import { usePriorityFee } from "@/lib/hooks/use-priorityFee";
 import { TransferMax } from "./transfer-max";
 
@@ -134,6 +133,9 @@ export default function Op({
       gas: advanceOptions?.gas
         ? (Number(advanceOptions.gas) * 10 ** 9).toFixed()
         : (Number(gasPrice) * 10 ** 9).toFixed(),
+      priority_fee: advanceOptions?.priority_fee
+        ? (Number(advanceOptions?.priority_fee) * 10 ** 9).toFixed()
+        : (Number(priorityFee) * 10 ** 9).toFixed(),
     };
 
     if (!advanceOptions?.nonce) {

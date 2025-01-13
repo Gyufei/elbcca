@@ -4,13 +4,10 @@ import { useContext } from "react";
 import fetcher from "../fetcher";
 import { NetworkContext } from "../providers/network-provider";
 import { isAddress } from "../utils";
-import useIndexStore from "../state";
 import { SystemEndPointPathMap } from "../end-point";
 
 export function useNonce(queryAccount: string) {
   const { network, networkName } = useContext(NetworkContext);
-  const userPathMap = useIndexStore((state) => state.userPathMap());
-
   const chain_id = network?.chain_id || "";
 
   const res = useSWR(

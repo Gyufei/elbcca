@@ -2,7 +2,6 @@
 
 import { toast } from "@/components/ui/use-toast";
 import { SWRConfig } from "swr";
-import { HintTexts } from "../hint-texts";
 import { useTranslations } from "next-intl";
 
 export default function SWRConfigProvider({

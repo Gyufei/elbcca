@@ -3,7 +3,6 @@ import { NetworkContext } from "../providers/network-provider";
 import { IToken } from "../types/token";
 import useSWRMutation from "swr/mutation";
 import fetcher from "../fetcher";
-import useIndexStore from "../state";
 import { GAS_TOKEN_ADDRESS } from "../constants/global";
 import { SystemEndPointPathMap } from "../end-point";
 
@@ -14,7 +13,6 @@ export function useAccountBalance(
   token1: IToken | null,
 ) {
   const [balances, setBalances] = useState<BalanceType[]>([0, 0]);
-  const userPathMap = useIndexStore((state) => state.userPathMap());
   const { network } = useContext(NetworkContext);
 
   const getAccountBalanceQuery = (queryTokens: string[]) => {

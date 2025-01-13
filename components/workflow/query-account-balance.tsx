@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect } from "react";
 
 import { cn, isAddress, parseToAddress } from "@/lib/utils";
 import { NetworkContext } from "@/lib/providers/network-provider";
@@ -11,13 +11,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { TokenContext } from "@/lib/providers/token-provider";
 import useIndexStore from "@/lib/state";
 import { useAccountBalance } from "@/lib/hooks/use-account-balance";

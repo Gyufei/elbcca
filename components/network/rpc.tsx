@@ -3,7 +3,6 @@
 import DetailItem from "../shared/detail-item";
 import { Input } from "../ui/input";
 import { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { HintTexts } from "@/lib/hint-texts";
 import fetcher from "@/lib/fetcher";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import useSWR from "swr";

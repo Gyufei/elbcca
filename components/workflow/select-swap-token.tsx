@@ -1,7 +1,7 @@
 import { ArrowBigRight } from "lucide-react";
 import TokenSelectAndInput, { ITokenNumDesc } from "./token-select-and-input";
 import { useTokenSwap } from "@/lib/hooks/use-tokenswap";
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect } from "react";
 import { TokenContext } from "@/lib/providers/token-provider";
 
 export default function SelectSwapToken({

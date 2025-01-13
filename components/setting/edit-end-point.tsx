@@ -14,7 +14,6 @@ import { toast } from "../ui/use-toast";
 import { UserInfoContext } from "@/lib/providers/user-info-provider";
 import useIndexStore from "@/lib/state";
 import useEffectStore from "@/lib/state/use-store";
-import { HintTexts } from "@/lib/hint-texts";
 import { useTranslations } from "next-intl";
 
 const URL_REGEX =

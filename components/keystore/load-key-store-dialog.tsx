@@ -15,7 +15,6 @@ import { SystemEndPointPathMap } from "@/lib/end-point";
 import { toast } from "../ui/use-toast";
 import { UNIT32_MAX } from "@/lib/constants/global";
 import { parseToAddress } from "@/lib/utils";
-import { HintTexts } from "@/lib/hint-texts";
 import { useTranslations } from "next-intl";
 
 const EmptyRow = {

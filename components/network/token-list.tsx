@@ -9,7 +9,6 @@ import useSWR from "swr";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import fetcher from "@/lib/fetcher";
 import DetailItem from "../shared/detail-item";
-import { HintTexts } from "@/lib/hint-texts";
 import { isAddress } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { NetworkChainType } from "@/lib/types/network";

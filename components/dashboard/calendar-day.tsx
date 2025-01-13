@@ -33,7 +33,6 @@ export default function CalendarDay({
   firstDayCurrentMonth: Date;
   onClick: () => void;
 }) {
-  const T = useTranslations("Common");
   const today = startOfToday();
 
   const isSelected = isEqual(day, selectedDay);

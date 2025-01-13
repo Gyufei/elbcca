@@ -25,7 +25,6 @@ import { useLocale, useTranslations } from "next-intl";
 
 export default function Calendar() {
   const T = useTranslations("Common");
-  const locale = useLocale();
   const { resetAction } = useDashboardReset();
   const selectedDay = useIndexStore((state) => state.selectedDay);
   const setSelectedDay = useIndexStore((state) => state.setSelectedDay);

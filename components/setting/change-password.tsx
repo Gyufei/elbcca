@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import LoadingIcon from "@/components/shared/loading-icon";
-import { HintTexts } from "@/lib/hint-texts";
 import { useTranslations } from "next-intl";
 
 interface IFormFields {

@@ -3,12 +3,10 @@ import { useContext } from "react";
 
 import fetcher from "../fetcher";
 import { NetworkContext } from "../providers/network-provider";
-import useIndexStore from "../state";
 import { SystemEndPointPathMap } from "../end-point";
 
 export function useGasPrice() {
   const { network } = useContext(NetworkContext);
-  const userPathMap = useIndexStore((state) => state.userPathMap());
 
   const chainId = network?.chain_id || "";
 

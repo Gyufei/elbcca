@@ -5,7 +5,6 @@ import { NetworkContext } from "../providers/network-provider";
 import fetcher from "../fetcher";
 import { isAddress } from "../utils";
 import { TokenContext } from "../providers/token-provider";
-import useIndexStore from "../state";
 import { SystemEndPointPathMap } from "../end-point";
 
 export function useTokenAllowance(
@@ -13,8 +12,6 @@ export function useTokenAllowance(
   spender: string,
   account: string,
 ) {
-  const userPathMap = useIndexStore((state) => state.userPathMap());
-
   const { gasToken } = useContext(TokenContext);
   const { networkId, networkName } = useContext(NetworkContext);
 
