@@ -172,7 +172,7 @@ export default function Op({
       token_in: token0.token?.token_address || "",
       token_out: token1.token?.token_address || "",
       token_in_name: token0.token?.token_symbol || "",
-      token_out_name: token0.token?.token_symbol || "",
+      token_out_name: token1.token?.token_symbol || "",
       amount: token0.num,
       is_exact_input: true,
     };
@@ -310,19 +310,35 @@ export default function Op({
       if (!res) {
         return;
       }
+      if (networkName === NetworkChainType.SOLANA) { 
+        if (!res.compute_units) {
+          throw new Error("gas insufficient");
+        }
+        if (res.compute_units) {
+          const pf = advanceOptions?.priority_fee ? advanceOptions.priority_fee : priorityFee;
+          const gasCost = Math.ceil((Number(res.compute_units) * Number(pf)/10**6)) / 10 ** 9 + 0.000005;
+          const amountCost = gasCost;
+          if (Number(amountCost) > Number(priorityFee || 0)) {
+            throw new Error("gas insufficient");
+          }
+  
+          return true;
+        }
+      } else {
+        if (!res.gaslimit) {
+          throw new Error("gas insufficient");
+        }
+        const gasCost =
+          (Number(res.gaslimit) * Number(advanceOptions?.gas)) / 10 ** 9;
 
-      if (!res.gaslimit) {
-        throw new Error("gas insufficient");
-      }
+        const isGasToken = token0.token?.token_address === GAS_TOKEN_ADDRESS;
+        const amountCost = isGasToken ? gasCost + Number(token0.num) : gasCost;
 
-      const gasCost =
-        (Number(res.gaslimit) * Number(advanceOptions?.gas)) / 10 ** 9;
+        if (Number(amountCost) > Number(gasBalance || 0)) {
+          throw new Error("gas insufficient");
+        }
 
-      const isGasToken = token0.token?.token_address === GAS_TOKEN_ADDRESS;
-      const amountCost = isGasToken ? gasCost + Number(token0.num) : gasCost;
-
-      if (Number(amountCost) > Number(gasBalance || 0)) {
-        throw new Error("gas insufficient");
+        return true;
       }
 
       return true;

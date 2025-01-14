@@ -33,8 +33,6 @@ export const SystemEndPointPathMap = {
   getRPC: WithHost("/setting/private_rpc"),
   gasPrice: WithHost("/web3/gas_price"),
   priorityFee: WithHost("/web3/priority_fee"),
-
-  accountTokensBalance: WithHost("/web3/batch_token_balanceof"),
   accountTokenBalance: WithHost("/web3/balanceof"),
 
   accountTokenAllowance: WithHost("/web3/token_allowance"),
@@ -42,6 +40,7 @@ export const SystemEndPointPathMap = {
 };
 
 export const UserEndPointPathMap = {
+  accountTokensBalance: "/web3/batch_token_balanceof",
   keyStoreAccounts: "/keystore/accounts",
   web3Info: "/tokenswap/info",
   tokenList: "/setting/account_token_list",

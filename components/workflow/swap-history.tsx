@@ -61,7 +61,7 @@ const SwapHistory = forwardRef((props: any, ref: any) => {
     if (max < min) {
       [max, min] = [min, max];
     }
-    return `chainId=${networkId || ""}&execute_time_maximum=${max}&execute_time_minimum=${min}`;
+    return `chain_id=${networkId || ""}&execute_time_maximum=${max}&execute_time_minimum=${min}`;
   };
 
   const fetchTasks = async (): Promise<Array<ITask> | undefined> => {

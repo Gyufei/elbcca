@@ -98,7 +98,7 @@ function OpLogo({ op }: { op: IOp }) {
       }
 
       if (op.op_name.includes("Swap")) {
-        return DexImgMap.uniswap;
+        return DexImgMap.swap;
       }
     }
 

@@ -77,4 +77,5 @@ export const TzList = (() => {
 export const DexImgMap = {
   uniswap: "/icons/uniswap.svg",
   pancakeSwap: "/icons/pancakeswap.png",
+  swap: "/icons/swap.svg",
 };

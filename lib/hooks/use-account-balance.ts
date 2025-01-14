@@ -1,10 +1,11 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NetworkContext } from "../providers/network-provider";
 import { IToken } from "../types/token";
 import useSWRMutation from "swr/mutation";
 import fetcher from "../fetcher";
 import { GAS_TOKEN_ADDRESS } from "../constants/global";
 import { SystemEndPointPathMap } from "../end-point";
+import useIndexStore from "../state";
 
 type BalanceType = number;
 export function useAccountBalance(
@@ -12,8 +13,13 @@ export function useAccountBalance(
   token0: IToken | null,
   token1: IToken | null,
 ) {
+  const userPathMap = useIndexStore((state) => state.userPathMap());
   const [balances, setBalances] = useState<BalanceType[]>([0, 0]);
-  const { network } = useContext(NetworkContext);
+  const { network, networkId } = useContext(NetworkContext);
+
+  useEffect(() => {
+    setBalances([0, 0])
+  }, [networkId])
 
   const getAccountBalanceQuery = (queryTokens: string[]) => {
     const queryParams = new URLSearchParams();
@@ -49,7 +55,7 @@ export function useAccountBalance(
 
   const accountBalanceFetch = async (queryTokens: string[]) => {
     try {
-      const res = await fetcher(`${SystemEndPointPathMap.accountTokensBalance}?${getAccountBalanceQuery(queryTokens)}`, {
+      const res = await fetcher(`${userPathMap.accountTokensBalance}?${getAccountBalanceQuery(queryTokens)}`, {
         method: "GET",
       });
       return res.batch_balance_of || queryTokens.map(() => 0);
