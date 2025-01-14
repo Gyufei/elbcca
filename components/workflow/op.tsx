@@ -318,7 +318,7 @@ export default function Op({
           const pf = advanceOptions?.priority_fee ? advanceOptions.priority_fee : priorityFee;
           const gasCost = Math.ceil((Number(res.compute_units) * Number(pf)/10**6)) / 10 ** 9 + 0.000005;
           const amountCost = gasCost;
-          if (Number(amountCost) > Number(priorityFee || 0)) {
+          if (Number(amountCost) > Number(gasBalance || 0)) {
             throw new Error("gas insufficient");
           }
   
