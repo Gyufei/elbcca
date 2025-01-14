@@ -45,21 +45,7 @@ export function useParseTasks() {
           const opType = opList.find((op: Record<string, any>) => {
             return op.op_id === t.op;
           })?.op_name || "";
-
-          if (t.op === 1) {
-            data.tokenInName = tokens.find(
-              (tk) => tk.token_address === data.token_in,
-            )?.token_symbol;
-            data.tokenOutName = tokens.find(
-              (tk) => tk.token_address === data.token_out,
-            )?.token_symbol;
-          }
-
-          if (t.op === 3) {
-            data.tokenName =
-              tokens.find((tk) => tk.token_address === data.token)?.token_symbol || "";
-          }
-
+      
           return {
             id: t.id,
             account: t.account,
@@ -68,7 +54,7 @@ export function useParseTasks() {
             txHash: t.tx_hash,
             memo: t.memo,
             op: t.op,
-            opName: opType || "",
+            opName: data?.op_name || opType || "",
             date,
             data,
           };

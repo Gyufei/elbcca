@@ -33,7 +33,7 @@ export interface ITaskData {
 
   //approve
   token?: string;
-  tokenName?: string;
+  token_name?: string;
   spender?: string;
 
   // transfer
@@ -46,6 +46,6 @@ export interface ITaskData {
   timeout: number;
   token_in: string;
   token_out: string;
-  tokenInName: string;
-  tokenOutName: string;
+  token_in_name: string;
+  token_out_name: string;
 }

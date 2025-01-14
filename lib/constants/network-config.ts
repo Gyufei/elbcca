@@ -24,30 +24,29 @@ export const networkConfigs = {
 
 export const networkRouting = {
   [NetworkChainType.SOLANA]: [
-    "Jupiter",
-    "Raydium"
+    { label: "Jupiter", value: "Jupiter" },
+    { label: "Raydium", value: "Raydium" },
   ],
   [NetworkChainType.BNB]: [
-    "Optimized",
-    "V3",
-    "V2"
+    { label: "Optimized", value: "Optimized", },
+    { label: "Pancake", value:  "Pancake", },
   ],
   [NetworkChainType.ETH]: [
-    "Optimized",
-    "V3",
-    "V2"
+    { label: "Optimized", value: "Optimized", },
+    { label:  "UniV3", value:  "uniswapv3", },
+    { label:  "UniV2", value:  "uniswap", },
   ],
 }
 
 export const networkAdvanceParams = {
   [NetworkChainType.SOLANA]: {
-    routing: networkRouting[NetworkChainType.SOLANA][0],
+    routing: networkRouting[NetworkChainType.SOLANA][0].value,
     schedule: null,
     slippage: "0.02",
     priority_fee: "",
   },
   [NetworkChainType.BNB]: {
-    routing: networkRouting[NetworkChainType.BNB][0],
+    routing: networkRouting[NetworkChainType.BNB][0].value,
     minimum_received: "0",
     schedule: null,
     timeout: 1800,
@@ -58,7 +57,7 @@ export const networkAdvanceParams = {
     no_check_gas: false,
   },
   [NetworkChainType.ETH]: {
-    routing: networkRouting[NetworkChainType.ETH][0],
+    routing: networkRouting[NetworkChainType.ETH][0].value,
     minimum_received: "0",
     schedule: null,
     timeout: 1800,

@@ -29,6 +29,7 @@ import { networkAdvanceParams } from "@/lib/constants/network-config";
 import { NetworkChainType } from "@/lib/types/network";
 import { usePriorityFee } from "@/lib/hooks/use-priorityFee";
 import { TransferMax } from "./transfer-max";
+import { IToken } from "@/lib/types/token";
 
 export default function Op({
   keyStores,
@@ -130,6 +131,7 @@ export default function Op({
       chain_id,
       account,
       keystore,
+      op_name: selectedOp?.op_name,
       ...(advanceOptions || {}),
       gas: advanceOptions?.gas
         ? (Number(advanceOptions.gas) * 10 ** 9).toFixed()
@@ -169,8 +171,8 @@ export default function Op({
       recipient: toAddress,
       token_in: token0.token?.token_address || "",
       token_out: token1.token?.token_address || "",
-      tokenInName: token0.token?.token_symbol || "",
-      tokenOutName: token0.token?.token_symbol || "",
+      token_in_name: token0.token?.token_symbol || "",
+      token_out_name: token0.token?.token_symbol || "",
       amount: token0.num,
       is_exact_input: true,
     };
@@ -192,13 +194,13 @@ export default function Op({
     if (isSwapOp) return getSwapParams();
   }
 
-  const getApproveParams = (tokenAddr: string) => {
+  const getApproveParams = (inToken: IToken | null) => {
     const commonParams = getCommonParams();
     if (!commonParams) return null;
-
     const params = {
       ...commonParams,
-      token: tokenAddr || "",
+      token: inToken?.token_address || "",
+      token_name: inToken?.token_symbol || "",
       amount: UNIT256_MAX,
       spender: spender
     };
@@ -207,8 +209,9 @@ export default function Op({
     return params;
   };
 
-  async function approveAction(tokenAddr: string) {
-    const params = getApproveParams(tokenAddr);
+  async function approveAction(inToken: IToken | null) {
+
+    const params = getApproveParams(inToken);
     if (!opApproveSendUrl || !params) return;
 
     await fetcher(opApproveSendUrl, {
@@ -235,7 +238,7 @@ export default function Op({
   async function handleApprove() {
     setApproveLoading(true);
     try {
-      await approveAction(token0.token?.token_address || "");
+      await approveAction(token0?.token);
 
       trigger0Allowance();
       setApproveLoading(false);
@@ -414,7 +417,6 @@ export default function Op({
                 handleTransferAmountChange={handleTransferAmountChange}
               />
             </div>
-            
           </div>
         )}
 

@@ -93,9 +93,15 @@ export default function SwapHistoryItem({
       {isSwap ? (
         <div className="flex justify-between text-content-color">
           <div>
-            {taskTxData.tokenInName}
-            <span>&rarr;</span>
-            {taskTxData.tokenOutName}
+            {
+              taskTxData.token_in_name && taskTxData.token_out_name && (
+                <>
+                  {taskTxData.token_in_name}
+                  <span>&rarr;</span>
+                  {taskTxData.token_out_name}
+                </>
+              )
+            }
           </div>
           <div className="TruncateSingleLine max-w-[200px]">
             Amount: {taskTxData?.amount}
@@ -147,7 +153,7 @@ function OpDisplay({ task, onClick }: { task: ITask; onClick: () => void }) {
           className="mx-1"
         />
       )}
-      ]{isApprove && taskTxData.tokenName && `(${taskTxData.tokenName})`}
+      ]{isApprove && taskTxData.token_name && `(${taskTxData.token_name})`}
       {task.txHash && (
         <ExternalLink
           className="mb-1 ml-1 h-4 w-4 cursor-pointer text-primary"

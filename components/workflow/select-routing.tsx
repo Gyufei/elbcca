@@ -34,15 +34,17 @@ export default function RoutingSelect({
   return (
     <Select
       value={value || undefined}
-      onValueChange={(e) => handleSelect(e)}
+      onValueChange={(e) => {
+        handleSelect(e)
+      }}
     >
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {(routings || []).map((t) => (
-          <SelectItem key={t} value={t}>
-            {t}
+          <SelectItem key={t.value} value={t.value}>
+            {t.label}
           </SelectItem>
         ))}
       </SelectContent>
