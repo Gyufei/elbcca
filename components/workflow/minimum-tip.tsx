@@ -6,7 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ArrowLeftRight } from "lucide-react";
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import { ITokenNumDesc } from "./token-select-and-input";
 
@@ -48,7 +48,7 @@ export function MinimumTip({
   return (
     <div className="h-[24px]">
       <div className="absolute right-0 top-[44px]  max-w-[80%] h-[24px] flex flex-row-reverse align-items text-[12px] text-[#707070]">
-        <ArrowLeftRight className="h-[12px] w-[12px] cursor-pointer mx-2 mt-[2px]" onClick={handleChangeTrans}/>
+        <Image src="/icons/minimum.svg" width={12} height={12} alt="arrow" className="h-[12px] w-[12px] cursor-pointer mx-2 mt-[2px]" onClick={handleChangeTrans} />
         {tokenAdvanceInfo.symbolName[0] || ''}
         <div className="select-none max-w-[40%]">
           {String(tokenAdvanceInfo.tokenRadio).length > 5 ? (
