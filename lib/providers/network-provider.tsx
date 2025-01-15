@@ -38,7 +38,7 @@ export default function NetworkProvider({
   );
 
   // filter production ENV
-  const networks = isProduction ? resNetworks.filter((item: INetwork) => { return ![ 11155111, 903].includes(item.chain_id) }) : resNetworks;
+  const networks = isProduction ? (resNetworks || []).filter((item: INetwork) => { return ![11155111, 903].includes(item.chain_id) }) : resNetworks;
   const networkDefault = networks?.[0];
 
   useEffect(() => {
