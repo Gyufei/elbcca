@@ -8,7 +8,6 @@ import { ITokenNumDesc } from "@/components/workflow/token-select-and-input";
 import fetcher from "@/lib/fetcher";
 import OpAdvanceOptions, {
   IAdvanceOptions,
-  minimumValueTrans,
 } from "@/components/workflow/op-advance-options";
 import { TestTxResult } from "./test-tx-result";
 import ActionTip, { IActionType } from "../shared/action-tip";
@@ -142,7 +141,7 @@ export default function Op({
       keystore,
       op_name: selectedOp?.op_name,
       ...(advanceOptions || {}),
-      minimum_received: minimumValueTrans(advanceOptions?.minimum_received, maxMinimum + ""),
+      minimum_received: advanceOptions?.minimum_received ||  maxMinimum + "",
       gas: advanceOptions?.gas
         ? (Number(advanceOptions.gas) * 10 ** 9).toFixed()
         : (Number(gasPrice) * 10 ** 9).toFixed(),

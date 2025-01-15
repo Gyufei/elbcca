@@ -12,6 +12,7 @@ import fetcher from "@/lib/fetcher";
 import useSWRMutation from "swr/mutation";
 import { DexImgMap } from "@/lib/constants/global";
 import SwapHistoryItemMemo from "./swap-history-items-memo";
+import { NetworkChainType } from "@/lib/types/network";
 
 export default function SwapHistoryItem({
   task,
@@ -20,7 +21,7 @@ export default function SwapHistoryItem({
   task: ITask;
   onCancel: () => void;
 }) {
-  const { network } = useContext(NetworkContext);
+  const { network, networkName } = useContext(NetworkContext);
   const userPathMap = useIndexStore((state) => state.userPathMap());
 
   const isSwap = task.op === 1;
@@ -57,6 +58,7 @@ export default function SwapHistoryItem({
     cancelAction();
   };
 
+  console.log(task, "task 8888")
   return (
     <div className="flex flex-col gap-y-2 rounded-md border border-border-color bg-custom-bg-white p-3 text-sm first:mt-4">
       <div className="flex justify-between text-content-color">
@@ -69,8 +71,14 @@ export default function SwapHistoryItem({
           <TruncateText text={task.data.account} />
         </div>
         <div className="TruncateSingleLine max-w-[200px]">
-          Gas:{" "}
-          {toNonExponential((Number(taskTxData?.gas) || 0) / 10 ** 9) + " Gwei"}
+          {
+            networkName !==  NetworkChainType.SOLANA && (
+              <>
+                Gas:{" "}
+                {toNonExponential((Number(taskTxData?.gas) || 0) / 10 ** 9) + " Gwei"}
+              </>
+            )
+          }
         </div>
       </div>
 
@@ -117,7 +125,7 @@ export default function SwapHistoryItem({
           />
           <SwapHistoryItemMemo status={task.status} memo={task.memo} />
         </div>
-        {!isApprove && <div>Nonce: {taskTxData?.nonce}</div>}
+        {!isApprove && networkName !==  NetworkChainType.SOLANA && <div>Nonce: {taskTxData?.nonce}</div>}
       </div>
     </div>
   );

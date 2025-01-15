@@ -121,7 +121,7 @@ export function LoadKeyStoreDialog({
             />
           </div>
 
-          <div className="w-max">
+          {/* <div className="w-max">
             <div className="mb-2 flex items-center gap-x-4">
               <label htmlFor="root" className="LabelText">
                 {T("RootAddresses")}
@@ -205,7 +205,7 @@ export function LoadKeyStoreDialog({
                 ))}
               </>
             )}
-          </div>
+          </div> */}
           <Button
             variant="default"
             disabled={isSubmitting}

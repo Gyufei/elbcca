@@ -71,7 +71,7 @@ export default function OpAdvanceOptions({
   function handleAdvanceOptionsChange(key: string, value: any) {
     if (key === "minimum_received") {
       value = value ? replaceStrNum(value) : null;
-      value =  minimumValueTrans(value, maxMinimum + "")
+      // value =  minimumValueTrans(value, maxMinimum + "")
     }
 
     if (key === "slippage" || key === "gas") {

@@ -144,6 +144,7 @@ export default function FilterAccountList({
 
   const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
+      if ((!tokenMin && !tokenMax) || (tokenMin && tokenMax && tokenMin > tokenMax)|| filtering) return;
       handleFilter();
     }
   };
@@ -179,7 +180,7 @@ export default function FilterAccountList({
       </div>
       <div className="relative mt-8 flex flex-col border-t border-shadow-color pt-5">
         <Button
-          disabled={(!tokenMin && !tokenMax) || filtering}
+          disabled={(!tokenMin && !tokenMax) || (tokenMin && tokenMax && tokenMin > tokenMax)|| filtering}
           onClick={handleFilter}
           className="disabled:opacity-1 absolute top-[-20px] mx-3 flex w-[95%] items-center justify-center rounded border bg-white py-2 hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:contrast-[0.9]"
         >
