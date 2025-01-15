@@ -1,20 +1,14 @@
-import { useState } from "react";
-import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import useSWRMutation from "swr/mutation";
-import { Minus, Plus } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import LoadingIcon from "@/components/shared/loading-icon";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 
-import { replaceStrNumNoDecimal } from "@/lib/hooks/use-str-num";
 import fetcher from "@/lib/fetcher";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import { toast } from "../ui/use-toast";
 import { UNIT32_MAX } from "@/lib/constants/global";
-import { parseToAddress } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
 const EmptyRow = {
@@ -42,7 +36,7 @@ export function LoadKeyStoreDialog({
   onSubmitted: (val: IFormFields) => void;
 }) {
   const T = useTranslations("Common");
-  const { handleSubmit, control, register, setValue } = useForm({
+  const { handleSubmit, register, setValue } = useForm({
     defaultValues: {
       keystore_name: "",
       range: [
@@ -53,12 +47,12 @@ export function LoadKeyStoreDialog({
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "range",
-  });
-
-  const [rootAddress, setRootAddress] = useState(false);
+  // const { fields, append, remove } = useFieldArray({
+  //   control,
+  //   name: "range",
+  // });
+  const rootAddress = false;
+  // const [rootAddress, setRootAddress] = useState(false);
 
   const submitFetcher = async (url: string, { arg }: { arg: IFormFields }) => {
     const res = await fetcher(url, {
