@@ -17,9 +17,11 @@ import { networkConfigs } from "@/lib/constants/network-config";
 import { NetworkChainType } from "@/lib/types/network";
 
 export default function NetworkSelect({
+  size = 'default',
   curretNetwork,
   handleSelect,
 }: {
+  size?: 'large' | 'default';
   curretNetwork: INetwork | null;
   handleSelect: (
     value: INetwork
@@ -34,6 +36,9 @@ export default function NetworkSelect({
     setPopOpen(false);
   };
 
+  const imgW = size === 'large' ? 20 : 16;
+  const textS = size === 'large' ? "text-[18px]" : "text-[16px]";
+
   return (
     <Popover
       open={popOpen}
@@ -46,11 +51,11 @@ export default function NetworkSelect({
         >
           {curretNetwork ? (
             <>
-              <div className="mr-2 text-title-color flex align-items text-[18px]">
+              <div className={`mr-2 text-title-color flex align-items ${textS}`}>
                 <Image 
                   src={networkConfigs[curretNetwork.currency_name as NetworkChainType].logo}
-                  width={20}
-                  height={20}
+                  width={imgW}
+                  height={imgW}
                   alt="choose"
                   className="mr-[5px]"
                 />
@@ -73,13 +78,13 @@ export default function NetworkSelect({
             {(networkList || []).map((option: INetwork) => (
               <div
                 key={option.chain_id}
-                className="flex cursor-pointer items-center h-10 pl-3 hover:bg-[#F6F7F8] text-[18px] align-items"
+                className={`flex cursor-pointer items-center h-10 pl-3 hover:bg-[#F6F7F8] ${textS} align-items`}
                 onClick={() => handleSelectNetwork(option)}
               >
                 <Image 
                   src={networkConfigs[option.currency_name as NetworkChainType].logo}
-                  width={20}
-                  height={20}
+                  width={imgW}
+                  height={imgW}
                   alt="choose"
                   className="mr-[5px]"
                 />

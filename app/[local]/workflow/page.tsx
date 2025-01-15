@@ -57,6 +57,7 @@ export default function WorkFlow() {
         <div className="flex flex-col px-4 pb-4 md:pt-4">
           <DetailItem title={T("Network")}>
             <NetworkSelect
+              size="large"
               curretNetwork={network}
               handleSelect={onNetworkChange}
             />

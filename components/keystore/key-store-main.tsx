@@ -24,10 +24,12 @@ import { useUserKeystores } from "@/lib/hooks/use-user-keystores";
 import { uniqBy } from "lodash";
 import useIndexStore from "@/lib/state";
 import { useTranslations } from "next-intl";
+import NetworkSelect from "../workflow/network-select";
 
 export default function KeyStoreMain() {
   const T = useTranslations("Common");
-  const { network } = useContext(NetworkContext);
+  const { network, onNetworkChange } = useContext(NetworkContext);
+
   const userPathMap = useIndexStore((state) => state.userPathMap());
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
@@ -290,7 +292,10 @@ export default function KeyStoreMain() {
               <DetailItem title={T("GasAvailable")}>{gasAvailable}</DetailItem>
               <DetailItem title={T("Tx")}>{tx}</DetailItem>
               <DetailItem title={T("DefaultNetwork")}>
-                {network?.network_name}
+                <NetworkSelect
+                  curretNetwork={network}
+                  handleSelect={onNetworkChange}
+                />
               </DetailItem>
               {!selectedRange && (
                 <DetailItem title={T("WorksFor")}>
