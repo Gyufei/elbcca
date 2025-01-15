@@ -65,8 +65,8 @@ export default function QueryAccountBalance({
 
   useEffect(() => {
     if (networkName) {
-      setFromAddress("");
-      setToAddress("")
+      setFromAddress?.("");
+      setToAddress?.("")
     }
   }, [networkName])
 
@@ -99,7 +99,7 @@ export default function QueryAccountBalance({
     }
 
     if (!toAddress) {
-      setToAddress(fromAddress);
+      setToAddress?.(fromAddress);
     }
   };
 
