@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 import {
@@ -8,13 +8,11 @@ import {
 } from "@/components/ui/popover";
 
 import { INetwork } from "@/lib/types/network";
-import useSWR from "swr";
-import { SystemEndPointPathMap } from "@/lib/end-point";
-import fetcher from "@/lib/fetcher";
 import { useTranslations } from "next-intl";
 import Image from 'next/image';
 import { networkConfigs } from "@/lib/constants/network-config";
 import { NetworkChainType } from "@/lib/types/network";
+import { NetworkContext } from "@/lib/providers/network-provider";
 
 export default function NetworkSelect({
   size = 'default',
@@ -28,7 +26,7 @@ export default function NetworkSelect({
   ) => void;
 }) {
   const T = useTranslations("Common");
-  const {data: networkList  } = useSWR(SystemEndPointPathMap.networks, fetcher);
+  const { networkList  } = useContext(NetworkContext)
   const [popOpen, setPopOpen] = useState(false);
 
   const handleSelectNetwork = (value: INetwork) => {

@@ -1,4 +1,4 @@
-export const isPreview = process.env.NEXT_PUBLIC_IS_PREVIEW_TEST === "1";
+export const isPreview = process.env.NEXT_PUBLIC_IS_PREVIEW === "1";
 export const isProduction = process.env.NODE_ENV === "production" && !isPreview;
 function WithHost(path: string) {
   return `${process.env.NEXT_PUBLIC_API_URL || 'https://tafect-auth.aggregation.top'}${path}`;
