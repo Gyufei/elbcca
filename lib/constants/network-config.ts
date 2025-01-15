@@ -40,6 +40,7 @@ export const networkRouting = {
 
 export const networkAdvanceParams = {
   [NetworkChainType.SOLANA]: {
+    minimum_received: "0",
     routing: networkRouting[NetworkChainType.SOLANA][0].value,
     schedule: null,
     slippage: "0.02",

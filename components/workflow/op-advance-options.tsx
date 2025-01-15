@@ -39,18 +39,25 @@ export interface IAdvanceOptions {
   priority_fee: number | null;
 }
 
+
+export function minimumValueTrans(v: string | null, maxV: string): string {
+  return (v &&  Number(v) > Number(maxV))? (maxV + "") : v || "";
+}
+
 export default function OpAdvanceOptions({
   options,
   onChange,
   account,
   token0,
-  token1
+  token1,
+  maxMinimum
 }: {
   options: IAdvanceOptions;
   onChange: (_o: IAdvanceOptions) => void;
   account: string;
   token0: ITokenNumDesc;
   token1: ITokenNumDesc;
+  maxMinimum: number;
 }) {
   const { networkName } = useContext(NetworkContext);
 
@@ -62,7 +69,12 @@ export default function OpAdvanceOptions({
   const timezone = useEffectStore(useIndexStore, (state) => state.timezone);
 
   function handleAdvanceOptionsChange(key: string, value: any) {
-    if (key === "slippage" || key === "gas" || key === "minimum_received") {
+    if (key === "minimum_received") {
+      value = value ? replaceStrNum(value) : null;
+      value =  minimumValueTrans(value, maxMinimum + "")
+    }
+
+    if (key === "slippage" || key === "gas") {
       value = value ? replaceStrNum(value) : null;
     }
 
@@ -129,7 +141,7 @@ export default function OpAdvanceOptions({
             <div className="relative">
               <Input
                 className="rounded-md border-border-color"
-                placeholder="0"
+                placeholder={(maxMinimum || "0") + ""}
                 value={options.minimum_received || ""}
                 onChange={(e) =>
                   handleAdvanceOptionsChange("minimum_received", e.target.value)
