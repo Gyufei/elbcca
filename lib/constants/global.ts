@@ -1,15 +1,15 @@
 export const LINKS = [
+  // {
+  //   name: "Dashboard",
+  //   href: "/dashboard",
+  // },
   {
-    name: "Dashboard",
-    href: "/dashboard",
+    name: "WorkFlow",
+    href: "/workflow",
   },
   {
     name: "KeyStore",
     href: "/keystore",
-  },
-  {
-    name: "WorkFlow",
-    href: "/workflow",
   },
   {
     name: "Setting",
@@ -17,6 +17,8 @@ export const LINKS = [
   },
 ];
 
+// export const defaultRoute = "/dashboard";
+export const defaultRoute = "/workflow";
 export const GAS_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 export const UNIT256_MAX =

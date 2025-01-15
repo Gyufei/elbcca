@@ -34,7 +34,7 @@ export default function ChangeLanguage() {
     // 强制重新渲染
     setTimeout(() => {
       window.location.reload();
-    }, 400)
+    }, 1000)
     setShowChangeDialog(false);
   };
 

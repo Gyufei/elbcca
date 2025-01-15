@@ -17,6 +17,8 @@ const validRoutes = [
   "signin",
 ];
 
+// const defaultRoute = "/dashboard";
+const defaultRoute = "/workflow";
 export default function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const validLocales = ["en", "zh"];
@@ -27,7 +29,7 @@ export default function middleware(request: NextRequest) {
 
   // 处理根路径
   if (pathname === "/") {
-    return NextResponse.redirect(new URL(`/${defaultLocale}/dashboard`, request.url));
+    return NextResponse.redirect(new URL(`/${defaultLocale}${defaultRoute}`, request.url));
   }
 
   const checkIsFilePath = (path: string) => {
@@ -49,7 +51,7 @@ export default function middleware(request: NextRequest) {
 
   // 处理 /en 或 /zh 路径
   if (restPath === "") {
-    return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+    return NextResponse.redirect(new URL(`/${locale}${defaultRoute}`, request.url));
   }
 
   // 处理无效路径，但排除 not-found 路由

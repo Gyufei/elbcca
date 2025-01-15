@@ -23,6 +23,7 @@ import LoadingIcon from "../shared/loading-icon";
 import { IUser } from "@/lib/auth/user";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { defaultRoute } from "@/lib/constants/global";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -69,7 +70,7 @@ export default function LoginForm({
     if (!res) {
       setShowLoginFailTip(true);
     } else {
-      window.location.href = `${window.location.origin}/dashboard`;
+      window.location.href = `${window.location.origin}${defaultRoute}`;
     }
 
     setIsLogging(false);

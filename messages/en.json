@@ -132,7 +132,7 @@
     "Approve": "Approve",
     "TransferAmount": "Transfer Amount",
     "TransferMAX": "MAX",
-    "ScheduleSuccess": "Your funds have been staked in the pool",
+    "ScheduleSuccess": "Transaction submitted successfully.",
     "ApproveSuccess": "Approve successfully",
     "ChangePasswordEmptyError": "Please input",
     "ChangePasswordRepeatError": "Two password not match",

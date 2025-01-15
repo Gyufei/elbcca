@@ -23,6 +23,7 @@ export const useStrNum = (
     val = noDecimals ? replaceStrNumNoDecimal(val) : replaceStrNum(val);
 
     setNumVal(val);
+    return val;
   };
 
   return [numVal, handleChange];

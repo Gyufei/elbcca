@@ -4,9 +4,10 @@ import { useEffect, useMemo } from "react";
 import { redirect, usePathname } from "next/navigation";
 import useIndexStore from "@/lib/state";
 import { checkUserIsValid } from "@/lib/auth/user";
+import { defaultRoute } from "@/lib/constants/global";
 
 const loginPath = "/signin";
-const Matcher = ["/dashboard", "/keystore", "/tokenswap", "/setting"];
+const Matcher = ["/dashboard", "/keystore", "/workflow", "/setting"];
 
 export default function GlobalRedirect({
   children,
@@ -40,11 +41,10 @@ export default function GlobalRedirect({
         !pathname.includes("/setting")
       ) {
         redirect("/setting");
-        return;
       }
 
       if (pathname === "/") {
-        redirect("/dashboard");
+        redirect(defaultRoute);
       }
     }
   }, [isLogin, pathname, activeUser, endpoint]);
