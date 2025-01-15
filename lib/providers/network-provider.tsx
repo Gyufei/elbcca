@@ -5,7 +5,7 @@ import useSWR from "swr";
 
 import { INetwork, NetworkChainType } from "@/lib/types/network";
 import fetcher from "@/lib/fetcher";
-import { SystemEndPointPathMap } from "../end-point";
+import { isProduction, SystemEndPointPathMap } from "../end-point";
 
 interface INetworkContext {
   network: INetwork | null;
@@ -32,11 +32,13 @@ export default function NetworkProvider({
   const networkId = network?.chain_id;
   const networkName = network?.currency_name as NetworkChainType;
 
-  const { data: networks = [] }: { data: Array<INetwork> } = useSWR(
+  const { data: resNetworks = [] }: { data: Array<INetwork> } = useSWR(
     SystemEndPointPathMap.networks,
     fetcher,
   );
 
+  // filter production ENV
+  const networks = isProduction ? resNetworks.filter((item: INetwork) => { return ![ 11155111, 903].includes(item.chain_id) }) : resNetworks;
   const networkDefault = networks?.[0];
 
   useEffect(() => {
