@@ -64,8 +64,10 @@ export default function QueryAccountBalance({
   } = useAccountBalance(fromAddress, token0, token1);
 
   useEffect(() => {
-    setFromAddress("");
-    setToAddress("")
+    if (networkName) {
+      setFromAddress("");
+      setToAddress("")
+    }
   }, [networkName])
 
   useEffect(() => {
