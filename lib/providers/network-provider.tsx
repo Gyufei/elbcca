@@ -36,7 +36,7 @@ export default function NetworkProvider({
     SystemEndPointPathMap.networks,
     fetcher,
   );
-  console.log(process.env.NODE_ENV, isProduction, "texst")
+  console.log(process.env.NODE_ENV, isProduction, process.env.NEXT_PUBLIC_IS_PREVIEW, "texst")
   // filter production ENV
   const networks = isProduction ? (resNetworks || []).filter((item: INetwork) => { return !["11155111", "903"].includes((item.chain_id || "") + "") }) : resNetworks;
   const networkDefault = networks?.[0];

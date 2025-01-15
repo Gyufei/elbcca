@@ -58,7 +58,6 @@ export default function SwapHistoryItem({
     cancelAction();
   };
 
-  console.log(task, "task 8888")
   return (
     <div className="flex flex-col gap-y-2 rounded-md border border-border-color bg-custom-bg-white p-3 text-sm first:mt-4">
       <div className="flex justify-between text-content-color">
