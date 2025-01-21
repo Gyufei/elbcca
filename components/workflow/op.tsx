@@ -1,35 +1,35 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 
 import QueryAccountBalance from "@/components/workflow/query-account-balance";
-import OpSelect from "@/components/workflow/op-select";
-import { toast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
-import { ITokenNumDesc } from "@/components/workflow/token-select-and-input";
-import fetcher from "@/lib/fetcher";
 import OpAdvanceOptions, {
   IAdvanceOptions,
 } from "@/components/workflow/op-advance-options";
-import { TestTxResult } from "./test-tx-result";
-import ActionTip, { IActionType } from "../shared/action-tip";
 import { NetworkContext } from "@/lib/providers/network-provider";
-import { GAS_TOKEN_ADDRESS, UNIT256_MAX } from "@/lib/constants/global";
-import { replaceStrNum } from "@/lib/hooks/use-str-num";
-import { Input } from "../ui/input";
-import { useOp } from "@/lib/hooks/use-op";
+import Input from "./components/input";
+import { useWorkflowParams } from "@/lib/hooks/use-workflow-params";
 import SelectSwapToken from "./select-swap-token";
-import { useTokenAllowance } from "@/lib/hooks/use-token-allowance";
 import { TokenContext } from "@/lib/providers/token-provider";
-import { Loader2 } from "lucide-react";
 import useIndexStore from "@/lib/state";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { useGasPrice } from "@/lib/hooks/use-gas-price";
-import useEffectStore from "@/lib/state/use-store";
 import { useTranslations } from "next-intl";
-import { networkAdvanceParams } from "@/lib/constants/network-config";
+import { networkAdvanceKeysMap, networkAdvanceParams } from "@/lib/constants/network-config";
 import { NetworkChainType } from "@/lib/types/network";
 import { usePriorityFee } from "@/lib/hooks/use-priorityFee";
 import { TransferMax } from "./transfer-max";
-import { IToken } from "@/lib/types/token";
+import { FormItem } from "./components/form-item";
+import Select from "./components/select";
+import useSWR from "swr";
+import { SystemEndPointPathMap } from "@/lib/end-point";
+import { fetchOp } from "./request";
+import { pick } from "lodash";
+import { TestTxBtn } from "./test-tx-btn";
+import { ApproveBtn } from "./approve-btn";
+import { SchedueBtn, SchedueBtnMethods } from "./schedue-btn";
+import { useWorkflow } from "@/lib/hooks/use-workflow";
+import QueryAccountUsdcMarket from "./query-account-usdc-market";
+import UsdcOptions from "./usdc-options";
+import UsdcBtn from "./usdc-button";
 
 export default function Op({
   keyStores,
@@ -41,485 +41,228 @@ export default function Op({
   afterAction: () => void;
 }) {
   const T = useTranslations("Common");
-  const { network, networkId, networkName } = useContext(NetworkContext);
-  const { gasToken } = useContext(TokenContext);
-  const [spender, setSpender] = useState<string>("");
-
-  const activeUser = useEffectStore(useIndexStore, (state) =>
-    state.activeUser(),
-  );
-
-  const {
-    op: selectedOp,
-    setOp: setSelectedOp,
-    opSignUrl,
-    opSendUrl,
-    isApproveOp,
-    isTransferOp,
-    isSwapOp,
-    opApproveSendUrl,
-  } = useOp();
-
-
+  const { networkId, networkName } = useContext(NetworkContext);
+  const { tokens } = useContext(TokenContext);
+  const [gasBalance, setGasBalance] = useState<number | null>(0);
   const fromAddress = useIndexStore((state) => state.fromAddress);
   const toAddress = useIndexStore((state) => state.toAddress);
   const setToAddress = useIndexStore((state) => state.setToAddress);
-
-  const [gasBalance, setGasBalance] = useState<number | null>(0);
-
-  const [testTxDialogOpen, setTestTxDialogOpen] = useState<boolean>(false);
-  const [testResult, setTestResult] = useState<any>(null);
-  const [sendTxResult, setSendTxResult] = useState<{
-    type: IActionType;
-    message: string;
-  } | null>();
-
-  const [token0, setToken0] = useState<ITokenNumDesc>({
-    token: null,
-    num: "",
-    allowance: "",
-  });
-  const [token1, setToken1] = useState<ITokenNumDesc>({
-    token: null,
-    num: "",
-    allowance: "",
-  });
-
-  const { data: gasPrice } = useGasPrice();
-  const { data: priorityFee } = usePriorityFee();
-
-  const shouldApproveToken0 = useMemo(() => {
-    if (networkName === NetworkChainType.SOLANA) return false;
-    if (token0.token?.token_address === GAS_TOKEN_ADDRESS) return false;
-    return token0.token && token0.allowance === "0";
-  }, [token0, networkName]);
-
-  const maxMinimum = useMemo(() => {
-    if (!token1 || !token1.num) return 0;
-    if (token1.num) {
-      return Number(token1.num)*0.95;
-    } 
-    return 0;
-  }, [token1?.num])
-
-
-  const [transferAmount, setTransferAmount] = useState<string>("");
-
   const [advanceOptions, setAdvanceOptions] = useState<IAdvanceOptions>({
     ...networkAdvanceParams[NetworkChainType.ETH] as IAdvanceOptions
   });
+  const advanceShowKey = networkAdvanceKeysMap[networkName as NetworkChainType] || [];
+  const [transferAmount, setTransferAmount] = useState<string>("");
+  
+  // const { data: opOptions = [] } = useSWR(() => {
+  //   return networkId
+  //     ? `${SystemEndPointPathMap.ops}?chain_id=${networkId}`
+  //     : null;
+  // }, fetchOp);
+
+  const opOptions = [
+    {op_id: 1, op_name: "创建订单"},
+    {op_id: 2, op_name: "取消订单"},
+    {op_id: 3, op_name: "交易订单"},
+    {op_id: 4, op_name: "提取代币"},
+  ]
+
+ 
+
+  const { data: gasPrice } = useGasPrice();
+  const { data: priorityFee } = usePriorityFee();
+  const  schedueRef = useRef<SchedueBtnMethods>(null);
+  
+  const [params, setParams] = useState<Record<string, any>>({});
+  const {
+    routings,
+    maxMinimum,
+    isApproveOp,
+    isTransferOp,
+    isSwapOp,
+    shouldApproveToken0,
+    trigger0Allowance
+  } = useWorkflowParams(params);
+
+  const {
+    signAction,
+    sendAction,
+    approveAction
+  } = useWorkflow({
+    params,
+    keyStores,
+    gasPrice,
+    priorityFee,
+    fromAddress,
+    toAddress,
+    advanceOptions,
+    transferAmount
+  })
+
+  const onParamsChange = (key?: string, value?: any) => {
+    console.log(key, value, "value 8888")
+    if (key) {
+      setParams((preParams) => {
+        console.log({
+          ...preParams,
+          [key]: value,
+        })
+        return {
+          ...preParams,
+          [key]: value,
+        }
+      })
+    } else {
+      setParams((preParams) => {
+        return {
+          ...preParams,
+          ...(value || {}),
+        }
+      })
+    }
+  }
 
 
   useEffect(() => {
-    if (networkId) {
+    // init params
+    if (tokens && opOptions) {
       const defaultParams = networkAdvanceParams[networkName as  NetworkChainType] as IAdvanceOptions;
+      setParams({
+        op: opOptions[0],
+        token0: tokens?.[0],
+        token1: tokens?.[1] || null,
+        token0Num: "",
+        token1Num: "",
+      })
       setAdvanceOptions({
         ...defaultParams,
       })
+
     }
-    
-  }, [networkId, networkName])
-
-  const handleTransferAmountChange = (e: string) => {
-    const reNum = replaceStrNum(e);
-    setTransferAmount(reNum);
-  };
-
-  const getCommonParams = () => {
-    const kStore = keyStores.find((ks) =>
-      ks.accounts.some((a) => a.account === fromAddress),
-    );
-
-    const chain_id = network?.chain_id + "" || "";
-    const keystore = kStore?.name || "";
-    const account = fromAddress;
-
-    const params = {
-      user_name: activeUser?.email,
-      chain_id,
-      account,
-      keystore,
-      op_name: selectedOp?.op_name,
-      ...(advanceOptions || {}),
-      minimum_received: advanceOptions?.minimum_received ||  maxMinimum + "",
-      gas: advanceOptions?.gas
-        ? (Number(advanceOptions.gas) * 10 ** 9).toFixed()
-        : (Number(gasPrice) * 10 ** 9).toFixed(),
-      priority_fee: advanceOptions?.priority_fee
-        ? (Number(advanceOptions?.priority_fee)).toFixed()
-        : (Number(priorityFee)).toFixed(),
-    };
-
-    if (!advanceOptions?.nonce) {
-      delete params.nonce;
-    }
-    return params;
-  };
-
-  const getTransferParams = () => {
-    const commonParams = getCommonParams();
-    if (!commonParams) return null;
-
-    const params = {
-      ...commonParams,
-      token: gasToken?.token_address || "",
-      amount: transferAmount || UNIT256_MAX,
-      recipient: toAddress,
-    };
-
-    if (!params.token || !params.amount || !params.recipient) return null;
-    return params;
-  };
-
-  const getSwapParams = () => {
-    const commonParams = getCommonParams();
-    if (!commonParams) return null;
-
-    const params = {
-      ...commonParams,
-      recipient: toAddress,
-      token_in: token0.token?.token_address || "",
-      token_out: token1.token?.token_address || "",
-      token_in_name: token0.token?.token_symbol || "",
-      token_out_name: token1.token?.token_symbol || "",
-      amount: token0.num,
-      is_exact_input: true,
-    };
-
-    if (
-      !params.keystore ||
-      !params.recipient ||
-      !params.token_in ||
-      !params.token_out ||
-      !params.amount
-    ) {
-      return null;
-    }
-    return params;
-  };
-
-  function getTxParams() {
-    if (isTransferOp) return getTransferParams();
-    if (isSwapOp) return getSwapParams();
-  }
-
-  const getApproveParams = (inToken: IToken | null) => {
-    const commonParams = getCommonParams();
-    if (!commonParams) return null;
-    const params = {
-      ...commonParams,
-      token: inToken?.token_address || "",
-      token_name: inToken?.token_symbol || "",
-      amount: UNIT256_MAX,
-      spender: spender
-    };
-
-    if (!params.token || !params.amount) return null;
-    return params;
-  };
-
-  async function approveAction(inToken: IToken | null) {
-
-    const params = getApproveParams(inToken);
-    if (!opApproveSendUrl || !params) return;
-
-    await fetcher(opApproveSendUrl, {
-      method: "POST",
-      body: JSON.stringify(params),
-    });
-  }
-
-  const { data: token0Allowance, mutate: trigger0Allowance } =
-    useTokenAllowance(
-      token0.token?.token_address || null,
-      spender || "",
-      fromAddress,
-    );
-
-  if (token0Allowance && token0.allowance !== token0Allowance) {
-    setToken0((prev) => ({
-      ...prev,
-      allowance: token0Allowance,
-    }));
-  }
-
-  const [approveLoading, setApproveLoading] = useState<boolean>(false);
-  async function handleApprove() {
-    setApproveLoading(true);
-    try {
-      await approveAction(token0?.token);
-
-      trigger0Allowance();
-      setApproveLoading(false);
-      setSendTxResult({
-        type: "success",
-        message: T("ApproveSuccess")
-      });
-
-      afterAction();
-    } catch (e: any) {
-      setSendTxResult({
-        type: "error",
-        message: `${e.status}: ${e.info}`,
-      });
-      setApproveLoading(false);
-    }
-  }
-
-  async function signAction() {
-    const params = getTxParams();
-    if (!opSignUrl || !params) return;
-
-    const res = await fetcher(opSignUrl, {
-      method: "POST",
-      body: JSON.stringify(params),
-    });
-
-    return res;
-  }
-
-  const [testLoading, setTestLoading] = useState<boolean>(false);
-  async function handleSign() {
-    try {
-      setTestLoading(true);
-      const res = await signAction();
-      setTestLoading(false);
-      if (!res) return;
-      handleShowTxResult(res);
-      afterAction();
-    } catch (e: any) {
-      toast({
-        variant: "destructive",
-        description: e.info,
-      });
-      setTestLoading(false);
-    }
-  }
-
-  function handleShowTxResult(res: Record<string, any>) {
-    if (networkName === NetworkChainType.SOLANA) { 
-      if (res.compute_units) {
-        const pf = advanceOptions?.priority_fee ? advanceOptions.priority_fee : priorityFee;
-        res.gas = Math.ceil((Number(res.compute_units) * Number(pf)/10**6)) / 10 ** 9 + 0.000005;
-      }
-    } else {
-      if (res.gaslimit) {
-        const gp = advanceOptions?.gas ? advanceOptions.gas : gasPrice;
-        res.gas = (Number(res.gaslimit) * Number(gp)) / 10 ** 9;
-      }
-    }
-    
-    setTestResult(res);
-    setTestTxDialogOpen(true);
-  }
-
-  async function testTxBeforeSend() {
-    try {
-      const res = await signAction();
-      if (!res) {
-        return;
-      }
-      if (networkName === NetworkChainType.SOLANA) { 
-        if (!res.compute_units) {
-          throw new Error("gas insufficient");
-        }
-        if (res.compute_units) {
-          const pf = advanceOptions?.priority_fee ? advanceOptions.priority_fee : priorityFee;
-          const gasCost = Math.ceil((Number(res.compute_units) * Number(pf)/10**6)) / 10 ** 9 + 0.000005;
-          const amountCost = gasCost;
-          if (Number(amountCost) > Number(gasBalance || 0)) {
-            throw new Error("gas insufficient");
-          }
+    // , opOptions
+  }, [tokens])
   
-          return true;
-        }
-      } else {
-        if (!res.gaslimit) {
-          throw new Error("gas insufficient");
-        }
-        const gasCost =
-          (Number(res.gaslimit) * Number(advanceOptions?.gas)) / 10 ** 9;
-
-        const isGasToken = token0.token?.token_address === GAS_TOKEN_ADDRESS;
-        const amountCost = isGasToken ? gasCost + Number(token0.num) : gasCost;
-
-        if (Number(amountCost) > Number(gasBalance || 0)) {
-          throw new Error("gas insufficient");
-        }
-
-        return true;
-      }
-
-      return true;
-    } catch (e) {
-      setTestResult({
-        gasInsufficient: true,
-      });
-      setTestTxDialogOpen(true);
-      return null;
-    }
-  }
-
-  async function sendAction() {
-    try {
-      const params = getTxParams();
-      if (!opSendUrl || !params) return;
-
-      await fetcher(opSendUrl, {
-        method: "POST",
-        body: JSON.stringify(params),
-      });
-
-      setSendTxResult({
-        type: "success",
-        message: T("ScheduleSuccess"),
-      });
-      afterAction();
-    } catch (e: any) {
-      setSendTxResult({
-        type: "error",
-        message: `${e.status}: ${e.info}`,
-      });
-      setSendLoading(false);
-    }
-  }
-
-  const [sendLoading, setSendLoading] = useState<boolean>(false);
-  async function handleSend() {
-    setSendLoading(true);
-    const testRes = await testTxBeforeSend();
-    if (!testRes) {
-      setSendLoading(false);
-      return;
-    }
-
-    await sendAction();
-    setSendLoading(false);
-  }
-
   return (
     <>
-      <div className="flex flex-col">
-        <div className="p-3">
-          <div className="LabelText mb-1">{T("OP")}</div>
-          <OpSelect
-            op={selectedOp}
-            handleOpSelect={(op) => setSelectedOp(op)}
-          />
-        </div>
-
-        <QueryAccountBalance 
-          gas={gasBalance} 
-          setGas={setGasBalance} 
-          token0={token0?.token}
-          token1={token1?.token}
+     <div className="flex flex-col">
+      <FormItem title={T("OP")} className="px-3">
+        <Select
+          valueKey={'op_id'}
+          labelKey={'op_name'}
+          options={opOptions}
+          value={params['op']}
+          labelInValue
+          onChange={(v) => onParamsChange('op', v)}
         />
-
-        {isSwapOp && (
-          <SelectSwapToken
-            token0={token0}
-            token1={token1}
-            setToken0={setToken0}
-            setToken1={setToken1}
-            setSpender={setSpender}
-            routing={advanceOptions?.routing || ""}
+      </FormItem>
+      {
+        advanceShowKey.includes('fromAddress') && (
+          <QueryAccountBalance
+            gas={gasBalance}
+            setGas={setGasBalance}
+            token0={params['token0']}
+            token1={params['token1']}
           />
-        )}
-
-        {isTransferOp && (
-          <div className="col mt-3 flex flex-col px-3">
-            <div className="LabelText mb-1">{T("TransferAmount")}</div>
-            <div className="relative">
-              <Input
-                value={transferAmount}
-                onChange={(e) => handleTransferAmountChange(e.target.value)}
-                className="rounded-md border-border-color"
-                placeholder="0"
-              />
-              <TransferMax 
-                gasBalance={gasBalance}
-                advanceOptions={advanceOptions}
-                handleTransferAmountChange={handleTransferAmountChange}
-              />
-            </div>
-          </div>
-        )}
-
-        {!isApproveOp && (
-          <div className="col mt-3 flex flex-col px-3">
-            <div className="LabelText mb-1">{T("ToAddress")}</div>
+        )
+      }
+      {
+        advanceShowKey.includes('usdcMarket') && (
+          <QueryAccountUsdcMarket />
+        )
+      }
+      {
+        advanceShowKey.includes('usdcOption') && (
+          <UsdcOptions op={params['op']} params={params} onChange={(v: Record<string, any>) => onParamsChange(undefined, v)} />
+        )
+      }
+      {isSwapOp && advanceShowKey.includes('tokenSwap') && (
+        <SelectSwapToken
+          value={pick(params, ['token0', 'token1', 'token0Num', 'token1Num', 'spender'])}
+          routing={advanceOptions?.["routing"] || ""}
+          options={tokens}
+          onChange={(v) => onParamsChange(undefined, v)}
+        />
+      )}
+      {isTransferOp && advanceShowKey.includes('transfer') && (
+        <FormItem title={T("TransferAmount")} className="px-3">
+          <div className="relative">
             <Input
-              value={toAddress}
-              onChange={(e: any) => setToAddress(e.target.value)}
-              className="mr-3 border-border-color bg-white"
-              placeholder={networkName ===  NetworkChainType.SOLANA ? "" : "0x11111111111"}
+              value={transferAmount}
+              onChange={(v) => setTransferAmount(v)}
+              placeholder="0"
+              type="number"
+            />
+            <TransferMax 
+              gasBalance={gasBalance}
+              advanceOptions={advanceOptions}
+              handleTransferAmountChange={setTransferAmount}
             />
           </div>
+        </FormItem>
         )}
-
+      {!isApproveOp && advanceShowKey.includes('toAddress') && (
+        <FormItem title={T("ToAddress")} className="px-3">
+          <Input
+            value={toAddress}
+            onChange={(e: any) => setToAddress(e.target.value)}
+            placeholder={networkName ===  NetworkChainType.SOLANA ? "" : "0x11111111111"}
+          />
+        </FormItem>)}
         <OpAdvanceOptions
-          options={advanceOptions}
-          onChange={setAdvanceOptions}
-          account={fromAddress}
-          token0={token0}
-          token1={token1}
+          routings={routings}
           maxMinimum={maxMinimum}
+          params={params}
+          options={advanceOptions}
+          fromAddress={fromAddress}
+          onAdvanceOptionsChange={setAdvanceOptions}
         />
-      </div>
+     </div>
+     <div className="mt-3 flex h-[60px] items-center gap-x-3 border-t bg-white px-3 py-2">
+      {children}
+      {
+        networkName !== NetworkChainType.USDC && (
+        <>
+          <TestTxBtn 
+            networkName={networkName}
+            params={params}
+            priorityFee={priorityFee}
+            gasPrice={gasPrice}
+            signAction={signAction}
+            onAfterAction={() => afterAction()}
+            onShowTxResult={(res) => schedueRef?.current?.onOpenTestResult(res)}
+          />
+          {isSwapOp && shouldApproveToken0 && (
+            <ApproveBtn
+              approveAction={approveAction}
+              onAfterAction={() => {
+                afterAction();
+                trigger0Allowance();
+              }}
+            />
+          )}
+          <SchedueBtn
+            ref={schedueRef}
+            networkName={networkName}
+            params={params}
+            priorityFee={priorityFee}
+            gasBalance={gasBalance}
+            onAfterAction={() => afterAction()}
+            signAction={signAction}
+            sendAction={sendAction} 
+          />
+        </>
+        )
+      }
 
-      <div className="mt-3 flex h-[60px] items-center gap-x-3 border-t bg-white px-3 py-2">
-        {children}
-        <Button
-          disabled={testLoading}
-          variant="outline"
-          className="h-10 w-32 rounded-md border border-primary text-primary  hover:bg-primary hover:text-white"
-          onClick={() => handleSign()}
-        >
-          <div className="flex items-center">
-            <span>{T("TestTx")}</span>
-            {testLoading && <Loader2 className="ml-1 h-4 w-4 animate-spin" />}
-          </div>
-        </Button>
-        {isSwapOp && shouldApproveToken0 && (
-          <Button
-            disabled={approveLoading}
-            variant="outline"
-            className="h-10 w-32 rounded-md border border-primary text-primary  hover:bg-primary hover:text-white"
-            onClick={() => handleApprove()}
-          >
-            <div className="flex items-center">
-              <span>{T("Approve")}</span>
-              {approveLoading && (
-                <Loader2 className="ml-1 h-4 w-4 animate-spin" />
-              )}
-            </div>
-          </Button>
-        )}
-        <Button
-          disabled={sendLoading}
-          variant="outline"
-          onClick={() => handleSend()}
-          className="h-10 w-32 rounded-md border border-primary text-primary hover:bg-primary hover:text-white"
-        >
-          <div className="flex items-center">
-            <span>{T("Schedule")}</span>
-            {sendLoading && <Loader2 className="ml-1 h-4 w-4 animate-spin" />}
-          </div>
-        </Button>
-      </div>
-
-      <TestTxResult
-        open={testTxDialogOpen}
-        message={testResult}
-        onOpenChange={setTestTxDialogOpen}
-        sureAction={() => sendAction()}
-      />
-
-      <ActionTip
-        type={sendTxResult?.type || "success"}
-        handleClose={() => setSendTxResult(null)}
-        message={sendTxResult?.message || null}
-      />
+      {
+        networkName === NetworkChainType.USDC && (
+          <UsdcBtn
+            op={params['op']}
+            params={params}
+            onAfterAction={() => afterAction()}
+          />
+        )
+      }
+     </div>
     </>
-  );
+  )
 }

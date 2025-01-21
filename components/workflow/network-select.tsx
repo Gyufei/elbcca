@@ -50,13 +50,17 @@ export default function NetworkSelect({
           {curretNetwork ? (
             <>
               <div className={`mr-2 text-title-color flex align-items ${textS}`}>
-                <Image 
-                  src={networkConfigs[curretNetwork.currency_name as NetworkChainType].logo}
-                  width={imgW}
-                  height={imgW}
-                  alt="choose"
-                  className="mr-[5px]"
-                />
+                {
+                  networkConfigs[curretNetwork.currency_name as NetworkChainType]?.logo && (
+                    <Image 
+                      src={networkConfigs[curretNetwork.currency_name as NetworkChainType]?.logo || ''}
+                      width={imgW}
+                      height={imgW}
+                      alt="choose"
+                      className="mr-[5px]"
+                    />
+                  )
+                }
                 {curretNetwork.chain_name}
               </div>
             </>
@@ -70,7 +74,7 @@ export default function NetworkSelect({
           />
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] px-0 py-2" align="start">
+      <PopoverContent className="w-[300px] px-0 py-2" align="start">
         <div className=" rounded-md bg-white">
           <div className="flex flex-col">
             {(networkList || []).map((option: INetwork) => (
@@ -79,13 +83,17 @@ export default function NetworkSelect({
                 className={`flex cursor-pointer items-center h-10 pl-3 hover:bg-[#F6F7F8] ${textS} align-items`}
                 onClick={() => handleSelectNetwork(option)}
               >
-                <Image 
-                  src={networkConfigs[option.currency_name as NetworkChainType].logo}
-                  width={imgW}
-                  height={imgW}
-                  alt="choose"
-                  className="mr-[5px]"
-                />
+                {
+                  networkConfigs[option.currency_name as NetworkChainType]?.logo && (
+                    <Image 
+                      src={networkConfigs[option.currency_name as NetworkChainType].logo}
+                      width={imgW}
+                      height={imgW}
+                      alt="choose"
+                      className="mr-[5px]"
+                    />
+                  )
+                }
                 {option.chain_name}
               </div>
             ))}

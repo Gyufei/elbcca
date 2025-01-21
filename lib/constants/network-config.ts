@@ -19,6 +19,12 @@ export const networkConfigs = {
     logo: '/icons/eth.svg',
     chainId: '3'
   },
+  [NetworkChainType.USDC]: {
+    name: "Hyperliquid",
+    chainType: NetworkChainType.USDC,
+    logo: '/icons/eth.svg',
+    chainId: '4'
+  },
 }
 
 
@@ -36,6 +42,7 @@ export const networkRouting = {
     { label:  "UniV3", value:  "uniswapv3", },
     { label:  "UniV2", value:  "uniswap", },
   ],
+  [NetworkChainType.USDC]: [],
 }
 
 export const networkAdvanceParams = {
@@ -68,4 +75,15 @@ export const networkAdvanceParams = {
     fixed_gas: false,
     no_check_gas: false,
   },
+  [NetworkChainType.USDC]: {
+
+  }
+}
+
+
+export const networkAdvanceKeysMap = {
+  [NetworkChainType.SOLANA]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'timeout', 'priority_fee', 'schedue'],
+  [NetworkChainType.BNB]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'timeout', 'slippage', 'nonce', 'gas', 'fixed_gas', 'no_check_gas', 'schedue'],
+  [NetworkChainType.ETH]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'timeout', 'slippage', 'nonce', 'gas', 'fixed_gas', 'no_check_gas', 'schedue'],
+  [NetworkChainType.USDC]: ['usdcMarket', 'usdcOption', 'schedue'],
 }

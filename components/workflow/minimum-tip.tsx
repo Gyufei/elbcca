@@ -8,32 +8,34 @@ import {
 } from "@/components/ui/tooltip";
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { ITokenNumDesc } from "./token-select-and-input";
-
-
+import { IToken } from "@/lib/types/token";
 
 export function MinimumTip({
+  token0Num,
+  token1Num,
   token0,
   token1
 }: {
-  token0: ITokenNumDesc
-  token1: ITokenNumDesc
+  token0: IToken | null;
+  token1: IToken | null;
+  token0Num: string;
+  token1Num: string;
 }) {
   const [transType, setTransType] = useState(false);
 
   const tokenAdvanceInfo = useMemo(() => {
-    if (!token0.token || !token1.token) return;
-    if (!token0.num || !token1.num) return;
+    if (!token0 || !token1) return;
+    if (!token0Num || !token1Num) return;
     if (transType === false) {
-      const tokenRadio = (Number(token0.num) / Number(token1.num))
+      const tokenRadio = (Number(token0Num) / Number(token1Num))
       return {
-        symbolName: [token0.token.token_symbol, token1.token.token_symbol],
+        symbolName: [token0.token_symbol, token1.token_symbol],
         tokenRadio
       };
     } else {
-      const tokenRadio = (Number(token1.num) / Number(token0.num))
+      const tokenRadio = (Number(token1Num) / Number(token0Num))
       return {
-        symbolName: [token1.token.token_symbol, token0.token.token_symbol],
+        symbolName: [token1.token_symbol, token0.token_symbol],
         tokenRadio
       };
     }

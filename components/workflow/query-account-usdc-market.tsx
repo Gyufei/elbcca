@@ -10,39 +10,22 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { TokenContext } from "@/lib/providers/token-provider";
 import useIndexStore from "@/lib/state";
-import { useAccountBalance } from "@/lib/hooks/use-account-balance";
-import { useGasPrice } from "@/lib/hooks/use-gas-price";
-import { useNonce } from "@/lib/hooks/use-nonce";
 import { useTranslations } from "next-intl";
-import { IToken } from "@/lib/types/token";
 import { NetworkChainType } from "@/lib/types/network";
 import { FormItem } from "./components/form-item";
 import Input from "./components/input";
+import useSWRMutation from "swr/mutation";
+import { SystemEndPointPathMap } from "@/lib/end-point";
+import fetcher from "@/lib/fetcher";
 
-export default function QueryAccountBalance({
-  token0,
-  token1,
-  gas,
-  setGas,
-}: {
-  gas: number | null;
-  setGas: (_gas: number) => void;
-  token0: IToken | null;
-  token1: IToken | null;
-}) {
+export default function QueryAccountUsdcMarket() {
   const T = useTranslations("Common");
-  const { network, networkName } = useContext(NetworkContext);
+  const { network, networkId, networkName } = useContext(NetworkContext);
 
-  const {
-    gasToken
-  } = useContext(TokenContext);
 
   const fromAddress = useIndexStore((state) => state.fromAddress);
   const setFromAddress = useIndexStore((state) => state.setFromAddress);
-  const toAddress = useIndexStore((state) => state.toAddress);
-  const setToAddress = useIndexStore((state) => state.setToAddress);
 
   const handleAccountChange = (v: string) => {
     if (networkName ===  NetworkChainType.SOLANA) {
@@ -53,29 +36,22 @@ export default function QueryAccountBalance({
     }
   };
 
-  const { mutate: getGas } = useGasPrice();
-  const { mutate: getNonce } = useNonce(fromAddress);
 
   const {
-    balances,
-    handleBalanceQuery,
-    gasBalanceRes,
-    triggerGasBalance,
-    resetGasBalance,
-  } = useAccountBalance(fromAddress, token0, token1);
+    data,
+    trigger: trigger,
+    reset: reset,
+  } = useSWRMutation(
+    `${SystemEndPointPathMap.accountTokenBalance}?chainId=${networkId}`,
+    fetcher as any,
+  );
 
   useEffect(() => {
     if (networkName) {
       setFromAddress?.("");
-      setToAddress?.("")
     }
   }, [networkName])
 
-  useEffect(() => {
-    if (gasBalanceRes) {
-      setGas(gasBalanceRes?.balance_of || 0);
-    }
-  }, [gasBalanceRes, setGas]);
 
   const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
@@ -85,32 +61,18 @@ export default function QueryAccountBalance({
 
   const handleQuery = () => {
     if (
-      token0 &&
-      token1 &&
       fromAddress &&
       isAddress(fromAddress, networkName || "")
     ) {
-      handleBalanceQuery();
-      triggerGasBalance();
+      trigger();
     }
 
-    if (fromAddress) {
-      getGas();
-      getNonce();
-    }
-
-    if (!toAddress) {
-      setToAddress?.(fromAddress);
-    }
   };
 
   useEffect(() => {
-    resetGasBalance();
-  }, [network?.chain_id, resetGasBalance]);
+    reset();
+  }, [network?.chain_id]);
 
-  useEffect(() => {
-    handleQuery();
-  }, [token0?.token_id, token1?.token_id])
 
   return (
     <>
@@ -132,9 +94,9 @@ export default function QueryAccountBalance({
         </div>
       </FormItem>
       <div className="mt-4 grid grid-cols-3 gap-x-3 px-3">
-        <SmallTokenCard name={gasToken?.token_symbol || 'ETH'} num={gas || 0} />
-        <SmallTokenCard name={token0?.token_symbol} num={balances[0] || 0} />
-        <SmallTokenCard name={token1?.token_symbol} num={balances[1] || 0} />
+        <SmallTokenCard name={'可用积分'} num={data?.a || 0} />
+        <SmallTokenCard name={'锁定的积分'} num={data?.b || 0} />
+        <SmallTokenCard name={'USDC数量'} num={data?.c || 0} />
       </div>
     </>
   );

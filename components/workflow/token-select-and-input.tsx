@@ -1,9 +1,10 @@
-import TokenSelect from "@/components/workflow/token-select";
-import { Input } from "@/components/ui/input";
+import Input from "./components/input";
 import { replaceStrNum } from "@/lib/hooks/use-str-num";
 import { IToken } from "@/lib/types/token";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
+import Select from "./components/select";
+import { FormItem } from "./components/form-item";
 
 export interface ITokenNumDesc {
   token: IToken | null;
@@ -48,19 +49,23 @@ export default function TokenSelectAndInput({
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="LabelText mb-1">{label}</div>
-      <TokenSelect
-        tokens={tokens}
-        token={token}
-        handleTokenSelect={(e) => handleTokenSelect(e)}
-      />
-      <div className="ml-2 h-3 border-l border-border-color" />
-      <Input
-        value={num}
-        onChange={(e) => handleNumChange(e.target.value)}
-        className="rounded-md border-border-color"
-        placeholder="0"
-      />
+      <FormItem title={label}>
+        <Select
+          labelInValue
+          options={tokens}
+          valueKey={'token_address'}
+          labelKey={'token_symbol'}
+          value={token}
+          onChange={(e) => handleTokenSelect(e as IToken)}
+        />
+        <div className="ml-2 h-3 border-l border-border-color" />
+        <Input
+          value={num}
+          onChange={handleNumChange}
+          placeholder="0"
+          type="number"
+        />
+      </FormItem>
     </div>
   );
 }

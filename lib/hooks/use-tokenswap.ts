@@ -5,26 +5,37 @@ import fetcher from "@/lib/fetcher";
 import useIndexStore from "@/lib/state";
 import { NetworkContext } from "@/lib/providers/network-provider";
 import { IToken } from "../types/token";
-import { ITokenNumDesc } from "@/components/workflow/token-select-and-input";
+
+export type SwapTokenType = {
+  token0: IToken | null,
+  token1: IToken | null,
+  token0Num: string;
+  token1Num: string;
+  spender: string | null;
+}
 
 export function useTokenSwap(
   routing: string,
-  token0: ITokenNumDesc,
-  token1: ITokenNumDesc,
-  setToken0: (_t: any) => void,
-  setToken1: (_t: any) => void,
-  setSpender: (_t: string) => void
+  value: SwapTokenType,
+  onChange: (v: Partial<SwapTokenType>) => void
 ) {
   const userPathMap  = useIndexStore((state) => state.userPathMap());
   const { networkId } = useContext(NetworkContext);
+  const {
+    token0,
+    token1,
+    token0Num,
+    token1Num
+  } = value || {};
 
   const estimateAction = async (
-    t0Addr: string,
-    t1Addr: string,
-    amount: string,
-    exactInput: boolean,
+    t0Addr?: string,
+    t1Addr?: string,
+    amount?: string,
+    exactInput?: boolean,
   ) => {
-    const setTokenAction = exactInput ? setToken1 : setToken0;
+    const changeKey = exactInput ? "token1Num" : "token0Num";
+    if (!t0Addr || !t1Addr) return;
 
     const amountNum = Number(amount);
     if (!amountNum || !(amountNum > 0)) return;
@@ -34,13 +45,21 @@ export function useTokenSwap(
         token0Addr: t0Addr,
         token1Addr: t1Addr,
         amount: String(amountNum),
-        exactInput: exactInput,
+        exactInput: exactInput === true,
       });
       const amount = result?.amount;
-      setSpender(result?.swap_address || "")
-      setTokenAction((t: any) => ({ ...t, num: String(amount || "") }));
+      const spender = result?.swap_address || "";
+
+      onChange({
+        [changeKey]: amount,
+        spender: spender
+      })
+
     } catch (e) {
-      setTokenAction((t: any) => ({ ...t, num: "" }));
+      onChange({
+        [changeKey]: "",
+        spender: ""
+      })
     }
   };
 
@@ -84,131 +103,61 @@ export function useTokenSwap(
     fetchEstimate,
   );
 
-  const handleToken0Change = async (t: IToken | null) => {
-    setToken0((prev: ITokenNumDesc) => ({ ...prev, token: t }));
-    if (!token0.num && !token1.num) return;
+  const handleTokenChange = async (t: IToken | null, type: 'token0' | 'token1') => {
+    const diretion = type === 'token0';
+    const tokenKey = type;
+    const oldTokenNum = diretion ? token0Num : token1Num;
+    const anotherToken = diretion ? token1 : token0;
+    const anotherTokenNum = diretion ? token1Num : token0Num;
 
-    if (!t) return;
-    if (!token1.token) {
-      setToken1((prev: ITokenNumDesc) => ({ ...prev, token: t }));
+    if (!t) {
+      onChange({
+        [tokenKey]: t
+      })
       return;
     }
+    
+    const isSameToken = t?.token_address === anotherToken?.token_address;
 
-    const isSameToken = t?.token_address === token1.token?.token_address;
     if (isSameToken) {
-      if (token1.num) {
-        setToken0((prev: ITokenNumDesc) => ({ ...prev, num: token1.num }));
-      } else if (token0.num) {
-        setToken1((prev: ITokenNumDesc) => ({ ...prev, num: token0.num }));
-      }
-
+      const num = oldTokenNum || anotherTokenNum;
+      onChange(diretion ? {
+        token0: t,
+        token1: null,
+      } : {
+        token0: null,
+        token1: t,
+      })
       return;
     }
-
-    if (token1.num) {
-      estimateAction(t.token_address, token1.token.token_address, token1.num, false);
-    } else if (token0.num) {
-      estimateAction(t.token_address, token1.token.token_address, token0.num, true);
+    if (oldTokenNum) {
+      estimateAction(t?.token_address, anotherToken?.token_address, oldTokenNum, diretion);
+    } else {
+      estimateAction(anotherToken?.token_address, t?.token_address, anotherTokenNum, !diretion);
     }
   };
 
-  const handleToken0NumChange = (n: string) => {
-    if (n === token0.num) return;
-    setToken0((prev: ITokenNumDesc) => ({ ...prev, num: n }));
-
-    if (!token0.token || !token1.token) {
-      setToken1((prev: ITokenNumDesc) => ({ ...prev, num: "" }));
-      return;
-    }
-
-    if (token0.token && token1.token) {
-      const isSameToken = token0?.token?.token_address === token1.token?.token_address;
-
-      if (isSameToken) {
-        setToken1((prev: ITokenNumDesc) => ({ ...prev, num: n }));
-      } else {
-        estimateAction(
-          token0?.token?.token_address || "",
-          token1?.token?.token_address || "",
-          n,
-          true,
-        );
-      }
-
-      return;
-    }
+  const handleTokenNumChange = (n: string, type: 'token0' | 'token1') => {
+    const diretion = type === 'token0';
+    const changeKey = diretion ? "token0Num" : "token1Num";
+    const oldTokenNum = diretion ? token0Num : token1Num;
+    const token = diretion ? token0 : token1;
+    const anotherToken = diretion ? token1 : token0;
+    if (n === oldTokenNum) return;
+    onChange({
+      [changeKey]: n
+    })
+    estimateAction(token?.token_address, anotherToken?.token_address, n, diretion);
   };
 
   useEffect(() => {
-    if (!token0.num && !token1.num) return;
-    if (!token0.token || !token1.token) return;
-    if (token0.num) {
-      estimateAction(token0.token.token_address, token1.token.token_address, token0.num, true);
-    } else if (token1.num) {
-      estimateAction(token0.token.token_address, token1.token.token_address || "", token1.num, false);
-    }
+    if (!token0Num && !token1Num) return;
+    if (!token0 || !token1) return;
+    estimateAction(token0.token_address, token1.token_address, token0Num, true);
   }, [routing])
 
-  const handleToken1Change = async (t: IToken | null) => {
-    setToken1((prev: ITokenNumDesc) => ({ ...prev, token: t }));
-
-    if (!t) return;
-    if (!token0.num && !token1.num) return;
-
-    if (!token0.token) {
-      setToken0((prev: ITokenNumDesc) => ({ ...prev, num: "" }));
-      return;
-    }
-
-    const isSameToken = t?.token_address === token0.token?.token_address;
-    if (isSameToken) {
-      if (token0.num) {
-        setToken1((prev: ITokenNumDesc) => ({ ...prev, num: token0.num }));
-      } else if (token1.num) {
-        setToken0((prev: ITokenNumDesc) => ({ ...prev, num: token1.num }));
-      }
-
-      return;
-    }
-
-    if (token0.num) {
-      estimateAction(token0.token.token_address, t?.token_address, token0.num, true);
-    } else if (token1.num) {
-      estimateAction(token0.token.token_address, t?.token_address || "", token1.num, false);
-    }
-  };
-
-  const handleToken1NumChange = (n: string) => {
-    if (n === token1.num) return;
-    setToken1((prev: ITokenNumDesc) => ({ ...prev, num: n }));
-
-    if (!token0.token || !token1.token) {
-      setToken0((prev: ITokenNumDesc) => ({ ...prev, num: "" }));
-      return;
-    }
-
-    if (token0.token && token1.token) {
-      const isSameToken = token0?.token?.token_address === token1.token?.token_address;
-
-      if (isSameToken) {
-        setToken0((prev: ITokenNumDesc) => ({ ...prev, num: n }));
-      } else {
-        estimateAction(
-          token0.token?.token_address || "",
-          token1?.token?.token_address || "",
-          n,
-          false,
-        );
-      }
-
-      return;
-    }
-  };
-
   return {
-    handleToken0Change,
-    handleToken0NumChange,
-    handleToken1Change,
-    handleToken1NumChange,
+    handleTokenChange,
+    handleTokenNumChange,
   };
 }

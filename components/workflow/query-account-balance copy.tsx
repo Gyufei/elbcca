@@ -3,6 +3,7 @@ import { useContext, useEffect } from "react";
 import { cn, isAddress, parseToAddress } from "@/lib/utils";
 import { NetworkContext } from "@/lib/providers/network-provider";
 
+import { Input } from "../ui/input";
 import {
   Tooltip,
   TooltipContent,
@@ -18,8 +19,6 @@ import { useNonce } from "@/lib/hooks/use-nonce";
 import { useTranslations } from "next-intl";
 import { IToken } from "@/lib/types/token";
 import { NetworkChainType } from "@/lib/types/network";
-import { FormItem } from "./components/form-item";
-import Input from "./components/input";
 
 export default function QueryAccountBalance({
   token0,
@@ -114,11 +113,13 @@ export default function QueryAccountBalance({
 
   return (
     <>
-      <FormItem title={T("FromAddress")} className="px-3">
-        <div className="flex justify-between gap-x-2">
+      <div className="p-3 pt-0">
+        <div className="LabelText mb-1">{T("FromAddress")}</div>
+        <div className="flex justify-between">
           <Input
             value={fromAddress}
             onChange={(e: any) => handleAccountChange(e.target.value)}
+            className="mr-3 border-border-color bg-white"
             placeholder={networkName ===  NetworkChainType.SOLANA ? "" : "0x11111111111"}
             onKeyDown={handleKeyDown}
           />
@@ -130,8 +131,9 @@ export default function QueryAccountBalance({
             {T("Query")}
           </button>
         </div>
-      </FormItem>
-      <div className="mt-4 grid grid-cols-3 gap-x-3 px-3">
+      </div>
+
+      <div className="mt-1 grid grid-cols-3 gap-x-3 px-3">
         <SmallTokenCard name={gasToken?.token_symbol || 'ETH'} num={gas || 0} />
         <SmallTokenCard name={token0?.token_symbol} num={balances[0] || 0} />
         <SmallTokenCard name={token1?.token_symbol} num={balances[1] || 0} />

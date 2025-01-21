@@ -17,7 +17,9 @@ export enum NetworkChainType {
   SOLANA = "SOL",
   BNB = "BNB",
   ETH = "ETH",
+  USDC = "USDC"
 }
+
 // export interface NetworkItem {
 //   chain_id: number;
 //   chain_name: string;

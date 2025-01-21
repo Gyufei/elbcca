@@ -1,71 +1,51 @@
 import { ArrowBigRight } from "lucide-react";
-import TokenSelectAndInput, { ITokenNumDesc } from "./token-select-and-input";
-import { useTokenSwap } from "@/lib/hooks/use-tokenswap";
-import { useContext, useEffect } from "react";
-import { TokenContext } from "@/lib/providers/token-provider";
+import TokenSelectAndInput from "./token-select-and-input";
+import { SwapTokenType, useTokenSwap } from "@/lib/hooks/use-tokenswap";
 import { IToken } from "@/lib/types/token";
 
-function hasToken(list: IToken[], token: IToken | null): boolean {
-  if (!token) return false;
-  return list.findIndex((item) => {
-    return item.token_address === token?.token_address && item.token_symbol === token?.token_symbol
-  }) > -1;
 
-}
 export default function SelectSwapToken({
-  token0,
-  token1,
-  setToken0,
-  setToken1,
   routing,
-  setSpender
+  options = [],
+  value,
+  onChange = () => {}
 }: {
+  options: IToken[];
+  value: SwapTokenType;
+  onChange: (v: Partial<SwapTokenType>) => void;
   routing: string;
-  token0: ITokenNumDesc;
-  token1: ITokenNumDesc;
-  setToken0: (_t: ITokenNumDesc | any) => void;
-  setToken1: (_t: ITokenNumDesc | any) => void;
-  setSpender: (_t: string) => void
 }) {
-  const { tokens } = useContext(TokenContext);
-  useEffect(() => {
-    if (tokens?.[0] && !hasToken(tokens, token0?.token)) {
-      setToken0((prev: ITokenNumDesc) => ({
-        ...prev,
-        token: {
-          ...tokens?.[0]
-        },
-      }));
-    }
-  }, [tokens, token0.token, setToken0]);
+  const {
+    token0,
+    token1,
+    token0Num,
+    token1Num
+  } = value;
 
-  useEffect(() => {
-    if (tokens?.[1] && !hasToken(tokens, token1?.token)) {
-      setToken1((prev: ITokenNumDesc) => ({
-        ...prev,
-        token: {
-          ...tokens?.[1]
-        },
-      }));
-    }
-  }, [tokens, token1.token, setToken1]);
+  const onTokenChange = (v: Partial<SwapTokenType>) => {
+    console.log(v, "v")
+    onChange({
+      // ...value,
+      ...v
+    })
+  }
 
   const {
-    handleToken0Change,
-    handleToken0NumChange,
-    handleToken1Change,
-    handleToken1NumChange,
-  } = useTokenSwap(routing, token0, token1, setToken0, setToken1, setSpender);
+    handleTokenChange,
+    handleTokenNumChange,
+  } = useTokenSwap(routing, value, onTokenChange);
+
+  
 
   return (
     <div className="mt-3 flex items-center justify-between px-3">
       <TokenSelectAndInput
         label="Token0"
-        tokens={tokens}
-        token={token0.token}
-        tokenNum={token0.num}
-        handleTokenChange={handleToken0Change}
-        handleTokenNumChange={handleToken0NumChange}
+        tokens={options}
+        token={token0}
+        tokenNum={token0Num}
+        handleTokenChange={(v) => handleTokenChange(v, 'token0')}
+        handleTokenNumChange={(n) => handleTokenNumChange(n, 'token0')}
       />
       <ArrowBigRight
         className="mx-1 mt-1 h-5 w-5 text-[#7d8998]"
@@ -75,11 +55,11 @@ export default function SelectSwapToken({
       />
       <TokenSelectAndInput
         label="Token1"
-        tokens={tokens}
-        token={token1.token}
-        tokenNum={token1.num}
-        handleTokenChange={handleToken1Change}
-        handleTokenNumChange={handleToken1NumChange}
+        tokens={options}
+        token={token1}
+        tokenNum={token1Num}
+        handleTokenChange={(v) => handleTokenChange(v, 'token1')}
+        handleTokenNumChange={(n) => handleTokenNumChange(n, 'token1')}
       />
     </div>
   );
