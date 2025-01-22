@@ -40,7 +40,7 @@ export function MinimumTip({
       };
     }
     
-  }, [token0, token1, transType]);
+  }, [token0, token1, token0Num, token1Num, transType]);
 
   function handleChangeTrans() {
     setTransType(!transType)

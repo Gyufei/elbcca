@@ -57,7 +57,7 @@ export function useWorkflow({
    
     const paramsAfter = {
       user_name: activeUser?.email,
-      chain_id,
+      chain_id: chain_id + "",
       account,
       keystore,
       op_name: params?.op?.op_name,
@@ -98,7 +98,6 @@ export function useWorkflow({
       const commonParams = getCommonParams();
       if (!commonParams) return null;
       const { token0, token1, token0Num } = params;
-      console.log(params, "params 888")
       const afterParams = {
         ...commonParams,
         recipient: toAddress,
@@ -110,7 +109,6 @@ export function useWorkflow({
         is_exact_input: true,
       };
   
-      console.log(afterParams, "afterParams 23344")
       if (
         !afterParams.keystore ||
         !afterParams.recipient ||

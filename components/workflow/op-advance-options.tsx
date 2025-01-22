@@ -117,10 +117,10 @@ export default function OpAdvanceOptions({
 
   return (
     <AdvanceCollapsible>
-      <div className="flex flex-row gap-y-3 px-3 gap-x-3 justify-between flex-wrap">
+      <div className="grid grid-cols-2 gap-y-3 px-3 gap-x-3 justify-between flex-wrap">
         {
           advanceShowKey.includes('routing') && (
-            <FormItem title={T("Routing")} className="w-[45%]">
+            <FormItem title={T("Routing")}>
               <Select
                 options={routings}
                 value={options['routing'] || ''}
@@ -142,7 +142,7 @@ export default function OpAdvanceOptions({
        
         {
           advanceShowKey.includes('timeout') && (
-            <FormItem title={T("Timeout(s)")} className="w-[45%]">
+            <FormItem title={T("Timeout(s)")}>
               <Input
                 value={options.timeout || ""}
                 onChange={(v) => onChange({ "timeout": Number(v) })}
@@ -155,7 +155,7 @@ export default function OpAdvanceOptions({
         }
         {
           advanceShowKey.includes('priority_fee') &&  (
-            <FormItem title={T("PriorityFee")} className="w-[45%]">
+            <FormItem title={T("PriorityFee")}>
               <Input
                 value={options.priority_fee || ""}
                 onChange={(v) => onChange({"priority_fee": Number(v) })}
@@ -167,7 +167,7 @@ export default function OpAdvanceOptions({
         }
         {
           advanceShowKey.includes('slippage') &&  (
-            <FormItem title={T("Slippage")} className="w-[45%]">
+            <FormItem title={T("Slippage")}>
               <div className="relative">
                 <Input
                   value={options.slippage || ""}
@@ -181,19 +181,18 @@ export default function OpAdvanceOptions({
               </div>
             </FormItem>
         )}
+
         {advanceShowKey.includes('nonce') && (
-          <FormItem title={T("Nonce")} className="w-[30%]">
-            <Input
-              value={options.nonce || ""}
-              onChange={(v) => onChange({ "nonce": Number(v) })}
-              placeholder={String(nonce) || "0"}
-              type="number"
-              noDecimals
-            />
-          </FormItem>
-        )}
-        {advanceShowKey.includes('gas') && (
-          <div className="w-[60%] flex-row flex-nowrap items-end justify-between">
+          <div className="col-span-full flex gap-x-3 items-end">
+            <FormItem title={T("Nonce")} className="flex-1">
+              <Input
+                value={options.nonce || ""}
+                onChange={(v) => onChange({ "nonce": Number(v) })}
+                placeholder={String(nonce) || "0"}
+                type="number"
+                noDecimals
+              />
+            </FormItem>
             <FormItem title={"Gas(gwei)"} className="flex-1">
               <Input
                 value={options.gas || ""}
@@ -228,13 +227,11 @@ export default function OpAdvanceOptions({
                 }}
               />
             </button>
-            
           </div>
         )}
-        
         {
           advanceShowKey.includes('schedue') && (
-            <FormItem title={T("ScheduleTime")} className="w-full">
+            <FormItem title={T("ScheduleTime")} className="col-span-full">
               <div className="flex justify-between gap-x-3">
                 <DateTimePicker
                   ampm={false}

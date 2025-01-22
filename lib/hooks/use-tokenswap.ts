@@ -110,17 +110,16 @@ export function useTokenSwap(
     const anotherToken = diretion ? token1 : token0;
     const anotherTokenNum = diretion ? token1Num : token0Num;
 
-    if (!t) {
+    if (!t || !anotherToken) {
       onChange({
         [tokenKey]: t
       })
       return;
     }
     
-    const isSameToken = t?.token_address === anotherToken?.token_address;
+    const isSameToken = t && t?.token_address === anotherToken?.token_address;
 
     if (isSameToken) {
-      const num = oldTokenNum || anotherTokenNum;
       onChange(diretion ? {
         token0: t,
         token1: null,
@@ -130,6 +129,9 @@ export function useTokenSwap(
       })
       return;
     }
+    onChange({
+      [tokenKey]: t
+    })
     if (oldTokenNum) {
       estimateAction(t?.token_address, anotherToken?.token_address, oldTokenNum, diretion);
     } else {

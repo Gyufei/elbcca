@@ -23,9 +23,7 @@ export default function SelectSwapToken({
   } = value;
 
   const onTokenChange = (v: Partial<SwapTokenType>) => {
-    console.log(v, "v")
     onChange({
-      // ...value,
       ...v
     })
   }
@@ -34,8 +32,6 @@ export default function SelectSwapToken({
     handleTokenChange,
     handleTokenNumChange,
   } = useTokenSwap(routing, value, onTokenChange);
-
-  
 
   return (
     <div className="mt-3 flex items-center justify-between px-3">

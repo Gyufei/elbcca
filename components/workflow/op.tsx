@@ -99,13 +99,8 @@ export default function Op({
   })
 
   const onParamsChange = (key?: string, value?: any) => {
-    console.log(key, value, "value 8888")
     if (key) {
       setParams((preParams) => {
-        console.log({
-          ...preParams,
-          [key]: value,
-        })
         return {
           ...preParams,
           [key]: value,

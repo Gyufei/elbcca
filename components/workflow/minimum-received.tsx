@@ -30,7 +30,7 @@ export default function MinimumReceived({
    } = tokenInfo || {};
   
   return (
-    <FormItem title={T("MinimumReceived")} className="w-[45%]">
+    <FormItem title={T("MinimumReceived")}>
       <div className="relative">
         <Input
           placeholder={(maxMinimum || "0") + ""}

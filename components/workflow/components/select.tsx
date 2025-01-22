@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useMemo } from "react";
 
 type BasicSelectProps = {
   labelKey?: string;
@@ -36,14 +37,20 @@ export default function BasicSelect({
     onChange(v);
   };
 
+  const selectedOp = useMemo(() => {
+    if (labelInValue) return value;
+    if (!value) return null;
+    return options.find((item: Record<string, any>) => item[valueKey] === value)
+  }, [value, options, labelInValue]);
+
   return (
     <Select value={(value as Record<string, any>)?.[valueKey] || value} onValueChange={(e) => handleSelect(e)}>
       <SelectTrigger>
         <SelectValue placeholder={placeholder}>
           {value && (
             <div className="flex items-center">
-              {(value as Record<string, any>)?.['logo'] && (<Image src={(value as Record<string, any>)?.['logo']} width={20} height={20} alt="logo" />)}
-              <span className="ml-1">{labelInValue ? (value as Record<string, any>)?.[labelKey] : value}</span>
+              {(selectedOp as Record<string, any>)?.['logo'] && (<Image src={(selectedOp as Record<string, any>)?.['logo']} width={20} height={20} alt="logo" />)}
+              <span className="ml-1">{(selectedOp as Record<string, any>)?.[labelKey]}</span>
             </div>
           )}
         </SelectValue>

@@ -47,7 +47,7 @@ export const networkRouting = {
 
 export const networkAdvanceParams = {
   [NetworkChainType.SOLANA]: {
-    minimum_received: "0",
+    minimum_received: "",
     routing: networkRouting[NetworkChainType.SOLANA][0].value,
     schedule: null,
     slippage: "0.02",
@@ -55,7 +55,7 @@ export const networkAdvanceParams = {
   },
   [NetworkChainType.BNB]: {
     routing: networkRouting[NetworkChainType.BNB][0].value,
-    minimum_received: "0",
+    minimum_received: "",
     schedule: null,
     timeout: 1800,
     slippage: "0.02",
@@ -66,7 +66,7 @@ export const networkAdvanceParams = {
   },
   [NetworkChainType.ETH]: {
     routing: networkRouting[NetworkChainType.ETH][0].value,
-    minimum_received: "0",
+    minimum_received: "",
     schedule: null,
     timeout: 1800,
     slippage: "0.02",
@@ -82,7 +82,7 @@ export const networkAdvanceParams = {
 
 
 export const networkAdvanceKeysMap = {
-  [NetworkChainType.SOLANA]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'timeout', 'priority_fee', 'schedue'],
+  [NetworkChainType.SOLANA]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'priority_fee', 'slippage', 'schedue'],
   [NetworkChainType.BNB]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'timeout', 'slippage', 'nonce', 'gas', 'fixed_gas', 'no_check_gas', 'schedue'],
   [NetworkChainType.ETH]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'timeout', 'slippage', 'nonce', 'gas', 'fixed_gas', 'no_check_gas', 'schedue'],
   [NetworkChainType.USDC]: ['usdcMarket', 'usdcOption', 'schedue'],
