@@ -27,4 +27,4 @@ export enum USDCOpType {
   WITHDRAW = 7,
   CREATEACCOUNT = 8,
   BRIDGE = 9
-};
+}

@@ -41,7 +41,7 @@ export default function BasicSelect({
     if (labelInValue) return value;
     if (!value) return null;
     return options.find((item: Record<string, any>) => item[valueKey] === value)
-  }, [value, options, labelInValue]);
+  }, [value, options, labelInValue, valueKey]);
 
   return (
     <Select value={(value as Record<string, any>)?.[valueKey] || value} onValueChange={(e) => handleSelect(e)}>

@@ -13,7 +13,7 @@ type BasicInputProps = {
 }
 export default  function BasicInput({
   value,
-  onChange = (v: string) => {},
+  onChange = () => {},
   placeholder = "",
   type =  "text",
   noDecimals = false,

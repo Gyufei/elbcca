@@ -112,7 +112,7 @@ export default function UsdcBtn({
         ...extraParams
       }),
     })
-  };
+  }
 
   async function handleClick() {
     try {

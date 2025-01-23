@@ -1,5 +1,6 @@
 import { DexImgMap } from "@/lib/constants/global";
 import fetcher from "@/lib/fetcher";
+import { NetworkChainType } from "@/lib/types/network";
 import { IOp } from "@/lib/types/op";
 
 const getImageSrc = (op: IOp) => {
@@ -28,6 +29,7 @@ export const fetchOp = async (url: string, networkName?: string) => {
     const res = await fetcher(url, {
       method: "GET",
     });
+    if (networkName === NetworkChainType.USDC) return res || [];
     const displayRes = (res || []).filter((op: IOp) => op.op_id !== 3)
     return displayRes.map((item: IOp) => {
       return {

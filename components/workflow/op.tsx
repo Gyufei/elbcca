@@ -129,7 +129,7 @@ export default function Op({
         ...defaultParams,
       })
     }
-  }, [tokens, opOptions])
+  }, [tokens, opOptions, networkName])
   
   return (
     <>

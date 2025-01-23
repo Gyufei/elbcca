@@ -30,7 +30,7 @@ export function useTokenAllowance(
     const queryStr = query.toString();
 
     return queryStr;
-  }, [tokenAddr, account, spender, networkId, gasToken?.token_address]);
+  }, [tokenAddr, account, spender, networkName, networkId, gasToken?.token_address]);
 
   const res = useSWR(() => {
     if (!queryStr) return null;

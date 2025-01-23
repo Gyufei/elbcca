@@ -1,5 +1,4 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { IOp } from "../types/op";
 import useIndexStore from "../state";
 import { NetworkContext } from "../providers/network-provider";
 import { NetworkChainType } from "../types/network";
@@ -9,7 +8,7 @@ import { useTokenAllowance } from "./use-token-allowance";
 
 export function useWorkflowParams(params: Record<string, any>) {
   const userPathMap = useIndexStore((state) => state.userPathMap());
-  const { network, networkId, networkName } = useContext(NetworkContext);
+  const { networkId, networkName } = useContext(NetworkContext);
   const [allowance, setAllowance] = useState<string | null>(null);
   const op = params.op;
   
