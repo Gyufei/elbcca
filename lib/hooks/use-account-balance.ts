@@ -4,7 +4,6 @@ import { IToken } from "../types/token";
 import useSWRMutation from "swr/mutation";
 import fetcher from "../fetcher";
 import { GAS_TOKEN_ADDRESS } from "../constants/global";
-import { SystemEndPointPathMap } from "../end-point";
 import useIndexStore from "../state";
 
 type BalanceType = number;
@@ -66,7 +65,7 @@ export function useAccountBalance(
   }
 
   const gasBalanceFetch = async () => {
-    const res = await fetcher( `${SystemEndPointPathMap.accountTokenBalance}?${getGasBalanceQuery()}`, {
+    const res = await fetcher( `${userPathMap.accountTokenBalance}?${getGasBalanceQuery()}`, {
       method: "GET",
     });
     return [res.balance_of || 0];
