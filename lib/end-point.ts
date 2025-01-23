@@ -37,7 +37,6 @@ export const SystemEndPointPathMap = {
 };
 
 export const UserEndPointPathMap = {
-  accountTokensBalance: "/web3/batch_token_balanceof",
   keyStoreAccounts: "/keystore/accounts",
   web3Info: "/tokenswap/info",
   tokenList: "/setting/account_token_list",
@@ -48,6 +47,7 @@ export const UserEndPointPathMap = {
   nonceNum: "/web3/nonce",
   gasPrice: "/web3/gas_price",
   priorityFee: "/web3/priority_fee",
+  accountTokensBalance: "/web3/batch_token_balanceof",
   accountTokenBalance: "/web3/balanceof",
   accountTokenAllowance: "/web3/token_allowance",
 
