@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useEffect } from "react"
 import { ChevronsUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -36,6 +36,12 @@ export function Combobox({
 }: ComboboxProps) {
   const [open, setOpen] = useState(false)
   const [searchKey, setSearchKey] = useState("");
+
+  useEffect(() => {
+    if (open === false) {
+      setSearchKey("")
+    }
+  }, [open])
 
   const filterOptions = useMemo(() => {
     const _v = (searchKey || "").trim();
@@ -79,11 +85,11 @@ export function Combobox({
       </PopoverTrigger>
       <PopoverContent className="w-[350px] p-0">
         <div className="rounded-md bg-white">
-          <div className="p-1">
+          <div className="p-3">
             <Input placeholder={searchPlaceholder} value={searchKey} onChange={(e) => setSearchKey(e.target.value)}/>
           </div>
     
-          <div className="flex flex-col max-h-[200px] overflow-y-auto">
+          <div className="max-h-[200px] overflow-y-auto">
             {
               filterOptions?.length === 0 && (
                 <div className="pb-8"><Empty /></div>
@@ -92,7 +98,7 @@ export function Combobox({
             {(filterOptions|| []).map((option: Record<string, any>) => (
               <div
                 key={option[valueKey]}
-                className={`relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
+                className={`flex cursor-pointer items-center h-[40px] pl-3 hover:bg-[#F6F7F8] text-[18px] align-items`}
                 onClick={() => handleSelect(option[valueKey])}
               >
                 {option[labelKey]}

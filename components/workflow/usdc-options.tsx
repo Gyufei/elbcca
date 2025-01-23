@@ -69,7 +69,6 @@ export default function UsdcOptions({
             options={offerOptions}
             value={params['order_id']}
             onChange={(v: any) => {
-              console.log(v, "v 23344")
               onChange({ 'order_id': v })
             }}
           />

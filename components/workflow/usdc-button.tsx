@@ -13,6 +13,7 @@ import Select from "./components/select";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { pick } from "lodash";
 import { USDCOpType } from "@/lib/types/network";
+import { isAddress } from "@/lib/utils";
 
 export default function UsdcBtn({
   op,
@@ -29,12 +30,12 @@ export default function UsdcBtn({
 }) {
   const userPathMap = useIndexStore((state) => state.userPathMap());
   const [loading, setLoading] = useState<boolean>(false);
-  const { networkId } = useContext(NetworkContext);
+  const { networkId, networkName } = useContext(NetworkContext);
   const [show, setShow] = useState<boolean>(false);
   
   const { data: hypeTradeUserInfo, trigger: triggerUserInfo, isMutating: isLoading } = useSWRMutation(
     () => {
-      return networkId&&fromAddress
+      return networkId&& fromAddress && isAddress(fromAddress, networkName || "")
         ? `${userPathMap.hypeTradeUserInfo}?chain_id=${networkId}&account=${fromAddress}`
         : null;
     }, fetcher as any);
@@ -55,10 +56,10 @@ export default function UsdcBtn({
 
 
   useEffect(() => {
-    triggerUserInfo()
+    triggerUserInfo?.()
   }, [networkId, fromAddress])
 
-  const isCreated = !isLoading && !!hypeTradeUserInfo;
+  const isCreated = !isLoading && fromAddress && isAddress(fromAddress, networkName || "") && !!hypeTradeUserInfo;
 
   const T = useTranslations("Common");
 
@@ -74,7 +75,6 @@ export default function UsdcBtn({
     }
     if (op?.op_id === USDCOpType.TAKEOFFER) {
       url = userPathMap.hypeTradeTakeOffer;
-      console.log(params['order_id'], "5555")
       const orderItem = params['order_id'];
       extraParams = {
         ...pick(params, ['item_amount']),
@@ -152,7 +152,7 @@ export default function UsdcBtn({
             disabled={loading}
             onClick={() => setShow(true)}
           >
-            <span>创建账号</span>
+            <span>{T("UsdcCreateAccount")}</span>
           </BasicButton>
         )
       }
@@ -272,7 +272,7 @@ function HypeTradeCreateAmountDialog({
             disabled={isSubmitting || !formValue.trading_mode}
             onClick={onSubmit}
           >
-            <span>创建账户</span>
+            <span>{T("UsdcCreateAccount")}</span>
           </BasicButton>
         </div>
       </DialogContent>

@@ -13,7 +13,7 @@ import useIndexStore from "@/lib/state";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { useGasPrice } from "@/lib/hooks/use-gas-price";
 import { useTranslations } from "next-intl";
-import { networkAdvanceKeysMap, networkAdvanceParams } from "@/lib/constants/network-config";
+import { networkAdvanceKeysMap, networkAdvanceParams, USDCDefaultParams } from "@/lib/constants/network-config";
 import { NetworkChainType } from "@/lib/types/network";
 import { usePriorityFee } from "@/lib/hooks/use-priorityFee";
 import { TransferMax } from "./transfer-max";
@@ -115,6 +115,7 @@ export default function Op({
     // init params
     if (tokens && opOptions) {
       const defaultParams = networkAdvanceParams[networkName as  NetworkChainType] as IAdvanceOptions;
+      const extraParams =  (networkName ===  NetworkChainType.USDC) ? USDCDefaultParams : {};
       setParams({
         op: opOptions[0],
         token0: tokens?.[0],
@@ -122,6 +123,7 @@ export default function Op({
         token0Num: "",
         token1Num: "",
         marketToken: tokens?.[0] || null,
+        ...extraParams
       })
       setAdvanceOptions({
         ...defaultParams,

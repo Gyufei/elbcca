@@ -80,6 +80,16 @@ export const networkAdvanceParams = {
   }
 }
 
+export const USDCDefaultParams = {
+  total_item_amount: null,
+  quote_token_amount: null,
+  order_id: null,
+  item_amount: null,
+  delete_id: null,
+  token_balance_type: "sales_revenue",
+  bridge_chain: "hyperliquid-arbitrum"
+}
+
 
 export const networkAdvanceKeysMap = {
   [NetworkChainType.SOLANA]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'priority_fee', 'slippage', 'schedue'],
