@@ -5,7 +5,7 @@ import { NetworkContext } from "../providers/network-provider";
 import fetcher from "../fetcher";
 import { isAddress } from "../utils";
 import { TokenContext } from "../providers/token-provider";
-import { SystemEndPointPathMap } from "../end-point";
+import useIndexStore from "../state";
 
 export function useTokenAllowance(
   tokenAddr: string | null,
@@ -14,7 +14,8 @@ export function useTokenAllowance(
 ) {
   const { gasToken } = useContext(TokenContext);
   const { networkId, networkName } = useContext(NetworkContext);
-
+  const userPathMap = useIndexStore((state) => state.userPathMap());
+  
   const queryStr = useMemo(() => {
     if (!tokenAddr || !account || !spender) return null;
     if (!isAddress(tokenAddr, networkName || "") || !isAddress(account, networkName || "")) return null;
@@ -33,7 +34,7 @@ export function useTokenAllowance(
 
   const res = useSWR(() => {
     if (!queryStr) return null;
-    return `${SystemEndPointPathMap.accountTokenAllowance}?${queryStr}`;
+    return `${userPathMap.accountTokenAllowance}?${queryStr}`;
   }, fetcher);
 
   return {

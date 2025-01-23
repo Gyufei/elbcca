@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Input } from "./input"
+import Empty from "../shared/empty"
 
 type ComboboxProps = {
   labelKey?: string;
@@ -39,8 +40,15 @@ export function Combobox({
   const filterOptions = useMemo(() => {
     const _v = (searchKey || "").trim();
     if (!_v || _v === '') return options || [];
-    if (_v) return options.filter((item) => item[labelKey].includes(_v) || item[valueKey].includes(_v)) || []
-  }, [value, options])
+    // || item[valueKey].includes(_v)
+    if (_v) return options.filter((item) => item[labelKey].includes(_v)) || []
+  }, [searchKey, options])
+
+  const selectedOp = useMemo(() => {
+    if (labelInValue) return value as Record<string, any>;
+    if (!value) return null;
+    return options.find((item: Record<string, any>) => item[valueKey] === value)
+  }, [value, options, labelInValue]);
 
 
   const handleSelect = (v: string) => {
@@ -63,28 +71,28 @@ export function Combobox({
           className={`justify-between ${className}`}
           onClick={() => setOpen(!open)}
         >
-          {value
-            ? options.find((item: Record<string, any>) => item[valueKey] === value)?.[labelKey]
+          {selectedOp
+            ? selectedOp?.[labelKey]
             : <span className="text-[#707070]">{placeholder}</span>}
           <ChevronsUpDown className="opacity-50 font-normal" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[350px] p-0">
         <div className="rounded-md bg-white">
           <div className="p-1">
             <Input placeholder={searchPlaceholder} value={searchKey} onChange={(e) => setSearchKey(e.target.value)}/>
           </div>
     
-          <div className="flex flex-col">
+          <div className="flex flex-col max-h-[200px] overflow-y-auto">
             {
               filterOptions?.length === 0 && (
-                <div className="text-[#707070] p-1">什么都没有</div>
+                <div className="pb-8"><Empty /></div>
               )
             }
             {(filterOptions|| []).map((option: Record<string, any>) => (
               <div
                 key={option[valueKey]}
-                className={`flex cursor-pointer items-center h-10 pl-3 hover:bg-[#F6F7F8] text-[16px] align-items`}
+                className={`relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50`}
                 onClick={() => handleSelect(option[valueKey])}
               >
                 {option[labelKey]}

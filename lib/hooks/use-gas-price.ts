@@ -3,17 +3,19 @@ import { useContext } from "react";
 
 import fetcher from "../fetcher";
 import { NetworkContext } from "../providers/network-provider";
-import { SystemEndPointPathMap } from "../end-point";
+import useIndexStore from "../state";
 
 export function useGasPrice() {
   const { network } = useContext(NetworkContext);
+  const userPathMap = useIndexStore((state) => state.userPathMap());
+
 
   const chainId = network?.chain_id || "";
 
   const res = useSWR(
     () => {
       if (chainId) {
-        return `${SystemEndPointPathMap.gasPrice}?chain_id=${chainId}`;
+        return `${userPathMap.gasPrice}?chain_id=${chainId}`;
       } else {
         return null;
       }

@@ -147,6 +147,24 @@
     "AddressError": "Address is error",
     "RPCError": "RPC is error",
     "Now": "Now",
-    "AddToken": "AddToken"
+    "AddToken": "AddToken",
+    "UsdcCreateAccount": "Create Account",
+    "UsdcUserName": "UserName",
+    "UsdcTradingMode": "TradingMode",
+    "UsdcCreateSuccess": "Create Account Success",
+    "UsdcFreePoint": "FreePoint",
+    "UsdcLockedPoint": "LockedPoint",
+    "UsdcTradeMarket": "HypesTrade",
+    "UsdcPointsQuantity": "PointsQuantity",
+    "UsdcPointsPrice": "PointsPrice",
+    "UsdcQuantity": "PointsQuantity",
+    "UsdcTradeOrder": "TradeOrder",
+    "UsdcTradeQuantity": "TradeQuantity",
+    "UsdcOrderId": "OrderId",
+    "UsdcTokenType": "TokenType",
+    "UsdcSalesRevenue": "Sales Revenue",
+    "UsdcReferralReward": "Sales Revenue",
+    "UsdcBridgeAmount": "BridgeAmount",
+    "UsdcBridgeChainWay": "ChainWay"
   }
 }

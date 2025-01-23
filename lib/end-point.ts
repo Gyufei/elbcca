@@ -33,12 +33,7 @@ export const SystemEndPointPathMap = {
   getTokenList: WithHost("/setting/account_token_list"),
   updateRpc: WithHost("/setting/private_rpc"),
   getRPC: WithHost("/setting/private_rpc"),
-  gasPrice: WithHost("/web3/gas_price"),
-  priorityFee: WithHost("/web3/priority_fee"),
-  accountTokenBalance: WithHost("/web3/balanceof"),
-
-  accountTokenAllowance: WithHost("/web3/token_allowance"),
-  nonceNum: WithHost("/web3/nonce"),
+  
 };
 
 export const UserEndPointPathMap = {
@@ -49,6 +44,12 @@ export const UserEndPointPathMap = {
   filterAccount: "/tokenswap/filter_account",
   estimateToken: "/tokenswap/estimate_token_amount",
   signTransfer: "/tokenswap/transfer/sign",
+
+  nonceNum: "/web3/nonce",
+  gasPrice: "/web3/gas_price",
+  priorityFee: "/web3/priority_fee",
+  accountTokenBalance: "/web3/balanceof",
+  accountTokenAllowance: "/web3/token_allowance",
 
   signApprove: "/tokenswap/approve/sign",
   signSwap: "/tokenswap/swap/sign",
@@ -63,4 +64,13 @@ export const UserEndPointPathMap = {
   scheduleSave: "/schedule/save",
   scheduleApply: "/schedule/apply",
 
+  hypeTradeUserInfo: "/hype_trade/user_info",
+  hypeTradeUserPointAmount: "/hype_trade/user_point_amount",
+  hypeTradeCreateAccount: "hype_trade/create_account",
+  hypeTradeCreateOffer: "/hype_trade/create_offer",
+  hypeTradeCancelOffer: "/hype_trade/cancel_offer",
+  hypeTradeGetOffer: "/hype_trade/offers",
+  hypeTradeTakeOffer: "/hype_trade/take_offer",
+  hypeTradeBridge: "/hype_trade/bridge",
+  hypeTradeWithdraw: "/hype_trade/withdraw_token_balance"
 };

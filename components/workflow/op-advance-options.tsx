@@ -12,7 +12,6 @@ import Input from "./components/input";
 import UnlockIcon from "@/components/icons/unlock";
 import LockIcon from "@/components/icons/lock";
 import NoCheckIcon from "@/components/icons/noCheck";
-import { replaceStrNum, replaceStrNumNoDecimal } from "@/lib/hooks/use-str-num";
 import { subMinutes } from "date-fns";
 import { useGasPrice } from "@/lib/hooks/use-gas-price";
 import { useNonce } from "@/lib/hooks/use-nonce";
@@ -20,14 +19,10 @@ import useIndexStore from "@/lib/state";
 import useEffectStore from "@/lib/state/use-store";
 import { useTranslations } from "next-intl";
 import { NetworkContext } from "@/lib/providers/network-provider";
-import RoutingSelect from "./select-routing";
 import { NetworkChainType } from "@/lib/types/network";
-import { MinimumTip } from "./minimum-tip";
-import { ITokenNumDesc } from "./token-select-and-input";
 import { usePriorityFee } from "@/lib/hooks/use-priorityFee";
 import { FormItem } from "./components/form-item";
 import Select from "./components/select";
-import { routing } from "i18n/routing";
 import { pick } from "lodash";
 import MinimumReceived from "./minimum-received";
 import { networkAdvanceKeysMap } from "@/lib/constants/network-config";
@@ -75,16 +70,16 @@ export default function OpAdvanceOptions({
 
   const timezone = useEffectStore(useIndexStore, (state) => state.timezone);
 
-  const onSchedueChange = (value: Date | string) => {
+  const onSchedueChange = (value: any) => {
     const offset = -(new Date().getTimezoneOffset() / 60);
     const offsetToTimezone = offset - Number(timezone) || 0;
-    value = (Number(value) / 1000 + offsetToTimezone * 60 * 60).toFixed();
+    const v = (value / 1000 + offsetToTimezone * 60 * 60).toFixed();
     onChange({
-      "schedule": value
+      "schedule": v
     })
   }
   const setNow = () => {
-    onSchedueChange((new Date().getTime()/1000).toFixed())
+    onSchedueChange((new Date()))
   };
 
   const curTimezoneStr = useIndexStore((state) => state.curTimezoneStr());
@@ -117,7 +112,7 @@ export default function OpAdvanceOptions({
 
   return (
     <AdvanceCollapsible>
-      <div className="grid grid-cols-2 gap-y-3 px-3 gap-x-3 justify-between flex-wrap">
+      <div className="grid grid-cols-2 px-3 gap-x-3 justify-between flex-wrap mt-[-12px]">
         {
           advanceShowKey.includes('routing') && (
             <FormItem title={T("Routing")}>

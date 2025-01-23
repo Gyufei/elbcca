@@ -78,7 +78,7 @@ export function useAccountBalance(
     trigger: triggerGasBalance,
     reset: resetGasBalance,
   } = useSWRMutation(
-    `${SystemEndPointPathMap.accountTokenBalance}?${getGasBalanceQuery()}`,
+    `${userPathMap.accountTokenBalance}?${getGasBalanceQuery()}`,
     fetcher as any,
   );
 

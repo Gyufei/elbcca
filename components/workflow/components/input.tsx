@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { replaceStrNum, replaceStrNumNoDecimal } from "@/lib/hooks/use-str-num";
 
 type BasicInputProps = {
-  value: string | number;
+  value?: string | number;
   onChange: (v: string) => void;
   placeholder?: string;
   type?: "text" | "number";

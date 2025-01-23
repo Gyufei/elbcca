@@ -53,20 +53,14 @@ export default function Op({
   const advanceShowKey = networkAdvanceKeysMap[networkName as NetworkChainType] || [];
   const [transferAmount, setTransferAmount] = useState<string>("");
   
-  // const { data: opOptions = [] } = useSWR(() => {
-  //   return networkId
-  //     ? `${SystemEndPointPathMap.ops}?chain_id=${networkId}`
-  //     : null;
-  // }, fetchOp);
-
-  const opOptions = [
-    {op_id: 1, op_name: "创建订单"},
-    {op_id: 2, op_name: "取消订单"},
-    {op_id: 3, op_name: "交易订单"},
-    {op_id: 4, op_name: "提取代币"},
-  ]
-
- 
+  const fetchOpAction = (url: string) => {
+    return fetchOp(url, networkName)
+  }
+  const { data: opOptions = [] } = useSWR(() => {
+    return networkId
+      ? `${SystemEndPointPathMap.ops}?chain_id=${networkId}`
+      : null;
+  }, fetchOpAction);
 
   const { data: gasPrice } = useGasPrice();
   const { data: priorityFee } = usePriorityFee();
@@ -127,14 +121,13 @@ export default function Op({
         token1: tokens?.[1] || null,
         token0Num: "",
         token1Num: "",
+        marketToken: tokens?.[0] || null,
       })
       setAdvanceOptions({
         ...defaultParams,
       })
-
     }
-    // , opOptions
-  }, [tokens])
+  }, [tokens, opOptions])
   
   return (
     <>
@@ -161,12 +154,22 @@ export default function Op({
       }
       {
         advanceShowKey.includes('usdcMarket') && (
-          <QueryAccountUsdcMarket />
+          <QueryAccountUsdcMarket 
+            params={params}
+            gas={gasBalance}
+            setGas={setGasBalance}
+            tokens={tokens}
+            onParamsChange={(v) => onParamsChange(undefined, v)}
+          />
         )
       }
       {
         advanceShowKey.includes('usdcOption') && (
-          <UsdcOptions op={params['op']} params={params} onChange={(v: Record<string, any>) => onParamsChange(undefined, v)} />
+          <UsdcOptions 
+            op={params['op']} 
+            params={params}
+            fromAddress={fromAddress}
+            onChange={(v: Record<string, any>) => onParamsChange(undefined, v)} />
         )
       }
       {isSwapOp && advanceShowKey.includes('tokenSwap') && (
@@ -251,6 +254,8 @@ export default function Op({
       {
         networkName === NetworkChainType.USDC && (
           <UsdcBtn
+            keyStores={keyStores}
+            fromAddress={fromAddress}
             op={params['op']}
             params={params}
             onAfterAction={() => afterAction()}

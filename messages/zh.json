@@ -147,6 +147,24 @@
     "AddressError": "地址格式错误",
     "RPCError": "RPC调用失败",
      "Now": "现在",
-    "AddToken": "添加Token"
+    "AddToken": "添加Token",
+    "UsdcCreateAccount": "创建账户",
+    "UsdcUserName": "用户名",
+    "UsdcTradingMode": "交易模式",
+    "UsdcCreateSuccess": "创建账户成功",
+    "UsdcFreePoint": "可用积分",
+    "UsdcLockedPoint": "锁定积分",
+    "UsdcTradeMarket": "交易市场",
+    "UsdcPointsQuantity": "积分数量",
+    "UsdcPointsPrice": "积分售价",
+    "UsdcQuantity": "积分数量",
+    "UsdcTradeOrder": "交易订单",
+    "UsdcTradeQuantity": "交易数量",
+    "UsdcOrderId": "订单ID",
+    "UsdcTokenType": "代币类型",
+    "UsdcSalesRevenue": "销售收入",
+    "UsdcReferralReward": "推荐奖励",
+    "UsdcBridgeAmount": "跨链金额",
+    "UsdcBridgeChainWay": "跨链方式"
   }
 }

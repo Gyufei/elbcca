@@ -16,13 +16,27 @@ import { NetworkChainType } from "@/lib/types/network";
 import { FormItem } from "./components/form-item";
 import Input from "./components/input";
 import useSWRMutation from "swr/mutation";
-import { SystemEndPointPathMap } from "@/lib/end-point";
 import fetcher from "@/lib/fetcher";
+import Select from "./components/select";
+import { IToken } from "@/lib/types/token";
+import { useAccountBalance } from "@/lib/hooks/use-account-balance";
 
-export default function QueryAccountUsdcMarket() {
+export default function QueryAccountUsdcMarket({
+  gas,
+  setGas,
+  params,
+  tokens = [],
+  onParamsChange
+}: {
+  tokens: IToken[];
+  gas: number | null;
+  params: Record<string, any>;
+  setGas: (_gas: number) => void;
+  onParamsChange: (v: Record<string, any>) => void;
+}) {
   const T = useTranslations("Common");
   const { network, networkId, networkName } = useContext(NetworkContext);
-
+  const userPathMap = useIndexStore((state) => state.userPathMap());
 
   const fromAddress = useIndexStore((state) => state.fromAddress);
   const setFromAddress = useIndexStore((state) => state.setFromAddress);
@@ -36,13 +50,18 @@ export default function QueryAccountUsdcMarket() {
     }
   };
 
+  const {
+    gasBalanceRes,
+    triggerGasBalance,
+    resetGasBalance,
+  } = useAccountBalance(fromAddress, null, null);
 
   const {
     data,
-    trigger: trigger,
-    reset: reset,
+    trigger: userPointTrigger,
+    reset: userPointReset,
   } = useSWRMutation(
-    `${SystemEndPointPathMap.accountTokenBalance}?chainId=${networkId}`,
+    `${userPathMap.hypeTradeUserPointAmount}?chain_id=${networkId}&account=${fromAddress}&token_address=${params['marketToken']?.token_address || ""}`,
     fetcher as any,
   );
 
@@ -64,13 +83,22 @@ export default function QueryAccountUsdcMarket() {
       fromAddress &&
       isAddress(fromAddress, networkName || "")
     ) {
-      trigger();
+      userPointTrigger();
+      triggerGasBalance();
     }
 
   };
 
   useEffect(() => {
-    reset();
+    if (gasBalanceRes) {
+      setGas(gasBalanceRes?.balance_of || 0);
+    }
+  }, [gasBalanceRes, setGas]);
+
+
+  useEffect(() => {
+    userPointReset();
+    resetGasBalance();
   }, [network?.chain_id]);
 
 
@@ -94,10 +122,20 @@ export default function QueryAccountUsdcMarket() {
         </div>
       </FormItem>
       <div className="mt-4 grid grid-cols-3 gap-x-3 px-3">
-        <SmallTokenCard name={'可用积分'} num={data?.a || 0} />
-        <SmallTokenCard name={'锁定的积分'} num={data?.b || 0} />
-        <SmallTokenCard name={'USDC数量'} num={data?.c || 0} />
+        <SmallTokenCard name={T("UsdcFreePoint")} num={data?.free_point || 0} />
+        <SmallTokenCard name={T("UsdcLockedPoint")} num={data?.locked_point || 0} />
+        <SmallTokenCard name={'USDC'} num={gas || 0} />
       </div>
+      <FormItem title={T("UsdcTradeMarket")} className="px-3">
+        <Select
+          value={params['marketToken']}
+          options={tokens}
+          valueKey={'token_address'}
+          labelKey={'token_symbol'}
+          labelInValue
+          onChange={(v) => onParamsChange({['marketToken']: v })}
+        />
+      </FormItem>
     </>
   );
 }
