@@ -19,7 +19,7 @@ import { useTranslations } from "next-intl";
 import { IToken } from "@/lib/types/token";
 import { NetworkChainType } from "@/lib/types/network";
 import { FormItem } from "./components/form-item";
-import Input from "./components/input";
+import { Input } from "@/components/ui/input";
 
 export default function QueryAccountBalance({
   token0,
@@ -35,9 +35,7 @@ export default function QueryAccountBalance({
   const T = useTranslations("Common");
   const { network, networkName } = useContext(NetworkContext);
 
-  const {
-    gasToken
-  } = useContext(TokenContext);
+  const { gasToken } = useContext(TokenContext);
 
   const fromAddress = useIndexStore((state) => state.fromAddress);
   const setFromAddress = useIndexStore((state) => state.setFromAddress);
@@ -45,7 +43,7 @@ export default function QueryAccountBalance({
   const setToAddress = useIndexStore((state) => state.setToAddress);
 
   const handleAccountChange = (v: string) => {
-    if (networkName ===  NetworkChainType.SOLANA) {
+    if (networkName === NetworkChainType.SOLANA) {
       setFromAddress(v);
     } else {
       const addrV = parseToAddress(v);
@@ -67,9 +65,9 @@ export default function QueryAccountBalance({
   useEffect(() => {
     if (networkName) {
       setFromAddress?.("");
-      setToAddress?.("")
+      setToAddress?.("");
     }
-  }, [networkName])
+  }, [networkName]);
 
   useEffect(() => {
     if (gasBalanceRes) {
@@ -110,7 +108,7 @@ export default function QueryAccountBalance({
 
   useEffect(() => {
     handleQuery();
-  }, [token0?.token_id, token1?.token_id])
+  }, [token0?.token_id, token1?.token_id]);
 
   return (
     <>
@@ -119,11 +117,15 @@ export default function QueryAccountBalance({
           <Input
             value={fromAddress}
             onChange={(e: any) => handleAccountChange(e.target.value)}
-            placeholder={networkName ===  NetworkChainType.SOLANA ? "" : "0x11111111111"}
+            placeholder={
+              networkName === NetworkChainType.SOLANA ? "" : "0x11111111111"
+            }
             onKeyDown={handleKeyDown}
           />
           <button
-            disabled={!fromAddress || !isAddress(fromAddress, networkName || "")}
+            disabled={
+              !fromAddress || !isAddress(fromAddress, networkName || "")
+            }
             onClick={() => handleQuery()}
             className="w-[72px] rounded-md border border-border-color bg-white  text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -132,7 +134,7 @@ export default function QueryAccountBalance({
         </div>
       </FormItem>
       <div className="mt-4 grid grid-cols-3 gap-x-3 px-3">
-        <SmallTokenCard name={gasToken?.token_symbol || 'ETH'} num={gas || 0} />
+        <SmallTokenCard name={gasToken?.token_symbol || "ETH"} num={gas || 0} />
         <SmallTokenCard name={token0?.token_symbol} num={balances[0] || 0} />
         <SmallTokenCard name={token1?.token_symbol} num={balances[1] || 0} />
       </div>

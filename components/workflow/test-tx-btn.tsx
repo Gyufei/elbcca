@@ -11,7 +11,7 @@ export function TestTxBtn({
   gasPrice,
   signAction = () => null,
   onAfterAction = () => {},
-  onShowTxResult = () => {}
+  onShowTxResult = () => {},
 }: {
   networkName?: string;
   params: Record<string, any>;
@@ -22,7 +22,7 @@ export function TestTxBtn({
   onShowTxResult: (res: any) => void;
 }) {
   const [loading, setLoading] = useState<boolean>(false);
- 
+
   const T = useTranslations("Common");
 
   async function handleSign() {
@@ -43,23 +43,26 @@ export function TestTxBtn({
   }
 
   function handleShowTxResult(res: Record<string, any>) {
-      if (networkName === NetworkChainType.SOLANA) { 
-        if (res.compute_units) {
-          const pf = params?.priority_fee ? params.priority_fee : priorityFee;
-          res.gas = Math.ceil((Number(res.compute_units) * Number(pf)/10**6)) / 10 ** 9 + 0.000005;
-        }
-      } else {
-        if (res.gaslimit) {
-          const gp = params?.gas ? params.gas : gasPrice;
-          res.gas = (Number(res.gaslimit) * Number(gp)) / 10 ** 9;
-        }
+    if (networkName === NetworkChainType.SOLANA) {
+      if (res.compute_units) {
+        const pf = params?.priority_fee ? params.priority_fee : priorityFee;
+        res.gas =
+          Math.ceil((Number(res.compute_units) * Number(pf)) / 10 ** 6) /
+            10 ** 9 +
+          0.000005;
       }
-      onShowTxResult(res);
+    } else {
+      if (res.gaslimit) {
+        const gp = params?.gas ? params.gas : gasPrice;
+        res.gas = (Number(res.gaslimit) * Number(gp)) / 10 ** 9;
+      }
+    }
+    onShowTxResult(res);
   }
 
   return (
     <>
-      <BasicButton 
+      <BasicButton
         loading={loading}
         disabled={loading}
         onClick={() => handleSign()}

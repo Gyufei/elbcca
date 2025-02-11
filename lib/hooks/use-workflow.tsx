@@ -10,7 +10,6 @@ import fetcher from "../fetcher";
 import { IAdvanceOptions } from "@/components/workflow/op-advance-options";
 import { TokenContext } from "../providers/token-provider";
 
-
 export function useWorkflow({
   params,
   keyStores,
@@ -19,7 +18,7 @@ export function useWorkflow({
   fromAddress,
   toAddress,
   advanceOptions,
-  transferAmount
+  transferAmount,
 }: {
   keyStores: Array<IKeyStoreAccount>;
   params: Record<string, any>;
@@ -37,16 +36,15 @@ export function useWorkflow({
   );
 
   const {
-      maxMinimum,
-      opSignUrl,
-      opSendUrl,
-      isTransferOp,
-      isSwapOp,
-      opApproveSendUrl,
-    } = useWorkflowParams(params);
+    maxMinimum,
+    opSignUrl,
+    opSendUrl,
+    isTransferOp,
+    isSwapOp,
+    opApproveSendUrl,
+  } = useWorkflowParams(params);
 
   const getCommonParams = () => {
-    
     const account = fromAddress;
     const kStore = keyStores.find((ks) =>
       ks.accounts.some((a) => a.account === account),
@@ -54,7 +52,7 @@ export function useWorkflow({
 
     const chain_id = networkId || "";
     const keystore = kStore?.name || "";
-   
+
     const paramsAfter = {
       user_name: activeUser?.email,
       chain_id: chain_id + "",
@@ -62,13 +60,13 @@ export function useWorkflow({
       keystore,
       op_name: params?.op?.op_name,
       ...(advanceOptions || {}),
-      minimum_received: advanceOptions?.minimum_received ||  maxMinimum + "",
+      minimum_received: advanceOptions?.minimum_received || maxMinimum + "",
       gas: advanceOptions?.gas
         ? (Number(advanceOptions.gas) * 10 ** 9).toFixed()
         : (Number(gasPrice) * 10 ** 9).toFixed(),
       priority_fee: advanceOptions?.priority_fee
-        ? (Number(advanceOptions?.priority_fee)).toFixed()
-        : (Number(priorityFee)).toFixed(),
+        ? Number(advanceOptions?.priority_fee).toFixed()
+        : Number(priorityFee).toFixed(),
     };
 
     if (!advanceOptions?.nonce) {
@@ -78,105 +76,105 @@ export function useWorkflow({
     return paramsAfter;
   };
 
+  const getTransferParams = () => {
+    const commonParams = getCommonParams();
+    if (!commonParams) return null;
 
-    const getTransferParams = () => {
-      const commonParams = getCommonParams();
-      if (!commonParams) return null;
-  
-      const paramsAfter = {
-        ...commonParams,
-        token: gasToken?.token_address || "",
-        amount: transferAmount || UNIT256_MAX,
-        recipient: toAddress,
-      };
-  
-      if (!paramsAfter.token || !paramsAfter.amount || !paramsAfter.recipient) return null;
-      return paramsAfter;
-    };
-  
-    const getSwapParams = () => {
-      const commonParams = getCommonParams();
-      if (!commonParams) return null;
-      const { token0, token1, token0Num } = params;
-      const afterParams = {
-        ...commonParams,
-        recipient: toAddress,
-        token_in: token0?.token_address || "",
-        token_out: token1?.token_address || "",
-        token_in_name: token0?.token_symbol || "",
-        token_out_name: token1?.token_symbol || "",
-        amount: token0Num,
-        is_exact_input: true,
-      };
-  
-      if (
-        !afterParams.keystore ||
-        !afterParams.recipient ||
-        !afterParams.token_in ||
-        !afterParams.token_out ||
-        !afterParams.amount
-      ) {
-        return null;
-      }
-      return afterParams;
-    };
-  
-    function getTxParams() {
-      if (isTransferOp) return getTransferParams();
-      if (isSwapOp) return getSwapParams();
-    }
-  
-    const getApproveParams = (inToken: IToken | null) => {
-      const commonParams = getCommonParams();
-      if (!commonParams) return null;
-      const afterParams = {
-        ...commonParams,
-        token: inToken?.token_address || "",
-        token_name: inToken?.token_symbol || "",
-        amount: UNIT256_MAX,
-        spender: params.spender
-      };
-  
-      if (!afterParams.token || !afterParams.amount) return null;
-      return afterParams;
+    const paramsAfter = {
+      ...commonParams,
+      token: gasToken?.token_address || "",
+      amount: transferAmount || UNIT256_MAX,
+      recipient: toAddress,
     };
 
-    async function signAction() {
-      const params = getTxParams();
-      console.log(params, opSignUrl, "test 测试中")
-      if (!opSignUrl || !params) return;
-  
-      const res = await fetcher(opSignUrl, {
-        method: "POST",
-        body: JSON.stringify(params),
-      });
-  
-      return res;
-    }
+    if (!paramsAfter.token || !paramsAfter.amount || !paramsAfter.recipient)
+      return null;
+    return paramsAfter;
+  };
 
-    async function sendAction() {
-      const params = getTxParams();
-      if (!opSendUrl || !params) return;
+  const getSwapParams = () => {
+    const commonParams = getCommonParams();
+    if (!commonParams) return null;
+    const { token0, token1, token0Num } = params;
+    const afterParams = {
+      ...commonParams,
+      recipient: toAddress,
+      token_in: token0?.token_address || "",
+      token_out: token1?.token_address || "",
+      token_in_name: token0?.token_symbol || "",
+      token_out_name: token1?.token_symbol || "",
+      amount: token0Num,
+      is_exact_input: true,
+    };
 
-      return fetcher(opSendUrl, {
-        method: "POST",
-        body: JSON.stringify(params),
-      });
+    if (
+      !afterParams.keystore ||
+      !afterParams.recipient ||
+      !afterParams.token_in ||
+      !afterParams.token_out ||
+      !afterParams.amount
+    ) {
+      return null;
     }
+    return afterParams;
+  };
 
-    async function approveAction() {
-      const afterParams = getApproveParams(params?.token0);
-      if (!opApproveSendUrl || !afterParams) return;
-  
-      await fetcher(opApproveSendUrl, {
-        method: "POST",
-        body: JSON.stringify(params),
-      });
-    }
+  function getTxParams() {
+    if (isTransferOp) return getTransferParams();
+    if (isSwapOp) return getSwapParams();
+  }
 
-    return {
-      signAction,
-      sendAction,
-      approveAction
-    }
+  const getApproveParams = (inToken: IToken | null) => {
+    const commonParams = getCommonParams();
+    if (!commonParams) return null;
+    const afterParams = {
+      ...commonParams,
+      token: inToken?.token_address || "",
+      token_name: inToken?.token_symbol || "",
+      amount: UNIT256_MAX,
+      spender: params.spender,
+    };
+
+    if (!afterParams.token || !afterParams.amount) return null;
+    return afterParams;
+  };
+
+  async function signAction() {
+    const params = getTxParams();
+    console.log(params, opSignUrl, "test 测试中");
+    if (!opSignUrl || !params) return;
+
+    const res = await fetcher(opSignUrl, {
+      method: "POST",
+      body: JSON.stringify(params),
+    });
+
+    return res;
+  }
+
+  async function sendAction() {
+    const params = getTxParams();
+    if (!opSendUrl || !params) return;
+
+    return fetcher(opSendUrl, {
+      method: "POST",
+      body: JSON.stringify(params),
+    });
+  }
+
+  async function approveAction() {
+    const afterParams = getApproveParams(params?.token0);
+    if (!opApproveSendUrl || !afterParams) return;
+
+    await fetcher(opApproveSendUrl, {
+      method: "POST",
+      body: JSON.stringify(params),
+    });
+  }
+
+  return {
+    signAction,
+    sendAction,
+    approveAction,
+  };
 }
