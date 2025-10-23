@@ -7,7 +7,7 @@ import {
 
 import CopyIcon from "./copy-icon";
 
-const displayText = (
+export const displayText = (
   text: string | undefined,
   start: number = 8,
   end: number = 6,

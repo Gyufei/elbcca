@@ -293,7 +293,7 @@ export default function KeyStoreMain() {
               <DetailItem title={T("Tx")}>{tx}</DetailItem>
               <DetailItem title={T("DefaultNetwork")}>
                 <NetworkSelect
-                  curretNetwork={network}
+                  currentNetwork={network}
                   handleSelect={onNetworkChange}
                 />
               </DetailItem>

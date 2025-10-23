@@ -25,11 +25,20 @@ import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { useTranslations } from "next-intl";
 import TruncateText from "../shared/trunc-text";
 import LoadingIcon from "../shared/loading-icon";
+import { Checkbox } from "../ui/checkbox";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+import { BasicButton } from "./components/button";
+import { NoteBtnDialog } from "./note-btn-dialog";
 
 export default function FilterAccountList({
   keyStores,
+  showFilter,
+  className,
 }: {
   keyStores: Array<IKeyStoreAccount>;
+  showFilter: boolean;
+  className?: string;
 }) {
   const T = useTranslations("Common");
   const userPathMap = useIndexStore((state) => state.userPathMap());
@@ -44,18 +53,8 @@ export default function FilterAccountList({
   const [tokenMin, setTokenMin] = useStrNum("");
   const [tokenMax, setTokenMax] = useStrNum("");
 
-  useEffect(() => {
-    if (tokens && !token) {
-      setToken(tokens[0])
-    }
-  }, [tokens])
-
-  function handleTokenSelect(token: IToken | null) {
-    setToken(token);
-    filterResultReset();
-  }
-
   const isFilterGasToken = token?.token_address === GAS_TOKEN_ADDRESS;
+  const [selectedWallets, setSelectedWallets] = useState<Array<string>>([]);
 
   const {
     data: accounts,
@@ -66,6 +65,17 @@ export default function FilterAccountList({
     `${userPathMap.filterAccount}?${getFilterQuery()}`,
     fetcher as any,
   );
+
+  useEffect(() => {
+    if (tokens && !token) {
+      setToken(tokens[0]);
+    }
+  }, [tokens]);
+
+  function handleTokenSelect(token: IToken | null) {
+    setToken(token);
+    filterResultReset();
+  }
 
   const uniqAccounts = useMemo<Array<Record<string, any>>>(() => {
     if (!Array.isArray(accounts)) {
@@ -144,79 +154,120 @@ export default function FilterAccountList({
 
   const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
-      if ((!tokenMin && !tokenMax) || (tokenMin && tokenMax && tokenMin > tokenMax)|| filtering) return;
+      if (
+        (!tokenMin && !tokenMax) ||
+        (tokenMin && tokenMax && tokenMin > tokenMax) ||
+        filtering
+      )
+        return;
       handleFilter();
     }
   };
 
+  function handleCreateVa() {
+    console.log("create va", selectedWallets);
+  }
+
+  function handleSelectWallet(account: string, checked: boolean) {
+    if (checked) {
+      setSelectedWallets([...selectedWallets, account]);
+    } else {
+      setSelectedWallets(selectedWallets.filter((acc) => acc !== account));
+    }
+  }
+
+  function handleSelectAll(checked: boolean) {
+    if (checked) {
+      setSelectedWallets(uniqAccounts.map((acc) => acc.account));
+    } else {
+      setSelectedWallets([]);
+    }
+  }
+
   return (
-    <div className="flex flex-col justify-stretch">
-      <div className="flex flex-col px-4">
-        <div className="LabelText mb-1">Token</div>
-        <div className="mb-3">
-          <TokenSelect
-            tokens={tokens}
-            token={token || null}
-            handleTokenSelect={handleTokenSelect}
-          />
+    <div className={cn("flex flex-col justify-stretch", className)}>
+      {showFilter && (
+        <div className="flex flex-col p-3">
+          <div className="LabelText mb-1">Token</div>
+          <div className="mb-3">
+            <TokenSelect
+              tokens={tokens}
+              token={token || null}
+              handleTokenSelect={handleTokenSelect}
+            />
+          </div>
+          <div className="flex items-center">
+            <Input
+              value={tokenMin || ""}
+              onChange={(e) => setTokenMin(e.target.value)}
+              className="border-border-color bg-white"
+              placeholder={T("Min")}
+              onKeyDown={handleKeyDown}
+            />
+            <div className="mx-2">-</div>
+            <Input
+              value={tokenMax || ""}
+              onChange={(e) => setTokenMax(e.target.value)}
+              className="border-border-color bg-white"
+              placeholder={T("Max")}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+
+          <Button
+            disabled={
+              (!tokenMin && !tokenMax) ||
+              (tokenMin && tokenMax && tokenMin > tokenMax) ||
+              filtering
+            }
+            onClick={handleFilter}
+            className="disabled:opacity-1 mt-3 flex items-center justify-center rounded border bg-white py-2 hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:contrast-[0.9]"
+          >
+            <LoadingIcon isLoading={filtering} />
+            <span className="text-title-color">{T("FilterAccount")}</span>
+          </Button>
         </div>
-        <div className="flex items-center">
-          <Input
-            value={tokenMin || ""}
-            onChange={(e) => setTokenMin(e.target.value)}
-            className="border-border-color bg-white"
-            placeholder={T("Min")}
-            onKeyDown={handleKeyDown}
-          />
-          <div className="mx-2">-</div>
-          <Input
-            value={tokenMax || ""}
-            onChange={(e) => setTokenMax(e.target.value)}
-            className="border-border-color bg-white"
-            placeholder={T("Max")}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
-      </div>
-      <div className="relative mt-8 flex flex-col border-t border-shadow-color pt-5">
-        <Button
-          disabled={(!tokenMin && !tokenMax) || (tokenMin && tokenMax && tokenMin > tokenMax)|| filtering}
-          onClick={handleFilter}
-          className="disabled:opacity-1 absolute top-[-20px] mx-3 flex w-[95%] items-center justify-center rounded border bg-white py-2 hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:contrast-[0.9]"
-        >
-          <LoadingIcon isLoading={filtering} />
-          <span className="text-title-color">{T("FilterAccount")}</span>
-        </Button>
+      )}
+
+      <div className="relative flex flex-col border-t border-shadow-color bg-[#fafafa]">
         <ScrollArea
-          className="pb-2"
+          className="h-auto pb-2"
           style={{
-            height: "calc(100vh - 430px)",
+            height: showFilter ? "calc(100vh - 536px)" : "calc(100vh - 342px)",
           }}
         >
-          {uniqAccounts.map((acc, index) => (
+          {uniqAccounts.map((acc: any, index: number) => (
             <div
               key={acc.account}
-              className="flex h-[73px] items-center justify-between border-b bg-custom-bg-white p-4"
+              className="flex h-[73px] items-center justify-between border-b bg-custom-bg-white p-3"
             >
-              <div className="pl-2 pr-5 text-lg leading-none text-content-color">
-                {index + 1}
-              </div>
-              <div className="flex flex-1 flex-col">
-                <div className="flex items-center text-lg font-medium text-title-color">
-                  <TruncateText text={acc.account}>
-                    <span
-                      className="ml-1 cursor-pointer text-content-color"
-                      onClick={() => handleClickAcc(acc.account)}
-                    >
-                      <ArrowUpRight className="h-4 w-4" />
-                    </span>
-                  </TruncateText>
-                  <div className="ml-4 flex h-4 w-4 items-center justify-center rounded-sm bg-[#707070] text-xs text-white">
-                    {acc.nonce}
+              <div className="flex flex-1 flex-col gap-y-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="pl-1 pr-5 text-left text-lg leading-none text-content-color">
+                      {index + 1}
+                    </div>
+                    <TruncateText text={acc.account}>
+                      <span
+                        className="ml-1 cursor-pointer text-lg font-medium text-title-color"
+                        onClick={() => handleClickAcc(acc.account)}
+                      >
+                        <ArrowUpRight className="h-4 w-4" />
+                      </span>
+                    </TruncateText>
+                    <NonceFlag className="ml-4" nonce={acc.nonce} />
                   </div>
+                  <NoteBtnDialog walletAddr={acc.account} />
                 </div>
                 <div className="LabelText flex">
-                  <div className="mr-6 flex items-center gap-x-1">
+                  <Checkbox
+                    className="ml-1 mr-3"
+                    checked={selectedWallets.includes(acc.account)}
+                    onCheckedChange={(checked) =>
+                      handleSelectWallet(acc.account, checked as boolean)
+                    }
+                  />
+                  <div className="mr-20 flex items-center gap-x-1">
                     <span>{gasToken?.token_symbol}</span>
                     <AmountTooltipDisplay amount={acc.gas_token_amount} />
                   </div>
@@ -232,6 +283,28 @@ export default function FilterAccountList({
             </div>
           ))}
         </ScrollArea>
+      </div>
+
+      <div className="flex justify-between px-3 py-2">
+        <div className="flex items-center gap-x-2">
+          <Checkbox
+            disabled={uniqAccounts.length === 0}
+            checked={
+              selectedWallets.length > 0 &&
+              selectedWallets.length === uniqAccounts.length
+            }
+            onCheckedChange={handleSelectAll}
+          />
+          <span>{T("SelectAll")}</span>
+        </div>
+
+        <BasicButton
+          loading={false}
+          disabled={false}
+          onClick={() => handleCreateVa()}
+        >
+          <span>{T("CreateVirtualAccount")}</span>
+        </BasicButton>
       </div>
     </div>
   );
@@ -255,5 +328,34 @@ function AmountTooltipDisplay({ amount }: { amount: string }) {
     </TooltipProvider>
   ) : (
     <div>{amount}</div>
+  );
+}
+
+function NonceFlag({
+  className,
+  nonce,
+}: {
+  className?: string;
+  nonce: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-center rounded border border-[#707070] bg-[#fff]",
+        className,
+      )}
+    >
+      <div className="flex h-5 w-5 items-center justify-center bg-[#707070]">
+        <Image
+          src="/icons/path-flag.svg"
+          alt="path-flag"
+          width={16}
+          height={16}
+        />
+      </div>
+      <div className="flex h-5 w-5 items-center justify-center text-xs text-[#707070]">
+        {nonce}
+      </div>
+    </div>
   );
 }

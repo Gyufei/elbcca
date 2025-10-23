@@ -16,11 +16,11 @@ import { getMessages } from "next-intl/server";
 
 
 export const metadata: Metadata = {
-  title: "mm-detake-ui",
-  description: "mm-detake-ui",
+  title: "DappDo",
+  description: "DappDo",
   twitter: {
     card: "summary_large_image",
-    title: "mm-detake",
+    title: "DappDo",
     description: "keystore manage tools",
     creator: "@steventey",
   },

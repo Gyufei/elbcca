@@ -16,11 +16,11 @@ import { NetworkContext } from "@/lib/providers/network-provider";
 
 export default function NetworkSelect({
   size = 'default',
-  curretNetwork,
+  currentNetwork,
   handleSelect,
 }: {
   size?: 'large' | 'default';
-  curretNetwork: INetwork | null;
+  currentNetwork: INetwork | null;
   handleSelect: (
     value: INetwork
   ) => void;
@@ -35,7 +35,7 @@ export default function NetworkSelect({
   };
 
   const imgW = size === 'large' ? 20 : 16;
-  const textS = size === 'large' ? "text-[18px]" : "text-[16px]";
+  const textS = size === 'large' ? "text-[18px] leading-[24px]" : "text-[16px] leading-[20px]";
 
   return (
     <Popover
@@ -47,13 +47,13 @@ export default function NetworkSelect({
           className="flex items-center transition-all duration-75 active:bg-gray-100"
           onClick={() => setPopOpen(!popOpen)}
         >
-          {curretNetwork ? (
+          {currentNetwork ? (
             <>
               <div className={`mr-2 text-title-color flex align-items ${textS}`}>
                 {
-                  networkConfigs[curretNetwork.currency_name as NetworkChainType]?.logo && (
+                  networkConfigs[currentNetwork.currency_name as NetworkChainType]?.logo && (
                     <Image 
-                      src={networkConfigs[curretNetwork.currency_name as NetworkChainType]?.logo || ''}
+                      src={networkConfigs[currentNetwork.currency_name as NetworkChainType]?.logo || ''}
                       width={imgW}
                       height={imgW}
                       alt="choose"
@@ -61,7 +61,7 @@ export default function NetworkSelect({
                     />
                   )
                 }
-                {curretNetwork.chain_name}
+                {currentNetwork.chain_name}
               </div>
             </>
           ) : (

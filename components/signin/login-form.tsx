@@ -97,7 +97,7 @@ export default function LoginForm({
         ) : (
           <>
             <div className="mb-4 text-lg font-bold text-title-color">
-             {T("SignInToYourDetakeAccount")}
+             {T("SignInToYourDappDoAccount")}
             </div>
           </>
         )}

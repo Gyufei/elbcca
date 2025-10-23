@@ -1,4 +1,4 @@
-## mm-detake-ui
+## DappDo UI
 
 [next.js](https://nextjs.org)
 [Precedent](https://precedent.dev/)
