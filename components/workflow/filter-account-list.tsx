@@ -1,19 +1,11 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import useSWRMutation from "swr/mutation";
 import { uniqBy } from "lodash";
-import { ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import TokenSelect from "@/components/workflow/token-select";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
 import { useStrNum } from "@/lib/hooks/use-str-num";
 import fetcher from "@/lib/fetcher";
 import { IToken } from "@/lib/types/token";
@@ -23,13 +15,11 @@ import { TokenContext } from "@/lib/providers/token-provider";
 import useIndexStore from "@/lib/state";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { useTranslations } from "next-intl";
-import TruncateText from "../shared/trunc-text";
 import LoadingIcon from "../shared/loading-icon";
 import { Checkbox } from "../ui/checkbox";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { BasicButton } from "./components/button";
-import { NoteBtnDialog } from "./note-btn-dialog";
+import WalletRow from "./wallet-row";
 
 export default function FilterAccountList({
   keyStores,
@@ -237,50 +227,23 @@ export default function FilterAccountList({
           }}
         >
           {uniqAccounts.map((acc: any, index: number) => (
-            <div
+            <WalletRow
               key={acc.account}
-              className="flex h-[73px] items-center justify-between border-b bg-custom-bg-white p-3"
+              index={index}
+              accData={acc}
+              handleClickAcc={handleClickAcc}
+              isFilterGasToken={isFilterGasToken}
+              gasToken={gasToken || undefined}
+              token={token || undefined}
             >
-              <div className="flex flex-1 flex-col gap-y-1">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="pl-1 pr-5 text-left text-lg leading-none text-content-color">
-                      {index + 1}
-                    </div>
-                    <TruncateText text={acc.account}>
-                      <span
-                        className="ml-1 cursor-pointer text-lg font-medium text-title-color"
-                        onClick={() => handleClickAcc(acc.account)}
-                      >
-                        <ArrowUpRight className="h-4 w-4" />
-                      </span>
-                    </TruncateText>
-                    <NonceFlag className="ml-4" nonce={acc.nonce} />
-                  </div>
-                  <NoteBtnDialog walletAddr={acc.account} />
-                </div>
-                <div className="LabelText flex">
-                  <Checkbox
-                    className="ml-1 mr-3"
-                    checked={selectedWallets.includes(acc.account)}
-                    onCheckedChange={(checked) =>
-                      handleSelectWallet(acc.account, checked as boolean)
-                    }
-                  />
-                  <div className="mr-20 flex items-center gap-x-1">
-                    <span>{gasToken?.token_symbol}</span>
-                    <AmountTooltipDisplay amount={acc.gas_token_amount} />
-                  </div>
-
-                  {!isFilterGasToken && (
-                    <div className="flex items-center gap-x-1">
-                      <span>{token?.token_symbol}</span>
-                      <AmountTooltipDisplay amount={acc.quote_token_amount} />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+              <Checkbox
+                className="ml-1 mr-3"
+                checked={selectedWallets.includes(acc.account)}
+                onCheckedChange={(checked) =>
+                  handleSelectWallet(acc.account, checked as boolean)
+                }
+              />
+            </WalletRow>
           ))}
         </ScrollArea>
       </div>
@@ -305,56 +268,6 @@ export default function FilterAccountList({
         >
           <span>{T("CreateVirtualAccount")}</span>
         </BasicButton>
-      </div>
-    </div>
-  );
-}
-
-function AmountTooltipDisplay({ amount }: { amount: string }) {
-  const isLong = amount.length > 8;
-  const amountFmt = isLong ? amount.slice(0, 8) + "..." : amount;
-  return isLong ? (
-    <TooltipProvider delayDuration={100}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="TruncateSingleLine">{amountFmt}</div>
-        </TooltipTrigger>
-        <TooltipContent>
-          <div className="flex items-center">
-            <p className="text-sm text-content-color">{amount}</p>
-          </div>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  ) : (
-    <div>{amount}</div>
-  );
-}
-
-function NonceFlag({
-  className,
-  nonce,
-}: {
-  className?: string;
-  nonce: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "flex items-center rounded border border-[#707070] bg-[#fff]",
-        className,
-      )}
-    >
-      <div className="flex h-5 w-5 items-center justify-center bg-[#707070]">
-        <Image
-          src="/icons/path-flag.svg"
-          alt="path-flag"
-          width={16}
-          height={16}
-        />
-      </div>
-      <div className="flex h-5 w-5 items-center justify-center text-xs text-[#707070]">
-        {nonce}
       </div>
     </div>
   );

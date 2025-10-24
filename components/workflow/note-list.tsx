@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { format, isToday, isYesterday } from "date-fns";
+import { format } from "date-fns";
 import {
   Dialog,
   DialogContent,
@@ -24,40 +24,12 @@ interface Note {
   networkType?: NetworkChainType;
 }
 
-// 模拟数据
-const mockNotes: Note[] = [
-  {
-    id: "1",
-    nickname: "NickName",
-    timestamp: new Date("2025-09-20T14:45:00"),
-    content: "Remarks Text Remarks Text Remarks Text Remarks Text Remarks Text",
-    network: "Ethereum",
-    networkType: NetworkChainType.ETH,
-  },
-  {
-    id: "2",
-    nickname: "NickName",
-    timestamp: new Date(),
-    content: "Remarks Text Remarks Text Remarks Text Remarks Text Remarks Text",
-    images: [
-      "/placeholder-avatar.png",
-      "/placeholder-avatar.png",
-      "/placeholder-avatar.png",
-      "/placeholder-avatar.png",
-    ],
-    networkType: NetworkChainType.SOLANA,
-  },
-];
-
 interface NoteListProps {
   notes: Note[];
-  setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
+  updateNotes: (updatedNotes: Note[]) => void;
 }
 
-export default function NoteList({
-  notes = mockNotes,
-  setNotes,
-}: NoteListProps) {
+export default function NoteList({ notes, updateNotes }: NoteListProps) {
   const T = useTranslations("Common");
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
@@ -66,13 +38,7 @@ export default function NoteList({
 
   // 格式化时间显示
   const formatTimestamp = (timestamp: Date) => {
-    if (isToday(timestamp)) {
-      return format(timestamp, "HH:mm") + " Today";
-    } else if (isYesterday(timestamp)) {
-      return format(timestamp, "HH:mm") + " Yesterday";
-    } else {
-      return format(timestamp, "HH:mm a MMM dd, yyyy");
-    }
+    return format(timestamp, "HH:mm a MMM dd, yyyy");
   };
 
   // 开始编辑
@@ -84,11 +50,10 @@ export default function NoteList({
   // 保存编辑
   const handleSaveEdit = () => {
     if (editingNoteId) {
-      setNotes((prev) =>
-        prev.map((note) =>
-          note.id === editingNoteId ? { ...note, content: editContent } : note,
-        ),
+      const newNotes = notes.map((note) =>
+        note.id === editingNoteId ? { ...note, content: editContent } : note,
       );
+      updateNotes(newNotes);
       setEditingNoteId(null);
       setEditContent("");
     }
@@ -133,7 +98,8 @@ export default function NoteList({
   // 确认删除
   const handleConfirmDelete = () => {
     if (deletingNoteId) {
-      setNotes((prev) => prev.filter((note) => note.id !== deletingNoteId));
+      const newNotes = notes.filter((note) => note.id !== deletingNoteId);
+      updateNotes(newNotes);
       setDeletingNoteId(null);
     }
   };

@@ -4,6 +4,7 @@ import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import FilterAccountList from "./filter-account-list";
+import VirtualAccounts from "./virtual-accounts";
 
 export default function WalletVA({
   keyStores,
@@ -34,8 +35,7 @@ export default function WalletVA({
             "flex w-[176px] cursor-pointer items-center justify-between border-r border-[#d6d6d6] p-3",
             currentTab === "wallet"
               ? "border-b-0 bg-[#F6F7F8] text-[#0572EC]"
-              : "bg-[#fafafa] text-[#707070]" +
-                  (showFilter ? "border-b" : "border-b-0"),
+              : "border-b bg-[#fafafa] text-[#707070]",
           )}
           onClick={() => handleTabChange("wallet")}
         >
@@ -63,7 +63,7 @@ export default function WalletVA({
         <div
           className={cn(
             "flex-1 border-[#d6d6d6]",
-            showFilter ? "border-b" : "",
+            currentTab === "virtualAccount" || showFilter ? "border-b" : "",
           )}
         ></div>
       </div>
@@ -71,6 +71,10 @@ export default function WalletVA({
         className={cn(currentTab === "wallet" ? "visible" : "hidden")}
         keyStores={keyStores}
         showFilter={showFilter}
+      />
+      <VirtualAccounts
+        keyStores={keyStores}
+        className={cn(currentTab === "virtualAccount" ? "visible" : "hidden")}
       />
     </div>
   );
