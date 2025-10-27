@@ -41,7 +41,7 @@ export default function WalletRow({
             </TruncateText>
             <NonceFlag className="ml-4" nonce={accData.nonce} />
           </div>
-          <NoteBtnDialog walletAddr={accData.account} />
+          <NoteBtnDialog wallet={accData.account} />
         </div>
         <div className="LabelText flex">
           {children}

@@ -11,7 +11,6 @@ export default function WalletVA({
 }: {
   keyStores: Array<IKeyStoreAccount>;
 }) {
-  console.log(keyStores);
   const T = useTranslations("Common");
   const [currentTab, setCurrentTab] = useState<"wallet" | "virtualAccount">(
     "wallet",

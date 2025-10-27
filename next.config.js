@@ -3,7 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: [],
+    domains: [
+      "img.dapp.do",
+    ],
   },
 };
 
@@ -16,7 +18,7 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const createNextIntlPlugin = require('next-intl/plugin');
 const withNextIntl = createNextIntlPlugin();
 
-module.exports =  withNextIntl(withSentryConfig(
+module.exports = withNextIntl(withSentryConfig(
   module.exports,
   {
     // For all available options, see:

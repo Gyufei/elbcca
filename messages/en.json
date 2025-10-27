@@ -181,6 +181,8 @@
     "ImageUploadSuccess": "Upload Success",
     "ImageUploadSuccessDesc": "Image uploaded successfully",
     "ImageUploadFailed": "Upload Failed",
-    "ImageUploadFailedDesc": "Image upload failed, please try again"
+    "ImageUploadFailedDesc": "Image upload failed, please try again",
+    "NoteDeleted": "Note Deleted Successfully",
+    "NoteDeleteFailed": "Note Delete Failed"
   }
 }

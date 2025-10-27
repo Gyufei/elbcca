@@ -1,33 +1,24 @@
 import NetworkOp from "./note-network-select";
 import { NoteImageUpload } from "./note-image-upload";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef, useState, useContext } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { NetworkChainType } from "@/lib/types/network";
-import { NetworkContext } from "@/lib/providers/network-provider";
-
-// Note类型定义
-interface Note {
-  id: string;
-  nickname: string;
-  timestamp: Date;
-  content: string;
-  images?: string[];
-  network?: string;
-  networkType?: NetworkChainType;
-}
+import { CornerDownLeft } from "lucide-react";
 
 interface NoteAddProps {
   dialogOpen: boolean;
-  onAddNote?: (note: Omit<Note, 'id' | 'timestamp'>) => void;
+  onAddNote?: (note: {
+    content: string;
+    img_list: string[];
+    chain_id: number;
+  }) => void;
 }
 
 export default function NoteAdd({ dialogOpen, onAddNote }: NoteAddProps) {
   const T = useTranslations("Common");
-  const { networkList } = useContext(NetworkContext);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [network, setNetwork] = useState("NotSet");
+  const [network, setNetwork] = useState(0);
   const [images, setImages] = useState<string[]>([]);
   const [note, setNote] = useState("");
 
@@ -56,28 +47,16 @@ export default function NoteAdd({ dialogOpen, onAddNote }: NoteAddProps) {
 
   const handleSave = () => {
     if (note.trim() && onAddNote) {
-      // 根据网络选择确定网络类型
-      let networkType: NetworkChainType | undefined;
-      if (network !== "NotSet") {
-        // 从networkList中找到对应的网络信息
-        const selectedNetwork = networkList.find(n => n.chain_name === network);
-        if (selectedNetwork) {
-          networkType = selectedNetwork.currency_name as NetworkChainType;
-        }
-      }
-
       onAddNote({
-        nickname: "NickName", // 这里应该从用户信息获取
         content: note.trim(),
-        network: network !== "NotSet" ? network : undefined,
-        networkType,
-        images: images.length > 0 ? images : undefined,
+        img_list: images.length > 0 ? images : [],
+        chain_id: network,
       });
-      
+
       // 重置表单
       setNote("");
       setImages([]);
-      setNetwork("NotSet");
+      setNetwork(0);
     }
   };
 
@@ -135,10 +114,10 @@ export default function NoteAdd({ dialogOpen, onAddNote }: NoteAddProps) {
           onClick={handleSave}
           className={cn(
             "flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border transition-all duration-200",
-            "hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50",
+            "group hover:border-primary hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50",
           )}
         >
-          <Image src="/icons/enter.svg" width={12} height={9} alt={T("Save")} />
+          <CornerDownLeft className="h-4 w-4" />
         </button>
       </div>
     </div>

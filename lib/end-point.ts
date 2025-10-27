@@ -1,7 +1,10 @@
 export const isPreview = process.env.NEXT_PUBLIC_IS_DETAKE_PREVIEW === "1";
 export const isProduction = process.env.NODE_ENV === "production" && !isPreview;
+
+const AuthHostUrl = isProduction ? 'https://auth.dapp.do' : 'https://preview-auth.dapp.do';
+
 function WithHost(path: string) {
-  return `${process.env.NEXT_PUBLIC_API_URL || 'https://tafect-auth.aggregation.top'}${path}`;
+  return `${AuthHostUrl}${path}`;
 }
 
 export const SystemEndPointPathMap = {
@@ -34,6 +37,7 @@ export const SystemEndPointPathMap = {
   updateRpc: WithHost("/setting/private_rpc"),
   getRPC: WithHost("/setting/private_rpc"),
   
+  uploadImage: WithHost("/upload/image"),
 };
 
 export const UserEndPointPathMap = {
@@ -72,5 +76,10 @@ export const UserEndPointPathMap = {
   hypeTradeGetOffer: "/hype_trade/offers",
   hypeTradeTakeOffer: "/hype_trade/take_offer",
   hypeTradeBridge: "/hype_trade/bridge",
-  hypeTradeWithdraw: "/hype_trade/withdraw_token_balance"
+  hypeTradeWithdraw: "/hype_trade/withdraw_token_balance",
+
+  createNote: "/wallet_notes/create",
+  getWalletNote: "/wallet_notes/list",
+  updateNote: "/wallet_notes/update",
+  deleteNote: "/wallet_notes/delete",
 };

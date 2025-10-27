@@ -11,26 +11,34 @@ import { networkConfigs } from "@/lib/constants/network-config";
 import { NetworkContext } from "@/lib/providers/network-provider";
 import { NetworkChainType } from "@/lib/types/network";
 
+export const NoteNetLogoConfig = {
+  1: "/icons/eth.svg",
+  56: "/icons/BNBChain.svg",
+  901: "/icons/Solana.svg",
+  11155111: "/icons/eth.svg",
+  903: "/icons/Solana.svg",
+};
+
 export default function NetworkOp({
   value,
   onChange,
 }: {
-  value: string;
-  onChange: (value: string) => void;
+  value: number;
+  onChange: (value: number) => void;
 }) {
   const { networkList } = useContext(NetworkContext);
 
   const selectOptions = useMemo(() => {
     return [
       {
-        value: "NotSet",
+        value: 0,
         label: "Not Set",
         logo: null,
       },
       ...networkList.map((item) => ({
-        value: item.chain_name,
+        value: item.chain_id,
         label: item.chain_name,
-        logo: networkConfigs[item.currency_name as NetworkChainType]?.logo,
+        logo: NoteNetLogoConfig[item.chain_id as keyof typeof NoteNetLogoConfig],
       })),
     ];
   }, [networkList]);
@@ -40,10 +48,10 @@ export default function NetworkOp({
   }, [value, selectOptions]);
 
   return (
-    <Select value={value} onValueChange={(e) => onChange(e)}>
+    <Select value={value.toString()} onValueChange={(e) => onChange(Number(e))}>
       <SelectTrigger className="w-fit gap-2 p-2">
         <SelectValue>
-          {value && (
+          {Number(value) !== 0 ? (
             <div className="flex items-center">
               {(selectedOp as Record<string, any>)?.["logo"] && (
                 <Image
@@ -57,12 +65,22 @@ export default function NetworkOp({
                 {(selectedOp as Record<string, any>)?.["label"]}
               </span>
             </div>
+          ) : (
+            <div className="flex items-center">
+              <span className="ml-1">
+                {(selectedOp as Record<string, any>)?.["label"]}
+              </span>
+            </div>
           )}
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
         {(selectOptions || []).map((item) => (
-          <SelectItem showIndicator={false} key={item.value} value={item.value}>
+          <SelectItem
+            showIndicator={false}
+            key={item.value}
+            value={item.value.toString()}
+          >
             <div className="flex items-center">
               {item.logo && (
                 <Image src={item["logo"]} width={20} height={20} alt="logo" />

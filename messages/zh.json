@@ -181,6 +181,8 @@
     "ImageUploadSuccess": "上传成功",
     "ImageUploadSuccessDesc": "图片已成功上传",
     "ImageUploadFailed": "上传失败",
-    "ImageUploadFailedDesc": "图片上传失败，请重试"
+    "ImageUploadFailedDesc": "图片上传失败，请重试",
+    "NoteDeleted": "备注删除成功",
+    "NoteDeleteFailed": "备注删除失败"
   }
 }

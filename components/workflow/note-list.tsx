@@ -12,28 +12,34 @@ import { Button } from "@/components/ui/button";
 import { networkConfigs } from "@/lib/constants/network-config";
 import { NetworkChainType } from "@/lib/types/network";
 import { cn } from "@/lib/utils";
+import NetworkOp, { NoteNetLogoConfig } from "./note-network-select";
+import { NoteImageUpload } from "./note-image-upload";
 
 // Note类型定义
 interface Note {
-  id: string;
-  nickname: string;
-  timestamp: Date;
+  id: number;
   content: string;
-  images?: string[];
-  network?: string;
-  networkType?: NetworkChainType;
+  img_list: string[];
+  account: string;
+  chain_id: number;
+  create_at: Date;
 }
 
 interface NoteListProps {
   notes: Note[];
-  updateNotes: (updatedNotes: Note[]) => void;
+  updateNotes: (updatedNotes: Note) => void;
+  deleteNote: (arg: { id: number; wallet?: string }) => void;
 }
 
-export default function NoteList({ notes, updateNotes }: NoteListProps) {
+export default function NoteList({
+  notes,
+  updateNotes,
+  deleteNote,
+}: NoteListProps) {
   const T = useTranslations("Common");
-  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
-  const [editContent, setEditContent] = useState("");
-  const [deletingNoteId, setDeletingNoteId] = useState<string | null>(null);
+
+  const [editingNote, setEditingNote] = useState<Note | null>(null);
+  const [deletingNoteId, setDeletingNoteId] = useState<number | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // 格式化时间显示
@@ -43,19 +49,19 @@ export default function NoteList({ notes, updateNotes }: NoteListProps) {
 
   // 开始编辑
   const handleStartEdit = (note: Note) => {
-    setEditingNoteId(note.id);
-    setEditContent(note.content);
+    setEditingNote(note);
   };
 
   // 保存编辑
   const handleSaveEdit = () => {
-    if (editingNoteId) {
-      const newNotes = notes.map((note) =>
-        note.id === editingNoteId ? { ...note, content: editContent } : note,
-      );
+    if (editingNote?.id) {
+      const newNotes = {
+        ...editingNote,
+        img_list: editingNote?.img_list || [],
+        chain_id: editingNote?.chain_id || 0,
+      };
       updateNotes(newNotes);
-      setEditingNoteId(null);
-      setEditContent("");
+      setEditingNote(null);
     }
   };
 
@@ -78,28 +84,28 @@ export default function NoteList({ notes, updateNotes }: NoteListProps) {
 
   // 当进入编辑模式时，聚焦并调整textarea高度
   useEffect(() => {
-    if (editingNoteId && textareaRef.current) {
+    if (editingNote?.id && textareaRef.current) {
       textareaRef.current.focus();
       adjustTextareaHeight(textareaRef.current);
     }
-  }, [editingNoteId]);
+  }, [editingNote?.id]);
 
   // 获取网络logo
-  const getNetworkLogo = (networkType?: NetworkChainType) => {
-    if (!networkType) return null;
-    return networkConfigs[networkType]?.logo || null;
+  const getNetworkLogo = (chain_id?: number) => {
+    if (!chain_id) return null;
+    return (
+      NoteNetLogoConfig[chain_id as keyof typeof NoteNetLogoConfig] || null
+    );
   };
 
-  // 删除确认
-  const handleDelete = (noteId: string) => {
+  const handleDelete = (noteId: number) => {
     setDeletingNoteId(noteId);
   };
 
   // 确认删除
   const handleConfirmDelete = () => {
     if (deletingNoteId) {
-      const newNotes = notes.filter((note) => note.id !== deletingNoteId);
-      updateNotes(newNotes);
+      deleteNote({ id: deletingNoteId });
       setDeletingNoteId(null);
     }
   };
@@ -110,7 +116,7 @@ export default function NoteList({ notes, updateNotes }: NoteListProps) {
   };
 
   return (
-    <div className="flex flex-col gap-0 border-b border-[#d6d6d6] px-5">
+    <div className="flex max-h-[500px] flex-col gap-0 overflow-y-auto border-b border-[#d6d6d6] px-5">
       {notes.map((note, index) => (
         /* 笔记内容 */
         <div key={note.id} className="flex items-start gap-3 pt-5">
@@ -124,10 +130,10 @@ export default function NoteList({ notes, updateNotes }: NoteListProps) {
               className="rounded"
             />
             {/* 网络logo */}
-            {note.networkType && getNetworkLogo(note.networkType) && (
+            {note.chain_id !== 0 && getNetworkLogo(note.chain_id) && (
               <div className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full border border-gray-200 bg-white">
                 <Image
-                  src={getNetworkLogo(note.networkType)!}
+                  src={getNetworkLogo(note.chain_id)!}
                   alt="network logo"
                   width={12}
                   height={12}
@@ -147,10 +153,10 @@ export default function NoteList({ notes, updateNotes }: NoteListProps) {
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="font-medium text-gray-900">
-                  {note.nickname}
+                  {note.account}
                 </span>
                 <span className="text-sm text-gray-500">
-                  {formatTimestamp(note.timestamp)}
+                  {formatTimestamp(new Date(note.create_at))}
                 </span>
               </div>
 
@@ -159,67 +165,138 @@ export default function NoteList({ notes, updateNotes }: NoteListProps) {
                 <button
                   onClick={() => handleStartEdit(note)}
                   className="rounded p-1 transition-colors hover:bg-gray-100"
-                  title="编辑"
+                  title="edit"
                 >
                   <Image
                     src="/icons/edit-2.svg"
                     width={16}
                     height={16}
-                    alt="编辑"
+                    alt="edit"
                   />
                 </button>
                 <button
                   onClick={() => handleDelete(note.id)}
                   className="rounded p-1 transition-colors hover:bg-gray-100"
-                  title="删除"
+                  title="delete"
                 >
                   <Image
                     src="/icons/delete-2.svg"
                     width={16}
                     height={16}
-                    alt="删除"
+                    alt="delete"
                   />
                 </button>
               </div>
             </div>
 
             {/* 笔记文本内容 */}
-            {editingNoteId === note.id ? (
-              <textarea
-                ref={textareaRef}
-                value={editContent}
-                onChange={(e) => {
-                  setEditContent(e.target.value);
-                  adjustTextareaHeight(e.target);
-                }}
-                onKeyDown={handleKeyDown}
-                onBlur={handleSaveEdit}
-                className="w-full resize-none rounded-md border p-2 text-sm leading-relaxed text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                style={{ minHeight: "40px" }}
-              />
+            {editingNote?.id === note.id ? (
+              <>
+                <textarea
+                  ref={textareaRef}
+                  value={editingNote?.content}
+                  onChange={(e) => {
+                    setEditingNote({
+                      ...editingNote,
+                      content: e.target.value,
+                    });
+                    adjustTextareaHeight(e.target);
+                  }}
+                  onKeyDown={handleKeyDown}
+                  className="w-full resize-none rounded-md border p-2 text-sm leading-relaxed text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  style={{ minHeight: "40px" }}
+                />
+                {editingNote?.img_list && editingNote?.img_list.length > 0 && (
+                  <div className="mt-2 grid grid-cols-4 gap-2">
+                    {editingNote?.img_list.map((image, imgIndex) => (
+                      <div key={imgIndex} className="relative">
+                        <button
+                          onClick={() =>
+                            setEditingNote({
+                              ...editingNote,
+                              img_list: editingNote?.img_list?.filter(
+                                (_, i) => i !== imgIndex,
+                              ),
+                            })
+                          }
+                          className="absolute right-0 top-0"
+                        >
+                          <Image
+                            src="/icons/delete-2.svg"
+                            width={16}
+                            height={16}
+                            alt="删除"
+                          />
+                        </button>
+                        <Image
+                          src={image}
+                          alt={`note image ${imgIndex + 1}`}
+                          width={88}
+                          height={88}
+                          className="rounded border"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <NoteImageUpload
+                      onImageUpload={(imageUrl) =>
+                        setEditingNote({
+                          ...editingNote,
+                          img_list: [
+                            ...(editingNote?.img_list || []),
+                            imageUrl,
+                          ],
+                        })
+                      }
+                    />
+                    <NetworkOp
+                      value={editingNote?.chain_id || 0}
+                      onChange={(value) =>
+                        setEditingNote({
+                          ...editingNote,
+                          chain_id: value as unknown as number,
+                        })
+                      }
+                    />
+                  </div>
+                  <button
+                    title={T("Save")}
+                    onClick={handleSaveEdit}
+                    className={cn(
+                      "flex h-10 cursor-pointer items-center justify-center rounded-full border border-primary px-6 transition-all duration-200",
+                      "bg-primary text-white disabled:cursor-not-allowed disabled:opacity-50",
+                    )}
+                  >
+                    {T("Save")}
+                  </button>
+                </div>
+              </>
             ) : (
-              <div
-                className={`cursor-pointer rounded-md text-base leading-relaxed text-[#333] transition-colors hover:bg-[#f6f7f8]`}
-                onClick={() => handleStartEdit(note)}
-              >
-                {note.content}
-              </div>
-            )}
-
-            {/* 图片展示 */}
-            {note.images && note.images.length > 0 && (
-              <div className="mt-2 grid grid-cols-4 gap-2">
-                {note.images.map((image, imgIndex) => (
-                  <Image
-                    key={imgIndex}
-                    src={image}
-                    alt={`note image ${imgIndex + 1}`}
-                    width={88}
-                    height={88}
-                    className="rounded border"
-                  />
-                ))}
-              </div>
+              <>
+                <div
+                  className={`cursor-pointer rounded-md text-base leading-relaxed text-[#333] transition-colors hover:bg-[#f6f7f8]`}
+                  onClick={() => handleStartEdit(note)}
+                >
+                  {note.content}
+                </div>
+                {note.img_list && note.img_list.length > 0 && (
+                  <div className="mt-2 grid grid-cols-4 gap-2">
+                    {note.img_list.map((image, imgIndex) => (
+                      <Image
+                        key={imgIndex}
+                        src={image}
+                        alt={`note image ${imgIndex + 1}`}
+                        width={88}
+                        height={88}
+                        className="rounded border"
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
