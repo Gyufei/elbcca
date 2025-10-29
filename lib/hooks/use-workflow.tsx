@@ -9,7 +9,6 @@ import { IToken } from "../types/token";
 import fetcher from "../fetcher";
 import { IAdvanceOptions } from "@/components/workflow/op-advance-options";
 import { TokenContext } from "../providers/token-provider";
-import { VaContext } from "../providers/va-provider";
 
 export function useWorkflow({
   isVa,

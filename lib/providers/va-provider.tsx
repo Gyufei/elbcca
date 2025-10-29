@@ -27,7 +27,6 @@ export default function VaProvider({
     "Wallet" | "VirtualAccount"
   >("Wallet");
   const [selectedToken, setSelectedToken] = useState<IToken | null>(null);
-  const [selectedVaName, setSelectedVaName] = useState<string | null>(null);
 
   const onAccountTypeChange = (value: "Wallet" | "VirtualAccount") => {
     setCurrentAccountType(value);
