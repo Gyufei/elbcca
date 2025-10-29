@@ -106,7 +106,11 @@ export default function RandomInputDialog(props: {
       <DialogTrigger>
         <CandleOpRow text={nowShowText} />
       </DialogTrigger>
-      <DialogContent title={T("Title")} className="w-[320px]" showClose={T("Cancel")}>
+      <DialogContent
+        title={T("Title")}
+        className="w-[320px]"
+        showClose={T("Cancel")}
+      >
         <RandomInput
           isRandom={isRandom}
           accValue={accValue}
