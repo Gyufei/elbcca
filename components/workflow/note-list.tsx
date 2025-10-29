@@ -9,8 +9,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { networkConfigs } from "@/lib/constants/network-config";
-import { NetworkChainType } from "@/lib/types/network";
 import { cn } from "@/lib/utils";
 import NetworkOp, { NoteNetLogoConfig } from "./note-network-select";
 import { NoteImageUpload } from "./note-image-upload";

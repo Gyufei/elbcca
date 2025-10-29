@@ -7,9 +7,7 @@ import {
 } from "@/components/ui/select";
 import { useContext, useMemo } from "react";
 import Image from "next/image";
-import { networkConfigs } from "@/lib/constants/network-config";
 import { NetworkContext } from "@/lib/providers/network-provider";
-import { NetworkChainType } from "@/lib/types/network";
 
 export const NoteNetLogoConfig = {
   1: "/icons/eth.svg",
@@ -38,7 +36,9 @@ export default function NetworkOp({
       ...networkList.map((item) => ({
         value: item.chain_id,
         label: item.chain_name,
-        logo: NoteNetLogoConfig[item.chain_id as keyof typeof NoteNetLogoConfig],
+        logo: NoteNetLogoConfig[
+          item.chain_id as keyof typeof NoteNetLogoConfig
+        ],
       })),
     ];
   }, [networkList]);

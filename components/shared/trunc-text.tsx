@@ -31,6 +31,7 @@ export default function TruncateText(props: {
   end?: number;
   children?: React.ReactNode;
   textClx?: string;
+  onClick?: (e: React.MouseEvent<HTMLSpanElement>) => void;
 }) {
   return (
     <TooltipProvider delayDuration={100}>
@@ -46,6 +47,7 @@ export function TruncateTextNoProvider({
   end = 6,
   children,
   textClx,
+  onClick,
 }: {
   text: string;
   showCopy?: boolean;
@@ -53,6 +55,7 @@ export function TruncateTextNoProvider({
   end?: number;
   children?: React.ReactNode;
   textClx?: string;
+  onClick?: (e: React.MouseEvent<HTMLSpanElement>) => void;
 }) {
   return (
     <Tooltip>
@@ -63,7 +66,7 @@ export function TruncateTextNoProvider({
         </span>
       </TooltipTrigger>
       <TooltipContent>
-        <div className="flex items-center">
+        <div className="flex items-center" onClick={onClick}>
           <p className="text-sm text-content-color">{text}</p>
           {children}
         </div>

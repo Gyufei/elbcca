@@ -1,4 +1,3 @@
-import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { cn } from "@/lib/utils";
 import TruncateText from "../shared/trunc-text";
 import { ArrowUpRight, XCircle } from "lucide-react";
@@ -21,13 +20,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "../ui/use-toast";
 import Empty from "../shared/empty";
 
-export default function VirtualAccounts({
-  className,
-  keyStores,
-}: {
-  keyStores: Array<IKeyStoreAccount>;
-  className?: string;
-}) {
+export default function VirtualAccounts({ className }: { className?: string }) {
   const T = useTranslations("Common");
   const { data: vaData } = useGetVa();
   const [openSubVa, setOpenSubVa] = useState<string | null>(null);
@@ -117,7 +110,7 @@ function VaRow({
   const [isEditName, setIsEditName] = useState(false);
   const [newName, setNewName] = useState(vaData.va_name);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const { trigger: deleteVa, isMutating } = useDeleteVa();
+  const { trigger: deleteVa } = useDeleteVa();
   const { network } = useContext(NetworkContext);
   const networkId = network?.chain_id;
   const activeUser = useEffectStore(useIndexStore, (state) =>
@@ -237,17 +230,23 @@ function VaRow({
                     ref={inputRef}
                   />
                 ) : (
-                  <TruncateText
-                    text={vaData.va_name}
-                    textClx="hover:underline hover:decoration-dashed hover:underline-offset-2"
-                  >
-                    <span
-                      className="ml-1 cursor-pointer text-lg font-medium text-title-color"
-                      onClick={() => handleVaNameChange(vaData.va_name)}
+                  <div onClick={handleEditName} className="cursor-pointer">
+                    <TruncateText
+                      onClick={(e) => e.stopPropagation()}
+                      text={vaData.va_name}
+                      textClx="hover:underline hover:decoration-dashed hover:underline-offset-2"
                     >
-                      <ArrowUpRight className="h-4 w-4" />
-                    </span>
-                  </TruncateText>
+                      <span
+                        className="ml-1 cursor-pointer text-lg font-medium text-title-color"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleVaNameChange(vaData.va_name);
+                        }}
+                      >
+                        <ArrowUpRight className="h-4 w-4" />
+                      </span>
+                    </TruncateText>
+                  </div>
                 )}
               </div>
               <SubWalletFlag

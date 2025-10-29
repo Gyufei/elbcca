@@ -1,9 +1,7 @@
 import { ArrowBigRight } from "lucide-react";
-import TokenSelectAndInput from "./token-select-and-input";
 import { SwapTokenType, useTokenSwap } from "@/lib/hooks/use-tokenswap";
 import { IToken } from "@/lib/types/token";
 import VaTokenSelectAndInput from "./va-token-select-and-input";
-
 
 export default function SelectSwapToken({
   routing,
@@ -18,23 +16,19 @@ export default function SelectSwapToken({
   routing: string;
   vaName: string;
 }) {
-  const {
-    token0,
-    token1,
-    token0Num,
-    token1Num
-  } = value;
+  const { token0, token1, token0Num, token1Num } = value;
 
   const onTokenChange = (v: Partial<SwapTokenType>) => {
     onChange({
-      ...v
-    })
-  }
+      ...v,
+    });
+  };
 
-  const {
-    handleTokenChange,
-    handleTokenNumChange,
-  } = useTokenSwap(routing, value, onTokenChange);
+  const { handleTokenChange, handleTokenNumChange } = useTokenSwap(
+    routing,
+    value,
+    onTokenChange,
+  );
 
   return (
     <div className="mt-3 flex items-center justify-between px-3">
@@ -43,8 +37,8 @@ export default function SelectSwapToken({
         tokens={options}
         token={token0}
         tokenNum={token0Num}
-        handleTokenChange={(v) => handleTokenChange(v, 'token0')}
-        handleTokenNumChange={(n) => handleTokenNumChange(n, 'token0')}
+        handleTokenChange={(v) => handleTokenChange(v, "token0")}
+        handleTokenNumChange={(n) => handleTokenNumChange(n, "token0")}
         vaName={vaName}
       />
       <ArrowBigRight
@@ -58,8 +52,8 @@ export default function SelectSwapToken({
         tokens={options}
         token={token1}
         tokenNum={token1Num}
-        handleTokenChange={(v) => handleTokenChange(v, 'token1')}
-        handleTokenNumChange={(n) => handleTokenNumChange(n, 'token1')}
+        handleTokenChange={(v) => handleTokenChange(v, "token1")}
+        handleTokenNumChange={(n) => handleTokenNumChange(n, "token1")}
         vaName={vaName}
       />
     </div>

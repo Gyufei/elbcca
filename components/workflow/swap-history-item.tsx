@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo } from "react";
 import { ChevronDown, ExternalLink } from "lucide-react";
 import Image from "next/image";
 
@@ -54,7 +54,7 @@ export default function SwapHistoryItem({
   }, [executed_txs, total_txs]);
 
   const fetchSubTasks = async (): Promise<Array<ITask> | undefined> => {
-    if (!isVa) return;
+    if (!isVa || !isCanParse) return;
 
     const taskRes: Array<Record<string, any>> = await fetcher(
       `${userPathMap.vaHistoryDetail}?va_tx_id=${task.id}`,

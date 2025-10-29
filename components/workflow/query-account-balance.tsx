@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect } from "react";
 
 import { cn, isAddress, parseToAddress } from "@/lib/utils";
 import { NetworkContext } from "@/lib/providers/network-provider";
@@ -20,7 +20,6 @@ import { IToken } from "@/lib/types/token";
 import { NetworkChainType } from "@/lib/types/network";
 import { FormItem } from "./components/form-item";
 import { Input } from "@/components/ui/input";
-import { VaContext } from "@/lib/providers/va-provider";
 
 export default function QueryAccountBalance({
   token0,

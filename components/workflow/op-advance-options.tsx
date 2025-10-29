@@ -26,7 +26,6 @@ import Select from "./components/select";
 import { pick } from "lodash";
 import MinimumReceived from "./minimum-received";
 import { networkAdvanceKeysMap } from "@/lib/constants/network-config";
-import { VaContext } from "@/lib/providers/va-provider";
 
 export interface IAdvanceOptions {
   schedule: string | null;
@@ -66,9 +65,6 @@ export default function OpAdvanceOptions({
   isVa: boolean;
 }) {
   const { networkName } = useContext(NetworkContext);
-
-  const advanceShowKeyNoVa =
-    networkAdvanceKeysMap[networkName as NetworkChainType] || [];
 
   const advanceShowKey = useMemo(() => {
     return isVa
