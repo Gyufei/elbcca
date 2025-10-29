@@ -26,6 +26,7 @@ import Select from "./components/select";
 import { pick } from "lodash";
 import MinimumReceived from "./minimum-received";
 import { networkAdvanceKeysMap } from "@/lib/constants/network-config";
+import { VaContext } from "@/lib/providers/va-provider";
 
 export interface IAdvanceOptions {
   schedule: string | null;
@@ -38,11 +39,13 @@ export interface IAdvanceOptions {
   routing: string | null;
   minimum_received: string | null;
   priority_fee: number | null;
+  executionDelays: number | null;
+  min_spending: string | null;
+  max_spending: string | null;
 }
 
-
 export function minimumValueTrans(v: string | null, maxV: string): string {
-  return (v &&  Number(v) > Number(maxV))? (maxV + "") : v || "";
+  return v && Number(v) > Number(maxV) ? maxV + "" : v || "";
 }
 
 export default function OpAdvanceOptions({
@@ -51,7 +54,8 @@ export default function OpAdvanceOptions({
   options,
   onAdvanceOptionsChange,
   maxMinimum,
-  fromAddress
+  fromAddress,
+  isVa,
 }: {
   params: Record<string, any>;
   options: IAdvanceOptions;
@@ -59,9 +63,18 @@ export default function OpAdvanceOptions({
   onAdvanceOptionsChange: (_o: IAdvanceOptions) => void;
   maxMinimum: number;
   fromAddress: string;
+  isVa: boolean;
 }) {
   const { networkName } = useContext(NetworkContext);
-  const advanceShowKey = networkAdvanceKeysMap[networkName as NetworkChainType] || [];
+
+  const advanceShowKeyNoVa =
+    networkAdvanceKeysMap[networkName as NetworkChainType] || [];
+
+  const advanceShowKey = useMemo(() => {
+    return isVa
+      ? networkAdvanceKeysMap.VA
+      : networkAdvanceKeysMap[networkName as NetworkChainType] || [];
+  }, [isVa, networkName]);
 
   const T = useTranslations("Common");
   const { data: gasPrice } = useGasPrice();
@@ -75,11 +88,11 @@ export default function OpAdvanceOptions({
     const offsetToTimezone = offset - Number(timezone) || 0;
     const v = (value / 1000 + offsetToTimezone * 60 * 60).toFixed();
     onChange({
-      "schedule": v
-    })
-  }
+      schedule: v,
+    });
+  };
   const setNow = () => {
-    onSchedueChange((new Date()))
+    onSchedueChange(new Date());
   };
 
   const curTimezoneStr = useIndexStore((state) => state.curTimezoneStr());
@@ -106,83 +119,80 @@ export default function OpAdvanceOptions({
   const onChange = (value: Partial<IAdvanceOptions>) => {
     onAdvanceOptionsChange({
       ...options,
-      ...value
-    })
-  }
+      ...value,
+    });
+  };
 
   return (
     <AdvanceCollapsible>
-      <div className="grid grid-cols-2 px-3 gap-x-3 justify-between flex-wrap mt-[-12px]">
-        {
-          advanceShowKey.includes('routing') && (
-            <FormItem title={T("Routing")}>
-              <Select
-                options={routings}
-                value={options['routing'] || ''}
-                onChange={(v) => onChange({ 'routing': v as string})}
-                placeholder={""}
-              />
-            </FormItem>
-          )
-        }
-        {
-          advanceShowKey.includes('minimum_received') && (
-            <MinimumReceived 
-              value={options['minimum_received'] || ''}
-              onChange={(v) => onChange({ 'minimum_received': v })}
-              maxMinimum={maxMinimum}
-              tokenInfo={pick(params, ["token0", "token1", "token0Num", "token1Num"])}
+      <div className="mt-[-12px] grid grid-cols-2 flex-wrap justify-between gap-x-3 px-3">
+        {advanceShowKey.includes("routing") && (
+          <FormItem title={T("Routing")}>
+            <Select
+              options={routings}
+              value={options["routing"] || ""}
+              onChange={(v) => onChange({ routing: v as string })}
+              placeholder={""}
             />
+          </FormItem>
         )}
-       
-        {
-          advanceShowKey.includes('timeout') && (
-            <FormItem title={T("Timeout(s)")}>
-              <Input
-                value={options.timeout || ""}
-                onChange={(v) => onChange({ "timeout": Number(v) })}
-                placeholder="0"
-                type="number"
-                noDecimals
-              />
-            </FormItem>
-          )
-        }
-        {
-          advanceShowKey.includes('priority_fee') &&  (
-            <FormItem title={T("PriorityFee")}>
-              <Input
-                value={options.priority_fee || ""}
-                onChange={(v) => onChange({"priority_fee": Number(v) })}
-                placeholder={String(priorityFee) || "0"}
-                type="number"
-              />
-            </FormItem>
-          )
-        }
-        {
-          advanceShowKey.includes('slippage') &&  (
-            <FormItem title={T("Slippage")}>
-              <div className="relative">
-                <Input
-                  value={options.slippage || ""}
-                  onChange={(v) => onChange({"slippage": v })}
-                  placeholder="0"
-                  type="number"
-                />
-              <div className="absolute right-2 top-[7px] select-none text-title-color">
-                %
-                </div>
-              </div>
-            </FormItem>
+        {advanceShowKey.includes("minimum_received") && (
+          <MinimumReceived
+            value={options["minimum_received"] || ""}
+            onChange={(v) => onChange({ minimum_received: v })}
+            maxMinimum={maxMinimum}
+            tokenInfo={pick(params, [
+              "token0",
+              "token1",
+              "token0Num",
+              "token1Num",
+            ])}
+          />
         )}
 
-        {advanceShowKey.includes('nonce') && (
-          <div className="col-span-full flex gap-x-3 items-end">
+        {advanceShowKey.includes("timeout") && (
+          <FormItem title={T("Timeout(s)")}>
+            <Input
+              value={options.timeout || ""}
+              onChange={(v) => onChange({ timeout: Number(v) })}
+              placeholder="0"
+              type="number"
+              noDecimals
+            />
+          </FormItem>
+        )}
+        {advanceShowKey.includes("priority_fee") && (
+          <FormItem title={T("PriorityFee")}>
+            <Input
+              value={options.priority_fee || ""}
+              onChange={(v) => onChange({ priority_fee: Number(v) })}
+              placeholder={String(priorityFee) || "0"}
+              type="number"
+            />
+          </FormItem>
+        )}
+        {advanceShowKey.includes("slippage") && (
+          <FormItem title={T("Slippage")}>
+            <div className="relative">
+              <Input
+                value={options.slippage || ""}
+                onChange={(v) => onChange({ slippage: v })}
+                placeholder="0"
+                type="number"
+              />
+              <div className="absolute right-2 top-[7px] select-none text-title-color">
+                %
+              </div>
+            </div>
+          </FormItem>
+        )}
+
+        {advanceShowKey.includes("nonce") && (
+          <div className="col-span-full flex items-end gap-x-3">
             <FormItem title={T("Nonce")} className="flex-1">
               <Input
                 value={options.nonce || ""}
-                onChange={(v) => onChange({ "nonce": Number(v) })}
+                onChange={(v) => onChange({ nonce: Number(v) })}
                 placeholder={String(nonce) || "0"}
                 type="number"
                 noDecimals
@@ -191,16 +201,14 @@ export default function OpAdvanceOptions({
             <FormItem title={"Gas(gwei)"} className="flex-1">
               <Input
                 value={options.gas || ""}
-                onChange={(v) => onChange({"gas": Number(v) })}
+                onChange={(v) => onChange({ gas: Number(v) })}
                 placeholder={String(gasPrice)}
                 type="number"
               />
             </FormItem>
             <button
               title="fixed gas"
-              onClick={() =>
-                onChange({"fixed_gas": !options.fixed_gas })
-              }
+              onClick={() => onChange({ fixed_gas: !options.fixed_gas })}
               className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-[11px] hover:bg-custom-bg-white"
             >
               {options.fixed_gas ? (
@@ -211,9 +219,7 @@ export default function OpAdvanceOptions({
             </button>
             <button
               title="no check gas"
-              onClick={() =>
-                onChange({"no_check_gas": !options.no_check_gas })
-              }
+              onClick={() => onChange({ no_check_gas: !options.no_check_gas })}
               className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-[11px] hover:bg-custom-bg-white"
             >
               <NoCheckIcon
@@ -224,30 +230,100 @@ export default function OpAdvanceOptions({
             </button>
           </div>
         )}
-        {
-          advanceShowKey.includes('schedue') && (
-            <FormItem title={T("ScheduleTime")} className="col-span-full">
-              <div className="flex justify-between gap-x-3">
-                <DateTimePicker
-                  ampm={false}
-                  closeOnSelect={true}
-                  minDateTime={pastTime}
-                  timeSteps={{ hours: 1, minutes: 1 }}
-                  slotProps={{ textField: { size: "small", fullWidth: true } }}
-                  value={displayDate}
-                  onChange={(e) => onSchedueChange(e as Date)}
-                  format="yyyy-MM-dd HH:mm"
+        {advanceShowKey.includes("va") && (
+          <>
+            <div></div>
+            <FormItem title={T("ExecutionDelay(s)")}>
+              <Input
+                value={options.executionDelays || ""}
+                onChange={(v) => onChange({ executionDelays: Number(v) })}
+                placeholder="1800"
+                type="number"
+                noDecimals
+              />
+            </FormItem>
+            <FormItem title={T("Spending")}>
+              <div className="relative flex items-center justify-between rounded-md border border-border-color bg-white">
+                <Input
+                  value={options.min_spending || ""}
+                  onChange={(v) => onChange({ min_spending: v })}
+                  placeholder="60"
+                  type="number"
+                  className="w-[40%] border-none"
                 />
-                <button
-                  onClick={() => setNow()}
-                  className="w-[72px] flex h-10 cursor-pointer items-center justify-center rounded-md border text-sm hover:bg-custom-bg-white"
-                >
-                  {T("Now")}
-                </button>
+                <span className="bg-white">-</span>
+                <Input
+                  value={options.max_spending || ""}
+                  onChange={(v) => onChange({ max_spending: v })}
+                  placeholder="100"
+                  type="number"
+                  className="w-[45%] border-none"
+                />
+                <span className="absolute right-2 top-[7px] select-none text-title-color">
+                  %
+                </span>
               </div>
             </FormItem>
-          )
-        }
+            <div className="col-span-full flex items-end gap-x-3">
+              <FormItem title={T("MaxSlippage")} className="flex-1">
+                <div className="relative">
+                  <Input
+                    value={options.slippage || ""}
+                    onChange={(v) => onChange({ slippage: v })}
+                    placeholder="0"
+                    type="number"
+                  />
+                  <div className="absolute right-2 top-[7px] select-none text-title-color">
+                    %
+                  </div>
+                </div>
+              </FormItem>
+              <FormItem title={"MaxGasPrice(gwei)"} className="flex-1">
+                <Input
+                  value={options.gas || ""}
+                  onChange={(v) => onChange({ gas: Number(v) })}
+                  placeholder={String(gasPrice)}
+                  type="number"
+                />
+              </FormItem>
+              <button
+                title="no check gas"
+                onClick={() =>
+                  onChange({ no_check_gas: !options.no_check_gas })
+                }
+                className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-[11px] hover:bg-custom-bg-white"
+              >
+                <NoCheckIcon
+                  style={{
+                    color: options.no_check_gas ? "#0572ec" : "#999",
+                  }}
+                />
+              </button>
+            </div>
+          </>
+        )}
+        {advanceShowKey.includes("schedule") && (
+          <FormItem title={T("ScheduleTime")} className="col-span-full">
+            <div className="flex justify-between gap-x-3">
+              <DateTimePicker
+                ampm={false}
+                closeOnSelect={true}
+                minDateTime={pastTime}
+                timeSteps={{ hours: 1, minutes: 1 }}
+                slotProps={{ textField: { size: "small", fullWidth: true } }}
+                value={displayDate}
+                onChange={(e) => onSchedueChange(e as Date)}
+                format="yyyy-MM-dd HH:mm"
+              />
+              <button
+                onClick={() => setNow()}
+                className="flex h-10 w-[72px] cursor-pointer items-center justify-center rounded-md border text-sm hover:bg-custom-bg-white"
+              >
+                {T("Now")}
+              </button>
+            </div>
+          </FormItem>
+        )}
       </div>
     </AdvanceCollapsible>
   );
@@ -260,7 +336,9 @@ function AdvanceCollapsible({ children }: { children?: React.ReactNode }) {
   return (
     <Collapsible className="mt-6 w-full" open={open} onOpenChange={setOpen}>
       <div className="mb-4 flex items-center pl-3">
-        <div className="mr-3 text-xs font-medium text-title-color">{T("AdvanceParameters")}</div>
+        <div className="mr-3 text-xs font-medium text-title-color">
+          {T("AdvanceParameters")}
+        </div>
         <div className="h-[1px] flex-1 bg-shadow-color" />
         <CollapsibleTrigger asChild>
           <ChevronDownCircle

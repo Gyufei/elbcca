@@ -5,6 +5,7 @@ import useSWRMutation from "swr/mutation";
 import fetcher from "../fetcher";
 import { GAS_TOKEN_ADDRESS } from "../constants/global";
 import useIndexStore from "../state";
+import { isAddress } from "../utils";
 
 type BalanceType = number;
 export function useAccountBalance(
@@ -14,16 +15,20 @@ export function useAccountBalance(
 ) {
   const userPathMap = useIndexStore((state) => state.userPathMap());
   const [balances, setBalances] = useState<BalanceType[]>([0, 0]);
-  const { network, networkId } = useContext(NetworkContext);
+  const { network, networkId, networkName } = useContext(NetworkContext);
 
   useEffect(() => {
-    setBalances([0, 0])
-  }, [networkId])
+    setBalances([0, 0]);
+  }, [networkId]);
 
   const getAccountBalanceQuery = (queryTokens: string[]) => {
     const queryParams = new URLSearchParams();
 
-    if (!network || !fromAddress) {
+    if (
+      !network ||
+      !fromAddress ||
+      !isAddress(fromAddress, networkName || "")
+    ) {
       return;
     }
 
@@ -54,23 +59,29 @@ export function useAccountBalance(
 
   const accountBalanceFetch = async (queryTokens: string[]) => {
     try {
-      const res = await fetcher(`${userPathMap.accountTokensBalance}?${getAccountBalanceQuery(queryTokens)}`, {
-        method: "GET",
-      });
+      const res = await fetcher(
+        `${userPathMap.accountTokensBalance}?${getAccountBalanceQuery(
+          queryTokens,
+        )}`,
+        {
+          method: "GET",
+        },
+      );
       return res.batch_balance_of || queryTokens.map(() => 0);
     } catch {
-      return queryTokens.map(() => 0)
+      return queryTokens.map(() => 0);
     }
-    
-  }
+  };
 
   const gasBalanceFetch = async () => {
-    const res = await fetcher( `${userPathMap.accountTokenBalance}?${getGasBalanceQuery()}`, {
-      method: "GET",
-    });
+    const res = await fetcher(
+      `${userPathMap.accountTokenBalance}?${getGasBalanceQuery()}`,
+      {
+        method: "GET",
+      },
+    );
     return [res.balance_of || 0];
-  }
-
+  };
 
   const {
     data: gasBalanceRes,
@@ -85,21 +96,23 @@ export function useAccountBalance(
     const tokenAddressList = [token0?.token_address, token1?.token_address];
     let result = [0, 0];
     if (tokenAddressList.includes(GAS_TOKEN_ADDRESS)) {
-      const res = await Promise.all(tokenAddressList.map((key) => {
-        if (!key) return null;
-        if (key === GAS_TOKEN_ADDRESS) {
-          return gasBalanceFetch()
-        } else {
-          return accountBalanceFetch([key])
-        }
-      }))
-      res.map((item, index) => result[index] = item[0] || 0)
+      const res = await Promise.all(
+        tokenAddressList.map((key) => {
+          if (!key) return null;
+          if (key === GAS_TOKEN_ADDRESS) {
+            return gasBalanceFetch();
+          } else {
+            return accountBalanceFetch([key]);
+          }
+        }),
+      );
+      res.map((item, index) => (result[index] = item[0] || 0));
     } else {
-      result = await accountBalanceFetch(tokenAddressList as string[])
+      result = await accountBalanceFetch(tokenAddressList as string[]);
     }
-   
-    setBalances(result)
-  }
+
+    setBalances(result);
+  };
 
   return {
     balances,

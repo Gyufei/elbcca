@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import CopyIcon from "./copy-icon";
+import { cn } from "@/lib/utils";
 
 export const displayText = (
   text: string | undefined,
@@ -29,6 +30,7 @@ export default function TruncateText(props: {
   start?: number;
   end?: number;
   children?: React.ReactNode;
+  textClx?: string;
 }) {
   return (
     <TooltipProvider delayDuration={100}>
@@ -43,17 +45,19 @@ export function TruncateTextNoProvider({
   start = 8,
   end = 6,
   children,
+  textClx,
 }: {
   text: string;
   showCopy?: boolean;
   start?: number;
   end?: number;
   children?: React.ReactNode;
+  textClx?: string;
 }) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <span className="inline-flex items-center">
+        <span className={cn("inline-flex items-center", textClx)}>
           {displayText(text, start, end)}
           {showCopy && <CopyIcon text={text} />}
         </span>

@@ -19,6 +19,7 @@ import useIndexStore from "@/lib/state";
 import useEffectStore from "@/lib/state/use-store";
 import { useTranslations } from "next-intl";
 import { toast } from "../ui/use-toast";
+import Empty from "../shared/empty";
 
 export default function VirtualAccounts({
   className,
@@ -27,7 +28,7 @@ export default function VirtualAccounts({
   keyStores: Array<IKeyStoreAccount>;
   className?: string;
 }) {
-  console.log(keyStores);
+  const T = useTranslations("Common");
   const { data: vaData } = useGetVa();
   const [openSubVa, setOpenSubVa] = useState<string | null>(null);
 
@@ -47,18 +48,22 @@ export default function VirtualAccounts({
             height: "calc(100vh - 286px)",
           }}
         >
-          {vaData?.map((va: IVaData, index: number) => (
-            <VaRow
-              key={va.va_name}
-              index={index}
-              vaLength={vaData.length || 0}
-              vaData={va}
-              openSubVa={openSubVa}
-              handleOpenSubVa={handleOpenSubVa}
-              gasToken={gasToken || undefined}
-              token={selectedToken || undefined}
-            />
-          ))}
+          {vaData?.length ? (
+            vaData?.map((va: IVaData, index: number) => (
+              <VaRow
+                key={va.va_name}
+                index={index}
+                vaLength={vaData.length || 0}
+                vaData={va}
+                openSubVa={openSubVa}
+                handleOpenSubVa={handleOpenSubVa}
+                gasToken={gasToken || undefined}
+                token={selectedToken || undefined}
+              />
+            ))
+          ) : (
+            <Empty displayText={T("NoVirtualAccounts")} />
+          )}
         </div>
       </div>
     </div>
@@ -119,6 +124,8 @@ function VaRow({
     state.activeUser(),
   );
 
+  const onVaNameChange = useIndexStore((state) => state.setFromAddress);
+
   const { data: subVaData } = useGetSubVa({
     tokenAddr: token?.token_address || "",
     accounts: vaData.wallet_list,
@@ -159,6 +166,10 @@ function VaRow({
       inputRef.current?.select();
       inputRef.current?.focus();
     }, 500);
+  }
+
+  function handleVaNameChange(va: string) {
+    onVaNameChange(va);
   }
 
   function handleDelete() {
@@ -226,12 +237,17 @@ function VaRow({
                     ref={inputRef}
                   />
                 ) : (
-                  <span
-                    className="cursor-pointer text-lg font-medium text-title-color hover:underline hover:decoration-dashed hover:underline-offset-2"
-                    onClick={handleEditName}
+                  <TruncateText
+                    text={vaData.va_name}
+                    textClx="hover:underline hover:decoration-dashed hover:underline-offset-2"
                   >
-                    {vaData.va_name}
-                  </span>
+                    <span
+                      className="ml-1 cursor-pointer text-lg font-medium text-title-color"
+                      onClick={() => handleVaNameChange(vaData.va_name)}
+                    >
+                      <ArrowUpRight className="h-4 w-4" />
+                    </span>
+                  </TruncateText>
                 )}
               </div>
               <SubWalletFlag
@@ -290,7 +306,7 @@ function VaRow({
             />
             {searchKeyword && (
               <XCircle
-                className="absolute right-2 cursor-pointer top-1/2 h-4 w-4 -translate-y-1/2 text-lg font-bold text-gray-400 hover:text-gray-600"
+                className="absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 cursor-pointer text-lg font-bold text-gray-400 hover:text-gray-600"
                 onClick={handleClearSearch}
               />
             )}

@@ -44,10 +44,6 @@ export const SystemEndPointPathMap = {
   vaQuery: WithHost("/va_account/wallets"),
   vaCreate: WithHost("/va_account/create"),
   vaRemove: WithHost("/va_account/delete"),
-  vaSendSwap: WithHost("/va_account/swap/send"),
-  vaSendTransfer: WithHost("/va_account/transfer/send"),
-  vaCancelTx: WithHost("/va_account/cancel"),
-  vaHistory: WithHost("/va_account/history"),
 };
 
 export const UserEndPointPathMap = {
@@ -93,5 +89,9 @@ export const UserEndPointPathMap = {
   updateNote: "/wallet_notes/update",
   deleteNote: "/wallet_notes/delete",
 
-  vaSubBalance: "/tokenswap/token_balance_nonce"
+  vaSubBalance: "/tokenswap/token_balance_nonce",
+  vaSendSwap: "/va_account/swap/send",
+  vaSendTransfer: "/va_account/transfer/send",
+  vaCancelTx: "/va_account/cancel",
+  vaHistory: "/va_account/history",
 };

@@ -1,7 +1,7 @@
-
 import { Input } from "@/components/ui/input";
 
 import { replaceStrNum, replaceStrNumNoDecimal } from "@/lib/hooks/use-str-num";
+import { cn } from "@/lib/utils";
 
 type BasicInputProps = {
   value?: string | number;
@@ -10,23 +10,24 @@ type BasicInputProps = {
   type?: "text" | "number";
   noDecimals?: boolean;
   onKeyDown?: (e: any) => void;
-}
-export default  function BasicInput({
+  className?: string;
+};
+export default function BasicInput({
   value,
   onChange = () => {},
   placeholder = "",
-  type =  "text",
+  type = "text",
   noDecimals = false,
-  onKeyDown = () => {}
+  onKeyDown = () => {},
+  className,
 }: BasicInputProps) {
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let val = e.target.value;
     if (type === "number") {
       if (val) {
         val = noDecimals ? replaceStrNumNoDecimal(val) : replaceStrNum(val);
       }
-     
+
       onChange(val);
       return;
     }
@@ -36,9 +37,9 @@ export default  function BasicInput({
     <Input
       value={value}
       onChange={handleChange}
-      className="rounded-md border-border-color"
+      className={cn("rounded-md border-border-color", className)}
       placeholder={placeholder}
       onKeyDown={onKeyDown}
-    /> 
-  )
+    />
+  );
 }

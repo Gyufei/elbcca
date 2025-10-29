@@ -316,6 +316,7 @@ export default function FilterAccountList({
 
         <BasicButton
           loading={creating}
+          className="!w-[200px]"
           disabled={
             creating || !networkId || !activeUser?.email || selectedWallets.length === 0
           }

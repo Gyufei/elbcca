@@ -23,8 +23,11 @@ export default function VaProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [currentAccountType, setCurrentAccountType] = useState<"Wallet" | "VirtualAccount">("Wallet");
+  const [currentAccountType, setCurrentAccountType] = useState<
+    "Wallet" | "VirtualAccount"
+  >("Wallet");
   const [selectedToken, setSelectedToken] = useState<IToken | null>(null);
+  const [selectedVaName, setSelectedVaName] = useState<string | null>(null);
 
   const onAccountTypeChange = (value: "Wallet" | "VirtualAccount") => {
     setCurrentAccountType(value);

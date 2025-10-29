@@ -4,29 +4,28 @@ export const networkConfigs = {
   [NetworkChainType.SOLANA]: {
     name: "Solana",
     chainType: NetworkChainType.SOLANA,
-    logo: '/icons/Solana.svg',
-    chainId: '1'
+    logo: "/icons/Solana.svg",
+    chainId: "1",
   },
   [NetworkChainType.BNB]: {
     name: "BNB Chain",
     chainType: NetworkChainType.BNB,
-    logo: '/icons/BNBChain.svg',
-    chainId: '2'
+    logo: "/icons/BNBChain.svg",
+    chainId: "2",
   },
   [NetworkChainType.ETH]: {
     name: "Ethereum",
     chainType: NetworkChainType.ETH,
-    logo: '/icons/eth.svg',
-    chainId: '3'
+    logo: "/icons/eth.svg",
+    chainId: "3",
   },
   [NetworkChainType.USDC]: {
     name: "Hyperliquid",
     chainType: NetworkChainType.USDC,
-    logo: '/icons/eth.svg',
-    chainId: '4'
+    logo: "/icons/eth.svg",
+    chainId: "4",
   },
-}
-
+};
 
 export const networkRouting = {
   [NetworkChainType.SOLANA]: [
@@ -34,16 +33,16 @@ export const networkRouting = {
     { label: "Raydium", value: "Raydium" },
   ],
   [NetworkChainType.BNB]: [
-    { label: "Optimized", value: "Optimized", },
-    { label: "Pancake", value:  "Pancake", },
+    { label: "Optimized", value: "Optimized" },
+    { label: "Pancake", value: "Pancake" },
   ],
   [NetworkChainType.ETH]: [
-    { label: "Optimized", value: "Optimized", },
-    { label:  "UniV3", value:  "uniswapv3", },
-    { label:  "UniV2", value:  "uniswap", },
+    { label: "Optimized", value: "Optimized" },
+    { label: "UniV3", value: "uniswapv3" },
+    { label: "UniV2", value: "uniswap" },
   ],
   [NetworkChainType.USDC]: [],
-}
+};
 
 export const networkAdvanceParams = {
   [NetworkChainType.SOLANA]: {
@@ -75,10 +74,17 @@ export const networkAdvanceParams = {
     fixed_gas: false,
     no_check_gas: false,
   },
-  [NetworkChainType.USDC]: {
-
-  }
-}
+  [NetworkChainType.USDC]: {},
+  VA: {
+    minimum_received: "0",
+    schedule: null,
+    slippage: "0.02",
+    priority_fee: "",
+    gas: null,
+    fixed_gas: false,
+    no_check_gas: false,
+  },
+};
 
 export const USDCDefaultParams = {
   total_item_amount: null,
@@ -87,13 +93,59 @@ export const USDCDefaultParams = {
   item_amount: null,
   delete_id: null,
   token_balance_type: "sales_revenue",
-  bridge_chain: "hyperliquid-arbitrum"
-}
-
+  bridge_chain: "hyperliquid-arbitrum",
+};
 
 export const networkAdvanceKeysMap = {
-  [NetworkChainType.SOLANA]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'priority_fee', 'slippage', 'schedue'],
-  [NetworkChainType.BNB]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'timeout', 'slippage', 'nonce', 'gas', 'fixed_gas', 'no_check_gas', 'schedue'],
-  [NetworkChainType.ETH]: ['fromAddress', 'transfer', 'tokenSwap', 'toAddress', 'routing', 'minimum_received', 'timeout', 'slippage', 'nonce', 'gas', 'fixed_gas', 'no_check_gas', 'schedue'],
-  [NetworkChainType.USDC]: ['usdcMarket', 'usdcOption', 'schedue'],
-}
+  [NetworkChainType.SOLANA]: [
+    "fromAddress",
+    "transfer",
+    "tokenSwap",
+    "toAddress",
+    "routing",
+    "minimum_received",
+    "priority_fee",
+    "slippage",
+    "schedule",
+  ],
+  [NetworkChainType.BNB]: [
+    "fromAddress",
+    "transfer",
+    "tokenSwap",
+    "toAddress",
+    "routing",
+    "minimum_received",
+    "timeout",
+    "slippage",
+    "nonce",
+    "gas",
+    "fixed_gas",
+    "no_check_gas",
+    "schedule",
+  ],
+  [NetworkChainType.ETH]: [
+    "fromAddress",
+    "transfer",
+    "tokenSwap",
+    "toAddress",
+    "routing",
+    "minimum_received",
+    "timeout",
+    "slippage",
+    "nonce",
+    "gas",
+    "fixed_gas",
+    "no_check_gas",
+    "schedule",
+  ],
+  [NetworkChainType.USDC]: ["usdcMarket", "usdcOption", "schedule"],
+  VA: [
+    "fromAddress",
+    "tokenSwap",
+    "transfer",
+    "toAddress",
+    "routing",
+    "schedule",
+    "va",
+  ],
+};

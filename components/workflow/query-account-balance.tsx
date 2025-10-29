@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 
 import { cn, isAddress, parseToAddress } from "@/lib/utils";
 import { NetworkContext } from "@/lib/providers/network-provider";
@@ -20,17 +20,20 @@ import { IToken } from "@/lib/types/token";
 import { NetworkChainType } from "@/lib/types/network";
 import { FormItem } from "./components/form-item";
 import { Input } from "@/components/ui/input";
+import { VaContext } from "@/lib/providers/va-provider";
 
 export default function QueryAccountBalance({
   token0,
   token1,
   gas,
   setGas,
+  isVa,
 }: {
   gas: number | null;
   setGas: (_gas: number) => void;
   token0: IToken | null;
   token1: IToken | null;
+  isVa: boolean;
 }) {
   const T = useTranslations("Common");
   const { network, networkName } = useContext(NetworkContext);
@@ -39,11 +42,12 @@ export default function QueryAccountBalance({
 
   const fromAddress = useIndexStore((state) => state.fromAddress);
   const setFromAddress = useIndexStore((state) => state.setFromAddress);
+  
   const toAddress = useIndexStore((state) => state.toAddress);
   const setToAddress = useIndexStore((state) => state.setToAddress);
 
   const handleAccountChange = (v: string) => {
-    if (networkName === NetworkChainType.SOLANA) {
+    if (networkName === NetworkChainType.SOLANA || isVa) {
       setFromAddress(v);
     } else {
       const addrV = parseToAddress(v);
@@ -52,7 +56,7 @@ export default function QueryAccountBalance({
   };
 
   const { mutate: getGas } = useGasPrice();
-  const { mutate: getNonce } = useNonce(fromAddress);
+  const { mutate: getNonce } = useNonce(fromAddress || "");
 
   const {
     balances,
@@ -60,7 +64,7 @@ export default function QueryAccountBalance({
     gasBalanceRes,
     triggerGasBalance,
     resetGasBalance,
-  } = useAccountBalance(fromAddress, token0, token1);
+  } = useAccountBalance(fromAddress || "", token0, token1);
 
   useEffect(() => {
     if (networkName) {
@@ -97,8 +101,8 @@ export default function QueryAccountBalance({
       getNonce();
     }
 
-    if (!toAddress) {
-      setToAddress?.(fromAddress);
+    if (!toAddress && !isVa) {
+      setToAddress?.(fromAddress || "");
     }
   };
 
@@ -115,7 +119,7 @@ export default function QueryAccountBalance({
       <FormItem title={T("FromAddress")} className="px-3">
         <div className="flex justify-between gap-x-2">
           <Input
-            value={fromAddress}
+            value={fromAddress || ""}
             onChange={(e: any) => handleAccountChange(e.target.value)}
             placeholder={
               networkName === NetworkChainType.SOLANA ? "" : "0x11111111111"
@@ -124,7 +128,8 @@ export default function QueryAccountBalance({
           />
           <button
             disabled={
-              !fromAddress || !isAddress(fromAddress, networkName || "")
+              !fromAddress ||
+              (!isVa && !isAddress(fromAddress, networkName || ""))
             }
             onClick={() => handleQuery()}
             className="w-[72px] rounded-md border border-border-color bg-white  text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
@@ -133,11 +138,16 @@ export default function QueryAccountBalance({
           </button>
         </div>
       </FormItem>
-      <div className="mt-4 grid grid-cols-3 gap-x-3 px-3">
-        <SmallTokenCard name={gasToken?.token_symbol || "ETH"} num={gas || 0} />
-        <SmallTokenCard name={token0?.token_symbol} num={balances[0] || 0} />
-        <SmallTokenCard name={token1?.token_symbol} num={balances[1] || 0} />
-      </div>
+      {!isVa && (
+        <div className="mt-4 grid grid-cols-3 gap-x-3 px-3">
+          <SmallTokenCard
+            name={gasToken?.token_symbol || "ETH"}
+            num={gas || 0}
+          />
+          <SmallTokenCard name={token0?.token_symbol} num={balances[0] || 0} />
+          <SmallTokenCard name={token1?.token_symbol} num={balances[1] || 0} />
+        </div>
+      )}
     </>
   );
 }

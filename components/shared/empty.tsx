@@ -1,12 +1,12 @@
 import { PackageOpen } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-export default function Empty() {
+export default function Empty({ displayText }: { displayText?: string }) {
   const T = useTranslations("Common");
   return (
     <div className="flex flex-col items-center justify-center pt-10 text-content-color">
       <PackageOpen className="mb-5 h-[40px] w-[40px]" />
-      <p className="text-lg">{T("NoItemsYet")}</p>
+      <p className="text-lg">{displayText || T("NoItemsYet")}</p>
     </div>
   );
 }

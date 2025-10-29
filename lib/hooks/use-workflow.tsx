@@ -9,8 +9,10 @@ import { IToken } from "../types/token";
 import fetcher from "../fetcher";
 import { IAdvanceOptions } from "@/components/workflow/op-advance-options";
 import { TokenContext } from "../providers/token-provider";
+import { VaContext } from "../providers/va-provider";
 
 export function useWorkflow({
+  isVa,
   params,
   keyStores,
   gasPrice,
@@ -20,6 +22,7 @@ export function useWorkflow({
   advanceOptions,
   transferAmount,
 }: {
+  isVa: boolean;
   keyStores: Array<IKeyStoreAccount>;
   params: Record<string, any>;
   gasPrice: string;
@@ -42,32 +45,52 @@ export function useWorkflow({
     isTransferOp,
     isSwapOp,
     opApproveSendUrl,
-  } = useWorkflowParams(params);
+  } = useWorkflowParams(params, isVa);
 
   const getCommonParams = () => {
     const account = fromAddress;
-    const kStore = keyStores.find((ks) =>
-      ks.accounts.some((a) => a.account === account),
-    );
+    const kStore = isVa
+      ? keyStores[0]
+      : keyStores.find((ks) => ks.accounts.some((a) => a.account === account));
 
     const chain_id = networkId || "";
     const keystore = kStore?.name || "";
 
-    const paramsAfter = {
-      user_name: activeUser?.email,
-      chain_id: chain_id + "",
-      account,
-      keystore,
-      op_name: params?.op?.op_name,
-      ...(advanceOptions || {}),
-      minimum_received: advanceOptions?.minimum_received || maxMinimum + "",
-      gas: advanceOptions?.gas
-        ? (Number(advanceOptions.gas) * 10 ** 9).toFixed()
-        : (Number(gasPrice) * 10 ** 9).toFixed(),
-      priority_fee: advanceOptions?.priority_fee
-        ? Number(advanceOptions?.priority_fee).toFixed()
-        : Number(priorityFee).toFixed(),
-    };
+    const paramsAfter = isVa
+      ? {
+          user_name: activeUser?.email,
+          chain_id: chain_id + "",
+          va_name: fromAddress,
+          keystore,
+          op_name: params?.op?.op_name,
+          ...(advanceOptions || {}),
+          min_spending: advanceOptions?.min_spending || "60",
+          max_spending: advanceOptions?.max_spending || "100",
+          execution_delays: advanceOptions?.executionDelays || "1800",
+          minimum_received: "0",
+          swap_router: params?.spender,
+          gas: advanceOptions?.gas
+            ? (Number(advanceOptions.gas) * 10 ** 9).toFixed()
+            : (Number(gasPrice) * 10 ** 9).toFixed(),
+          priority_fee: advanceOptions?.priority_fee
+            ? Number(advanceOptions?.priority_fee).toFixed()
+            : Number(priorityFee).toFixed(),
+        }
+      : {
+          user_name: activeUser?.email,
+          chain_id: chain_id + "",
+          account,
+          keystore,
+          op_name: params?.op?.op_name,
+          ...(advanceOptions || {}),
+          minimum_received: advanceOptions?.minimum_received || maxMinimum + "",
+          gas: advanceOptions?.gas
+            ? (Number(advanceOptions.gas) * 10 ** 9).toFixed()
+            : (Number(gasPrice) * 10 ** 9).toFixed(),
+          priority_fee: advanceOptions?.priority_fee
+            ? Number(advanceOptions?.priority_fee).toFixed()
+            : Number(priorityFee).toFixed(),
+        };
 
     if (!advanceOptions?.nonce) {
       delete paramsAfter.nonce;
@@ -87,8 +110,25 @@ export function useWorkflow({
       recipient: toAddress,
     };
 
-    if (!paramsAfter.token || !paramsAfter.amount || !paramsAfter.recipient)
+    if (!paramsAfter.token || !paramsAfter.amount || !paramsAfter.recipient) {
       return null;
+    }
+
+    if (isVa) {
+      const deleteKeys = [
+        "fixed_gas",
+        "gas",
+        "minimum_received",
+        "no_check_gas",
+        "priority_fee",
+        "slippage",
+        "routing",
+        "token"
+      ];
+      deleteKeys.forEach((key) => {
+        delete (paramsAfter as any)[key];
+      });
+    }
     return paramsAfter;
   };
 
@@ -96,26 +136,44 @@ export function useWorkflow({
     const commonParams = getCommonParams();
     if (!commonParams) return null;
     const { token0, token1, token0Num } = params;
-    const afterParams = {
-      ...commonParams,
-      recipient: toAddress,
-      token_in: token0?.token_address || "",
-      token_out: token1?.token_address || "",
-      token_in_name: token0?.token_symbol || "",
-      token_out_name: token1?.token_symbol || "",
-      amount: token0Num,
-      is_exact_input: true,
-    };
+    const afterParams = isVa
+      ? {
+          ...commonParams,
+          token_in: token0?.token_address || "",
+          token_out: token1?.token_address || "",
+          token_in_name: token0?.token_symbol || "",
+          token_out_name: token1?.token_symbol || "",
+          amount: token0Num,
+          is_exact_input: true,
+        }
+      : {
+          ...commonParams,
+          recipient: toAddress,
+          token_in: token0?.token_address || "",
+          token_out: token1?.token_address || "",
+          token_in_name: token0?.token_symbol || "",
+          token_out_name: token1?.token_symbol || "",
+          amount: token0Num,
+          is_exact_input: true,
+        };
 
     if (
       !afterParams.keystore ||
-      !afterParams.recipient ||
       !afterParams.token_in ||
       !afterParams.token_out ||
       !afterParams.amount
     ) {
       return null;
     }
+
+    if (isVa && "va_name" in afterParams && !afterParams.va_name) {
+      return null;
+    }
+
+    if (!isVa && "recipient" in afterParams && !afterParams.recipient) {
+      return null;
+    }
+
     return afterParams;
   };
 
@@ -136,12 +194,12 @@ export function useWorkflow({
     };
 
     if (!afterParams.token || !afterParams.amount) return null;
+
     return afterParams;
   };
 
   async function signAction() {
     const params = getTxParams();
-    console.log(params, opSignUrl, "test 测试中");
     if (!opSignUrl || !params) return;
 
     const res = await fetcher(opSignUrl, {

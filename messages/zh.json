@@ -84,6 +84,10 @@
     "Advance": "高级",
     "AdvanceParameters": "高级参数",
     "Timeout(s)": "超时(秒)",
+    "ExecutionDelay(s)": "执行延迟(秒)",
+    "Spending": "花费",
+    "MaxSlippage": "最大滑点",
+    "MaxGasPrice": "最大 Gas 价格(gwei)",
     "Slippage": "滑点",
     "Nonce": "随机数",
     "Gas(gwei)": "Gas(单位: gwei)",
@@ -187,6 +191,7 @@
     "VaDeleted": "虚拟账户删除成功",
     "VaDeleteFailed": "虚拟账户删除失败",
     "VaCreated": "虚拟账户创建成功",
-    "VaCreateFailed": "虚拟账户创建失败"
+    "VaCreateFailed": "虚拟账户创建失败",
+    "NoVirtualAccounts": "无虚拟账户"
   }
 }

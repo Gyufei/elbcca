@@ -123,7 +123,7 @@ export default function UsdcBtn({
       if (res.status === false) {
         toast({
           variant: "destructive",
-          description: res.msg || "schedue fail",
+          description: res.msg || "schedule fail",
         });
       }
       onAfterAction();
