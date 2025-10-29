@@ -17,7 +17,7 @@ export default function LogoPlace() {
           boxShadow: "-1px 0px 0px 0px #d6d6d6, inset -1px 0px 0px 0px #d6d6d6",
         }}
       >
-        <Image src="/logo.svg" width={128} height={128} alt="logo" />
+        <Image src="/logo.svg" width={128} height={128} className="rounded-full" alt="logo" />
       </div>
 
       <BorderCol />
