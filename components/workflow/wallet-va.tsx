@@ -57,7 +57,9 @@ export default function WalletVA({
         <div
           className={cn(
             "flex-1 border-[#d6d6d6]",
-            currentAccountType === "VirtualAccount" || showFilter ? "border-b" : "",
+            currentAccountType === "VirtualAccount" || showFilter
+              ? "border-b"
+              : "",
           )}
         ></div>
       </div>
@@ -67,8 +69,9 @@ export default function WalletVA({
         showFilter={showFilter}
       />
       <VirtualAccounts
-        keyStores={keyStores}
-        className={cn(currentAccountType === "VirtualAccount" ? "visible" : "hidden")}
+        className={cn(
+          currentAccountType === "VirtualAccount" ? "visible" : "hidden",
+        )}
       />
     </div>
   );
