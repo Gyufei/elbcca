@@ -41,7 +41,7 @@ export default function DayOperation({
       applyAction();
     }
   };
-  
+
   return (
     <div className="w-[400px] border-l border-[#d6d6d6] bg-[#fafafa]">
       <div className="p-3">
@@ -81,7 +81,14 @@ export default function DayOperation({
         <div className="flex h-[calc(100vh-455px)] flex-col justify-stretch gap-y-3 overflow-y-auto px-3 pb-2">
           {tasks?.length ? (
             tasks.map((task) => (
-              <SwapHistoryItem key={task.id} task={task} onCancel={onCancel} />
+              <SwapHistoryItem
+                key={task.id}
+                task={task}
+                onCancel={onCancel}
+                isVa={false}
+                subOpenTaskId={null}
+                onOpenSubTask={() => {}}
+              />
             ))
           ) : Array.isArray(tasks) ? (
             <Empty />
