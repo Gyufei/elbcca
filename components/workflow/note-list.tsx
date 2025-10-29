@@ -14,6 +14,7 @@ import { NetworkChainType } from "@/lib/types/network";
 import { cn } from "@/lib/utils";
 import NetworkOp, { NoteNetLogoConfig } from "./note-network-select";
 import { NoteImageUpload } from "./note-image-upload";
+import { XCircle } from "lucide-react";
 
 // Note类型定义
 interface Note {
@@ -180,7 +181,7 @@ export default function NoteList({
                   title="delete"
                 >
                   <Image
-                    src="/icons/delete-2.svg"
+                    src="/icons/delete.svg"
                     width={16}
                     height={16}
                     alt="delete"
@@ -219,14 +220,9 @@ export default function NoteList({
                               ),
                             })
                           }
-                          className="absolute right-0 top-0"
+                          className="absolute -right-2 -top-2 text-red-400"
                         >
-                          <Image
-                            src="/icons/delete-2.svg"
-                            width={16}
-                            height={16}
-                            alt="删除"
-                          />
+                          <XCircle className="h-4 w-4" />
                         </button>
                         <Image
                           src={image}

@@ -5,6 +5,8 @@ import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { useTranslations } from "next-intl";
+import fetcher from "@/lib/fetcher";
+import { SystemEndPointPathMap } from "@/lib/end-point";
 
 interface NoteImageUploadProps {
   onImageUpload?: (imageUrl: string) => void;
@@ -35,37 +37,40 @@ export function NoteImageUpload({
     return allowedImageTypes.includes(file.type);
   };
 
-  // 模拟图片上传到图床
   const uploadImage = async (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
+    const formData = new FormData();
+    formData.append("image", file, file.name);
 
-      reader.onload = () => {
-        // 模拟上传进度
-        let progress = 0;
-        const interval = setInterval(() => {
-          progress += Math.random() * 30;
-          if (progress >= 100) {
-            progress = 100;
-            clearInterval(interval);
+    // 等待期间做一个“乐观进度”，最多到 90%
+    let optimisticProgress = 0;
+    const timer = setInterval(() => {
+      optimisticProgress = Math.min(
+        optimisticProgress + Math.random() * 12,
+        90,
+      );
+      setUploadProgress(optimisticProgress);
+    }, 120);
 
-            // 这里应该替换为实际的图床API调用
-            // 目前使用base64作为示例
-            const base64 = reader.result as string;
-            setTimeout(() => {
-              resolve(base64);
-            }, 500);
-          }
-          setUploadProgress(progress);
-        }, 100);
-      };
+    try {
+      const res: any = await fetcher(SystemEndPointPathMap.uploadImage, {
+        method: "POST",
+        body: formData,
+      });
 
-      reader.onerror = () => {
-        reject(new Error("Image read failed"));
-      };
+      // 正常返回后拉满进度
+      setUploadProgress(100);
 
-      reader.readAsDataURL(file);
-    });
+      // 后端可能返回字符串或对象，做兼容提取 URL
+      const url = res.url;
+
+      if (!url) {
+        throw new Error("Invalid upload response");
+      }
+
+      return url as string;
+    } finally {
+      clearInterval(timer);
+    }
   };
 
   const handleFileSelect = async (

@@ -183,6 +183,10 @@
     "ImageUploadFailed": "上传失败",
     "ImageUploadFailedDesc": "图片上传失败，请重试",
     "NoteDeleted": "备注删除成功",
-    "NoteDeleteFailed": "备注删除失败"
+    "NoteDeleteFailed": "备注删除失败",
+    "VaDeleted": "虚拟账户删除成功",
+    "VaDeleteFailed": "虚拟账户删除失败",
+    "VaCreated": "虚拟账户创建成功",
+    "VaCreateFailed": "虚拟账户创建失败"
   }
 }

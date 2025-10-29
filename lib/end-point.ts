@@ -1,7 +1,9 @@
 export const isPreview = process.env.NEXT_PUBLIC_IS_DETAKE_PREVIEW === "1";
 export const isProduction = process.env.NODE_ENV === "production" && !isPreview;
 
-const AuthHostUrl = isProduction ? 'https://auth.dapp.do' : 'https://preview-auth.dapp.do';
+const AuthHostUrl = isProduction
+  ? "https://auth.dapp.do"
+  : "https://preview-auth.dapp.do";
 
 function WithHost(path: string) {
   return `${AuthHostUrl}${path}`;
@@ -36,8 +38,16 @@ export const SystemEndPointPathMap = {
   getTokenList: WithHost("/setting/account_token_list"),
   updateRpc: WithHost("/setting/private_rpc"),
   getRPC: WithHost("/setting/private_rpc"),
-  
+
   uploadImage: WithHost("/upload/image"),
+
+  vaQuery: WithHost("/va_account/wallets"),
+  vaCreate: WithHost("/va_account/create"),
+  vaRemove: WithHost("/va_account/delete"),
+  vaSendSwap: WithHost("/va_account/swap/send"),
+  vaSendTransfer: WithHost("/va_account/transfer/send"),
+  vaCancelTx: WithHost("/va_account/cancel"),
+  vaHistory: WithHost("/va_account/history"),
 };
 
 export const UserEndPointPathMap = {
@@ -62,7 +72,7 @@ export const UserEndPointPathMap = {
   sendSwap: "/tokenswap/swap/send",
   swapHistory: "/tokenswap/history",
   cancelTask: "/tokenswap/cancel",
-  
+
   scheduleXYZ: "/schedule/xyz",
   scheduleList: "/schedule/list",
   scheduleSave: "/schedule/save",
@@ -82,4 +92,6 @@ export const UserEndPointPathMap = {
   getWalletNote: "/wallet_notes/list",
   updateNote: "/wallet_notes/update",
   deleteNote: "/wallet_notes/delete",
+
+  vaSubBalance: "/tokenswap/token_balance_nonce"
 };

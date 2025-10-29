@@ -12,7 +12,9 @@ import { IToken } from "@/lib/types/token";
 import { NetworkContext } from "@/lib/providers/network-provider";
 import { GAS_TOKEN_ADDRESS, UNIT256_MAX } from "@/lib/constants/global";
 import { TokenContext } from "@/lib/providers/token-provider";
+import { VaContext } from "@/lib/providers/va-provider";
 import useIndexStore from "@/lib/state";
+import useEffectStore from "@/lib/state/use-store";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
 import { useTranslations } from "next-intl";
 import LoadingIcon from "../shared/loading-icon";
@@ -20,6 +22,9 @@ import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils";
 import { BasicButton } from "./components/button";
 import WalletRow from "./wallet-row";
+import { useCreateVa } from "@/lib/hooks/use-create-va";
+import { toast } from "../ui/use-toast";
+import { useGetVa } from "@/lib/hooks/use-get-va";
 
 export default function FilterAccountList({
   keyStores,
@@ -36,15 +41,19 @@ export default function FilterAccountList({
   const networkId = network?.chain_id;
 
   const { tokens, gasToken } = useContext(TokenContext);
+  const { selectedToken, onTokenChange } = useContext(VaContext);
 
   const setFromAddress = useIndexStore((state) => state.setFromAddress);
+  const activeUser = useEffectStore(useIndexStore, (state) => state.activeUser());
 
-  const [token, setToken] = useState<IToken | null>(gasToken);
   const [tokenMin, setTokenMin] = useStrNum("");
   const [tokenMax, setTokenMax] = useStrNum("");
 
-  const isFilterGasToken = token?.token_address === GAS_TOKEN_ADDRESS;
+  const isFilterGasToken = selectedToken?.token_address === GAS_TOKEN_ADDRESS;
   const [selectedWallets, setSelectedWallets] = useState<Array<string>>([]);
+  
+  const { data: vaData } = useGetVa();
+  const { trigger: createVa, isMutating: creating } = useCreateVa();
 
   const {
     data: accounts,
@@ -57,13 +66,21 @@ export default function FilterAccountList({
   );
 
   useEffect(() => {
-    if (tokens && !token) {
-      setToken(tokens[0]);
+    if (
+      !tokens.find(
+        (token) => token.token_address === selectedToken?.token_address,
+      )
+    ) {
+      onTokenChange(tokens[0]);
     }
-  }, [tokens]);
+
+    if (tokens && !selectedToken) {
+      onTokenChange(tokens[0]);
+    }
+  }, [tokens, selectedToken, onTokenChange]);
 
   function handleTokenSelect(token: IToken | null) {
-    setToken(token);
+    onTokenChange(token);
     filterResultReset();
   }
 
@@ -105,8 +122,8 @@ export default function FilterAccountList({
       );
     }
 
-    if (token?.token_address) {
-      queryParams.set("token_address", token.token_address);
+    if (selectedToken?.token_address) {
+      queryParams.set("token_address", selectedToken.token_address);
     }
 
     let min = tokenMin || "0";
@@ -126,7 +143,7 @@ export default function FilterAccountList({
   }
 
   function handleFilter() {
-    if (!token?.token_address) {
+    if (!selectedToken?.token_address) {
       return;
     }
 
@@ -154,8 +171,44 @@ export default function FilterAccountList({
     }
   };
 
+  function getNextVaName() {
+    const names = (vaData || []).map((v) => v.va_name);
+    let maxNum = 0;
+    for (const name of names) {
+      const match = /^VA(\d+)$/i.exec(name);
+      if (match) {
+        const num = Number(match[1]);
+        if (!Number.isNaN(num)) {
+          maxNum = Math.max(maxNum, num);
+        }
+      }
+    }
+    return `VA${maxNum + 1}`;
+  }
+
   function handleCreateVa() {
-    console.log("create va", selectedWallets);
+    if (!networkId || !activeUser?.email) return;
+    if (!selectedWallets.length) return;
+
+    const vaName = getNextVaName();
+
+    createVa(
+      {
+        chain_id: networkId,
+        user_name: activeUser.email,
+        va_name: vaName,
+        wallet_list: selectedWallets,
+      },
+      {
+        onSuccess: () => {
+          toast({ title: T("VaCreated") });
+          setSelectedWallets([]);
+        },
+        onError: () => {
+          toast({ title: T("VaCreateFailed"), variant: "destructive" });
+        },
+      },
+    );
   }
 
   function handleSelectWallet(account: string, checked: boolean) {
@@ -182,7 +235,7 @@ export default function FilterAccountList({
           <div className="mb-3">
             <TokenSelect
               tokens={tokens}
-              token={token || null}
+              token={selectedToken || null}
               handleTokenSelect={handleTokenSelect}
             />
           </div>
@@ -234,7 +287,7 @@ export default function FilterAccountList({
               handleClickAcc={handleClickAcc}
               isFilterGasToken={isFilterGasToken}
               gasToken={gasToken || undefined}
-              token={token || undefined}
+              token={selectedToken || undefined}
             >
               <Checkbox
                 className="ml-1 mr-3"
@@ -262,8 +315,10 @@ export default function FilterAccountList({
         </div>
 
         <BasicButton
-          loading={false}
-          disabled={false}
+          loading={creating}
+          disabled={
+            creating || !networkId || !activeUser?.email || selectedWallets.length === 0
+          }
           onClick={() => handleCreateVa()}
         >
           <span>{T("CreateVirtualAccount")}</span>

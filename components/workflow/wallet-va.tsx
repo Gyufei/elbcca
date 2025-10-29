@@ -1,10 +1,11 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { IKeyStoreAccount } from "@/lib/types/keystore";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { cn } from "@/lib/utils";
 import FilterAccountList from "./filter-account-list";
 import VirtualAccounts from "./virtual-accounts";
+import { VaContext } from "@/lib/providers/va-provider";
 
 export default function WalletVA({
   keyStores,
@@ -12,13 +13,7 @@ export default function WalletVA({
   keyStores: Array<IKeyStoreAccount>;
 }) {
   const T = useTranslations("Common");
-  const [currentTab, setCurrentTab] = useState<"wallet" | "virtualAccount">(
-    "wallet",
-  );
-
-  const handleTabChange = (tab: "wallet" | "virtualAccount") => {
-    setCurrentTab(tab);
-  };
+  const { currentAccountType, onAccountTypeChange } = useContext(VaContext);
 
   const handleChangeFilter = () => {
     setShowFilter(!showFilter);
@@ -32,11 +27,11 @@ export default function WalletVA({
         <div
           className={cn(
             "flex w-[176px] cursor-pointer items-center justify-between border-r border-[#d6d6d6] p-3",
-            currentTab === "wallet"
+            currentAccountType === "Wallet"
               ? "border-b-0 bg-[#F6F7F8] text-[#0572EC]"
               : "border-b bg-[#fafafa] text-[#707070]",
           )}
-          onClick={() => handleTabChange("wallet")}
+          onClick={() => onAccountTypeChange("Wallet")}
         >
           <div>{T("Wallets")}</div>
           <Image
@@ -50,30 +45,30 @@ export default function WalletVA({
         <div
           className={cn(
             "flex w-[176px] cursor-pointer items-center border-r border-[#d6d6d6] p-3",
-            currentTab === "virtualAccount"
+            currentAccountType === "VirtualAccount"
               ? "border-b-0 bg-[#F6F7F8] text-[#0572EC]"
               : "bg-[#fafafa] text-[#707070] " +
                   (showFilter ? "border-b" : "border-b-0"),
           )}
-          onClick={() => handleTabChange("virtualAccount")}
+          onClick={() => onAccountTypeChange("VirtualAccount")}
         >
           <div>{T("VirtualAccounts")}</div>
         </div>
         <div
           className={cn(
             "flex-1 border-[#d6d6d6]",
-            currentTab === "virtualAccount" || showFilter ? "border-b" : "",
+            currentAccountType === "VirtualAccount" || showFilter ? "border-b" : "",
           )}
         ></div>
       </div>
       <FilterAccountList
-        className={cn(currentTab === "wallet" ? "visible" : "hidden")}
+        className={cn(currentAccountType === "Wallet" ? "visible" : "hidden")}
         keyStores={keyStores}
         showFilter={showFilter}
       />
       <VirtualAccounts
         keyStores={keyStores}
-        className={cn(currentTab === "virtualAccount" ? "visible" : "hidden")}
+        className={cn(currentAccountType === "VirtualAccount" ? "visible" : "hidden")}
       />
     </div>
   );

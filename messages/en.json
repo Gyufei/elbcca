@@ -183,6 +183,10 @@
     "ImageUploadFailed": "Upload Failed",
     "ImageUploadFailedDesc": "Image upload failed, please try again",
     "NoteDeleted": "Note Deleted Successfully",
-    "NoteDeleteFailed": "Note Delete Failed"
+    "NoteDeleteFailed": "Note Delete Failed",
+    "VaDeleted": "Virtual Account Deleted Successfully",
+    "VaDeleteFailed": "Virtual Account Delete Failed",
+    "VaCreated": "Virtual Account Created Successfully",
+    "VaCreateFailed": "Virtual Account Create Failed"
   }
 }

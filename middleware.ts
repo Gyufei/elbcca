@@ -15,6 +15,7 @@ const validRoutes = [
   "layout",
   "setting",
   "signin",
+  "monitoring"
 ];
 
 // const defaultRoute = "/dashboard";

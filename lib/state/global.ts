@@ -65,6 +65,7 @@ export const CreateGlobalStoreState: StateCreator<
       if (!activeUser) return null;
       return activeUser?.endpoint || null;
     },
+
     userPathMap: () => {
       const endPoint = get().endpoint();
       const newMap = cloneDeep(UserEndPointPathMap);

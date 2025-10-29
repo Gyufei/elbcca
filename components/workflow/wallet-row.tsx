@@ -14,30 +14,46 @@ export default function WalletRow({
   children,
   gasToken,
   token,
+  indexClx,
+  clx,
 }: {
   index: number;
   accData: any;
-  handleClickAcc: (addr: string) => void;
+  handleClickAcc?: (addr: string) => void;
   isFilterGasToken: boolean;
   gasToken: IToken | undefined;
   token: IToken | undefined;
   children?: React.ReactNode;
+  indexClx?: string;
+  clx?: string;
 }) {
   return (
-    <div className="flex h-[73px] items-center justify-between border-b bg-custom-bg-white p-3">
+    <div
+      className={cn(
+        "flex h-[73px] items-center justify-between border-b bg-custom-bg-white p-3",
+        clx,
+      )}
+    >
       <div className="flex flex-1 flex-col gap-y-1">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="pl-1 pr-5 text-left text-lg leading-none text-content-color">
+            <div
+              className={cn(
+                "pl-1 pr-5 text-left text-lg leading-none text-content-color",
+                indexClx,
+              )}
+            >
               {index + 1}
             </div>
             <TruncateText text={accData.account}>
-              <span
-                className="ml-1 cursor-pointer text-lg font-medium text-title-color"
-                onClick={() => handleClickAcc(accData.account)}
-              >
-                <ArrowUpRight className="h-4 w-4" />
-              </span>
+              {handleClickAcc && (
+                <span
+                  className="ml-1 cursor-pointer text-lg font-medium text-title-color"
+                  onClick={() => handleClickAcc(accData.account)}
+                >
+                  <ArrowUpRight className="h-4 w-4" />
+                </span>
+              )}
             </TruncateText>
             <NonceFlag className="ml-4" nonce={accData.nonce} />
           </div>
@@ -52,7 +68,7 @@ export default function WalletRow({
 
           {!isFilterGasToken && (
             <div className="flex items-center gap-x-1">
-              <span>{token?.token_symbol}</span>
+              <span>{token?.token_symbol || "Token"}</span>
               <AmountTooltipDisplay amount={accData.quote_token_amount} />
             </div>
           )}

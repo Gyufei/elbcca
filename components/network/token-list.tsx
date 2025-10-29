@@ -1,4 +1,3 @@
-
 "use client";
 import { useRef, useState } from "react";
 
@@ -9,7 +8,7 @@ import useSWR from "swr";
 import { SystemEndPointPathMap } from "@/lib/end-point";
 import fetcher from "@/lib/fetcher";
 import DetailItem from "../shared/detail-item";
-import {  isTokenAddress } from "@/lib/utils";
+import { isTokenAddress } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { NetworkChainType } from "@/lib/types/network";
 
@@ -25,35 +24,42 @@ interface TokenListProps {
   networkName: string;
 }
 
-
 export default function TokenList({ chainId, networkName }: TokenListProps) {
-  const {data: list,  mutate } = useSWR(SystemEndPointPathMap.getTokenList + `?chain_id=${chainId}`, fetcher);
+  const { data: list, mutate } = useSWR(
+    SystemEndPointPathMap.getTokenList + `?chain_id=${chainId}`,
+    fetcher,
+  );
 
   const onRefresh = () => {
-    mutate()
-  }
+    mutate();
+  };
   return (
     <div className="flex flex-1 flex-col justify-stretch">
-      <AddTokenTnput networkName={networkName} onRefresh={onRefresh} chainId={chainId}/>
-      <TokenTable 
-        list={list}
+      <AddTokenTnput
+        networkName={networkName}
         onRefresh={onRefresh}
         chainId={chainId}
       />
-     </div>
+      <TokenTable list={list} onRefresh={onRefresh} chainId={chainId} />
+    </div>
   );
 }
 
-
-function AddTokenTnput({ onRefresh, chainId, networkName }: { onRefresh: () => void; chainId: string; networkName: string;}) {
+function AddTokenTnput({
+  onRefresh,
+  chainId,
+  networkName,
+}: {
+  onRefresh: () => void;
+  chainId: string;
+  networkName: string;
+}) {
   const T = useTranslations("Common");
   const [errorMsg, setErrorMsg] = useState("");
 
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const [loading, setLoading] = useState<boolean>(false)
-
- 
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onChange = (val: string) => {
     if (val && !isTokenAddress(val, networkName)) {
@@ -75,7 +81,7 @@ function AddTokenTnput({ onRefresh, chainId, networkName }: { onRefresh: () => v
   const handleAdd = async () => {
     if (loading) return;
     if (errorMsg) return;
-    setLoading(true)
+    setLoading(true);
     const params = {
       token_address: inputValue,
     };
@@ -83,18 +89,21 @@ function AddTokenTnput({ onRefresh, chainId, networkName }: { onRefresh: () => v
     try {
       await fetcher(SystemEndPointPathMap.addToken + `?chain_id=${chainId}`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(params),
       });
-      onRefresh()
+      onRefresh();
     } catch (err) {
-        console.error('Error update:', err);
+      console.error("Error update:", err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  
+  };
+
   return (
-    <DetailItem title={T("AddToken")} className={"border-none p-0 mb-9"}>
+    <DetailItem title={T("AddToken")} className={"mb-9 border-none p-0"}>
       <div className="relative flex w-full flex-col justify-center">
         <div className="flex flex-row">
           <Input
@@ -102,7 +111,9 @@ function AddTokenTnput({ onRefresh, chainId, networkName }: { onRefresh: () => v
             ref={inputRef}
             type="text"
             value={inputValue || ""}
-            placeholder={networkName ===  NetworkChainType.SOLANA ? "" : "0x11111111111"}
+            placeholder={
+              networkName === NetworkChainType.SOLANA ? "" : "0x11111111111"
+            }
             onBlur={onBlur}
             onChange={(e) => onChange(e.target.value)}
             className="w-[400px] focus-visible:ring-0 data-[state=error]:border-destructive"
@@ -115,14 +126,10 @@ function AddTokenTnput({ onRefresh, chainId, networkName }: { onRefresh: () => v
             {T("Save")}
           </button>
         </div>
-        {
-          errorMsg && (
-            <div className="mt-2 text-sm text-destructive">
-              {errorMsg}
-            </div>
-          )
-        }
-    </div>
-  </DetailItem>
-  )
+        {errorMsg && (
+          <div className="mt-2 text-sm text-destructive">{errorMsg}</div>
+        )}
+      </div>
+    </DetailItem>
+  );
 }

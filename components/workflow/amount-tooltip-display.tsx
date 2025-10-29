@@ -5,10 +5,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-
 export default function AmountTooltipDisplay({ amount }: { amount: string }) {
-  const isLong = amount.length > 8;
-  const amountFmt = isLong ? amount.slice(0, 8) + "..." : amount;
+  const isLong = amount && amount.length > 8;
+  const amountFmt = isLong ? amount?.slice(0, 8) + "..." : amount;
   return isLong ? (
     <TooltipProvider delayDuration={100}>
       <Tooltip>
