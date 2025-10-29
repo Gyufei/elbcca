@@ -49,7 +49,7 @@ export default function Op({
   const T = useTranslations("Common");
   const { networkId, networkName } = useContext(NetworkContext);
   const { tokens } = useContext(TokenContext);
-  const { currentAccountType, selectedToken } = useContext(VaContext);
+  const { currentAccountType } = useContext(VaContext);
   const isVa = currentAccountType === "VirtualAccount";
 
   const [gasBalance, setGasBalance] = useState<number | null>(0);

@@ -4,9 +4,11 @@ import { useMemo, useState } from "react";
 export default function SwapHistoryItemStatus({
   status,
   onCancelQueue,
+  isSub = false,
 }: {
   status: StatusEnum;
   onCancelQueue?: () => void;
+  isSub?: boolean;
 }) {
   const colorMap = {
     [StatusEnum["pre-queue"]]: {
@@ -54,8 +56,10 @@ export default function SwapHistoryItemStatus({
   }, [status]);
 
   const isCanCancel = useMemo(
-    () => status === StatusEnum["pre-queue"] || status === StatusEnum.queue,
-    [status],
+    () =>
+      !isSub &&
+      (status === StatusEnum["pre-queue"] || status === StatusEnum.queue),
+    [status, isSub],
   );
 
   const [isHover, setIsHover] = useState(false);

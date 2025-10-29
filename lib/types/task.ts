@@ -19,9 +19,14 @@ export interface ITask {
   data: ITaskData;
   gasUsed: number;
   memo: string;
+  
+  executed_txs?: number;
+  total_txs?: number;
 }
 
 export interface ITaskData {
+  va_name: string;
+
   chain_id: string;
   keystore: string;
   account: string;

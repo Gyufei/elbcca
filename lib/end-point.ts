@@ -92,6 +92,7 @@ export const UserEndPointPathMap = {
   vaSubBalance: "/tokenswap/token_balance_nonce",
   vaSendSwap: "/va_account/swap/send",
   vaSendTransfer: "/va_account/transfer/send",
-  vaCancelTx: "/va_account/cancel",
+  vaCancelTask: "/va_account/cancel",
   vaHistory: "/va_account/history",
+  vaHistoryDetail: "/va_account/history/detail",
 };

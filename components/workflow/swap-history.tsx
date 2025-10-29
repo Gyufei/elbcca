@@ -23,9 +23,14 @@ import useIndexStore from "@/lib/state";
 import { useParseTasks } from "@/lib/hooks/use-parse-task";
 import { useTranslations } from "next-intl";
 import { NetworkContext } from "@/lib/providers/network-provider";
+import { VaContext } from "@/lib/providers/va-provider";
 
 const SwapHistory = forwardRef((props: any, ref: any) => {
   const T = useTranslations("Common");
+  const { currentAccountType } = useContext(VaContext);
+  const isVa = currentAccountType === "VirtualAccount";
+  const [subOpenTaskId, setSubOpenTaskId] = useState<number | null>(null);
+
   const userPathMap = useIndexStore((state) => state.userPathMap());
   const { networkId } = useContext(NetworkContext);
 
@@ -61,7 +66,9 @@ const SwapHistory = forwardRef((props: any, ref: any) => {
     if (max < min) {
       [max, min] = [min, max];
     }
-    return `chain_id=${networkId || ""}&execute_time_maximum=${max}&execute_time_minimum=${min}`;
+    return `chain_id=${
+      networkId || ""
+    }&execute_time_maximum=${max}&execute_time_minimum=${min}`;
   };
 
   const fetchTasks = async (): Promise<Array<ITask> | undefined> => {
@@ -70,7 +77,9 @@ const SwapHistory = forwardRef((props: any, ref: any) => {
     }
 
     const taskRes: Array<Record<string, any>> = await fetcher(
-      `${userPathMap.swapHistory}?${getQueryStr()}`,
+      isVa
+        ? `${userPathMap.vaHistory}?${getQueryStr()}`
+        : `${userPathMap.swapHistory}?${getQueryStr()}`,
     );
 
     if (!taskRes) return undefined;
@@ -181,8 +190,11 @@ const SwapHistory = forwardRef((props: any, ref: any) => {
             filteredTasks.map((task) => (
               <SwapHistoryItem
                 key={task.id}
+                isVa={isVa}
                 task={task}
                 onCancel={handleSearch}
+                subOpenTaskId={subOpenTaskId}
+                onOpenSubTask={setSubOpenTaskId}
               />
             ))
           ) : Array.isArray(tasks) ? (
