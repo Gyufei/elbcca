@@ -314,7 +314,7 @@ function VaRow({
       )}
       {openSubVa === vaData.va_name && (
         <div className="flex flex-col px-3">
-          {currentPageData.length > 0 &&
+          {currentPageData.length > 0 ? (
             currentPageData.map((subAcc: any, subIndex: number) => (
               <WalletRow
                 indexClx="pr-2"
@@ -332,7 +332,10 @@ function VaRow({
               >
                 <div className="ml-1 h-4 w-4"></div>
               </WalletRow>
-            ))}
+            ))
+          ) : (
+            <Empty />
+          )}
 
           {/* 分页组件 */}
           {totalPages > 1 && (
