@@ -13,6 +13,7 @@ import { useGetSubVa } from "@/lib/hooks/use-get-sub-va";
 import { Input } from "../ui/input";
 import { VaContext } from "@/lib/providers/va-provider";
 import { useDeleteVa } from "@/lib/hooks/use-delete-va";
+import { useUpdateVaName } from "@/lib/hooks/use-edit-va-name";
 import { NetworkContext } from "@/lib/providers/network-provider";
 import useIndexStore from "@/lib/state";
 import useEffectStore from "@/lib/state/use-store";
@@ -111,13 +112,14 @@ function VaRow({
   const [newName, setNewName] = useState(vaData.va_name);
   const [searchKeyword, setSearchKeyword] = useState("");
   const { trigger: deleteVa } = useDeleteVa();
+  const { trigger: updateVaName, isMutating: updatingName } = useUpdateVaName();
   const { network } = useContext(NetworkContext);
   const networkId = network?.chain_id;
   const activeUser = useEffectStore(useIndexStore, (state) =>
     state.activeUser(),
   );
 
-  const onVaNameChange = useIndexStore((state) => state.setFromAddress);
+  const onGlobalVaNameChange = useIndexStore((state) => state.setFromAddress);
 
   const { data: subVaData } = useGetSubVa({
     tokenAddr: token?.token_address || "",
@@ -161,8 +163,40 @@ function VaRow({
     }, 500);
   }
 
-  function handleVaNameChange(va: string) {
-    onVaNameChange(va);
+  function handleGlobalVaNameChange(va: string) {
+    onGlobalVaNameChange(va);
+  }
+
+  function handleVaNameEdit() {
+    if (!isEditName) return;
+    const trimmed = newName.trim();
+    if (!trimmed || trimmed === vaData.va_name) {
+      setNewName(vaData.va_name);
+      setIsEditName(false);
+      return;
+    }
+    if (!networkId || !activeUser?.email) {
+      setIsEditName(false);
+      return;
+    }
+    updateVaName(
+      {
+        chain_id: networkId,
+        user_name: activeUser.email,
+        va_name: vaData.va_name,
+        new_va_name: trimmed,
+      },
+      {
+        onSuccess: () => {
+          setIsEditName(false);
+        },
+        onError: () => {
+          toast({ title: T("GlobalError"), variant: "destructive" });
+          setIsEditName(false);
+          setNewName(vaData.va_name);
+        },
+      },
+    );
   }
 
   function handleDelete() {
@@ -226,21 +260,32 @@ function VaRow({
                     value={newName}
                     className="h-7 border border-[rgba(5,114,236,0.4)]"
                     onChange={(e) => setNewName(e.target.value)}
-                    onBlur={() => setIsEditName(false)}
+                    onBlur={() => handleVaNameEdit()}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleVaNameEdit();
+                      }
+                      if (e.key === "Escape") {
+                        setIsEditName(false);
+                        setNewName(vaData.va_name);
+                      }
+                    }}
+                    disabled={updatingName}
                     ref={inputRef}
                   />
                 ) : (
                   <div onClick={handleEditName} className="cursor-pointer">
                     <TruncateText
                       onClick={(e) => e.stopPropagation()}
-                      text={vaData.va_name}
+                      text={newName}
                       textClx="hover:underline hover:decoration-dashed hover:underline-offset-2"
                     >
                       <span
                         className="ml-1 cursor-pointer text-lg font-medium text-title-color"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleVaNameChange(vaData.va_name);
+                          handleGlobalVaNameChange(vaData.va_name);
                         }}
                       >
                         <ArrowUpRight className="h-4 w-4" />

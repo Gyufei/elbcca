@@ -41,7 +41,7 @@ export default function QueryAccountBalance({
 
   const fromAddress = useIndexStore((state) => state.fromAddress);
   const setFromAddress = useIndexStore((state) => state.setFromAddress);
-  
+
   const toAddress = useIndexStore((state) => state.toAddress);
   const setToAddress = useIndexStore((state) => state.setToAddress);
 
@@ -115,7 +115,7 @@ export default function QueryAccountBalance({
 
   return (
     <>
-      <FormItem title={T("FromAddress")} className="px-3">
+      <FormItem title={isVa ? T("From") : T("FromAddress")} className="px-3">
         <div className="flex justify-between gap-x-2">
           <Input
             value={fromAddress || ""}
@@ -125,16 +125,18 @@ export default function QueryAccountBalance({
             }
             onKeyDown={handleKeyDown}
           />
-          <button
-            disabled={
-              !fromAddress ||
-              (!isVa && !isAddress(fromAddress, networkName || ""))
-            }
-            onClick={() => handleQuery()}
-            className="w-[72px] rounded-md border border-border-color bg-white  text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {T("Query")}
-          </button>
+          {!isVa && (
+            <button
+              disabled={
+                !fromAddress ||
+                (!isVa && !isAddress(fromAddress, networkName || ""))
+              }
+              onClick={() => handleQuery()}
+              className="w-[72px] rounded-md border border-border-color bg-white  text-sm font-bold text-title-color hover:bg-custom-bg-white disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {T("Query")}
+            </button>
+          )}
         </div>
       </FormItem>
       {!isVa && (

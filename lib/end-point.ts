@@ -44,6 +44,7 @@ export const SystemEndPointPathMap = {
   vaQuery: WithHost("/va_account/wallets"),
   vaCreate: WithHost("/va_account/create"),
   vaRemove: WithHost("/va_account/delete"),
+  vaUpdateName: WithHost("/va_account/va_name"),
 };
 
 export const UserEndPointPathMap = {

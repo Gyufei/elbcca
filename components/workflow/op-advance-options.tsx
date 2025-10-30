@@ -172,7 +172,9 @@ export default function OpAdvanceOptions({
             <div className="relative">
               <Input
                 value={options.slippage || ""}
-                onChange={(v) => onChange({ slippage: v })}
+                onChange={(v) =>
+                  onChange({ slippage: Number(v) > 100 ? "100" : v })
+                }
                 placeholder="0"
                 type="number"
               />
@@ -242,7 +244,14 @@ export default function OpAdvanceOptions({
               <div className="relative flex items-center justify-between rounded-md border border-border-color bg-white">
                 <Input
                   value={options.min_spending || ""}
-                  onChange={(v) => onChange({ min_spending: v })}
+                  onChange={(v) =>
+                    onChange({
+                      min_spending:
+                        Number(v) > Number(options.max_spending)
+                          ? Number(options.max_spending) - 1 + ""
+                          : v,
+                    })
+                  }
                   placeholder="60"
                   type="number"
                   className="w-[40%] border-none"
@@ -250,7 +259,9 @@ export default function OpAdvanceOptions({
                 <span className="bg-white">-</span>
                 <Input
                   value={options.max_spending || ""}
-                  onChange={(v) => onChange({ max_spending: v })}
+                  onChange={(v) =>
+                    onChange({ max_spending: Number(v) > 100 ? "100" : v })
+                  }
                   placeholder="100"
                   type="number"
                   className="w-[45%] border-none"

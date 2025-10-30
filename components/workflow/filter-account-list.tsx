@@ -24,7 +24,7 @@ import { BasicButton } from "./components/button";
 import WalletRow from "./wallet-row";
 import { useCreateVa } from "@/lib/hooks/use-create-va";
 import { toast } from "../ui/use-toast";
-import { useGetVa } from "@/lib/hooks/use-get-va";
+// import { useGetVa } from "@/lib/hooks/use-get-va";
 
 export default function FilterAccountList({
   keyStores,
@@ -44,15 +44,17 @@ export default function FilterAccountList({
   const { selectedToken, onTokenChange } = useContext(VaContext);
 
   const setFromAddress = useIndexStore((state) => state.setFromAddress);
-  const activeUser = useEffectStore(useIndexStore, (state) => state.activeUser());
+  const activeUser = useEffectStore(useIndexStore, (state) =>
+    state.activeUser(),
+  );
 
   const [tokenMin, setTokenMin] = useStrNum("");
   const [tokenMax, setTokenMax] = useStrNum("");
 
   const isFilterGasToken = selectedToken?.token_address === GAS_TOKEN_ADDRESS;
   const [selectedWallets, setSelectedWallets] = useState<Array<string>>([]);
-  
-  const { data: vaData } = useGetVa();
+
+  // const { data: vaData } = useGetVa();
   const { trigger: createVa, isMutating: creating } = useCreateVa();
 
   const {
@@ -171,26 +173,29 @@ export default function FilterAccountList({
     }
   };
 
-  function getNextVaName() {
-    const names = (vaData || []).map((v) => v.va_name);
-    let maxNum = 0;
-    for (const name of names) {
-      const match = /^VA(\d+)$/i.exec(name);
-      if (match) {
-        const num = Number(match[1]);
-        if (!Number.isNaN(num)) {
-          maxNum = Math.max(maxNum, num);
-        }
-      }
+  function getRandomVaName() {
+    const now = Date.now();
+    const perf =
+      typeof performance !== "undefined" && performance.now
+        ? Math.floor(performance.now() * 1000)
+        : 0;
+    let rand32 = 0;
+    if (typeof crypto !== "undefined" && "getRandomValues" in crypto) {
+      const buf = new Uint32Array(1);
+      crypto.getRandomValues(buf);
+      rand32 = buf[0];
+    } else {
+      rand32 = Math.floor(Math.random() * 0xffffffff);
     }
-    return `VA${maxNum + 1}`;
+    const salt = ((now & 0x7fffffff) ^ (perf & 0xfffff) ^ rand32).toString(36);
+    return `VA-${salt}`;
   }
 
   function handleCreateVa() {
     if (!networkId || !activeUser?.email) return;
     if (!selectedWallets.length) return;
 
-    const vaName = getNextVaName();
+    const vaName = getRandomVaName();
 
     createVa(
       {
@@ -318,7 +323,10 @@ export default function FilterAccountList({
           loading={creating}
           className="!w-[200px]"
           disabled={
-            creating || !networkId || !activeUser?.email || selectedWallets.length === 0
+            creating ||
+            !networkId ||
+            !activeUser?.email ||
+            selectedWallets.length === 0
           }
           onClick={() => handleCreateVa()}
         >
