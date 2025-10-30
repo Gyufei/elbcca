@@ -192,6 +192,7 @@
     "VaDeleteFailed": "虚拟账户删除失败",
     "VaCreated": "虚拟账户创建成功",
     "VaCreateFailed": "虚拟账户创建失败",
-    "NoVirtualAccounts": "无虚拟账户"
+    "NoVirtualAccounts": "无虚拟账户",
+    "FailedToUpdateVaName": "更新虚拟账户名称失败,请检查名称是否有效"
   }
 }

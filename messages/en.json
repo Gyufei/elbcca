@@ -192,6 +192,7 @@
     "VaDeleteFailed": "Virtual Account Delete Failed",
     "VaCreated": "Virtual Account Created Successfully",
     "VaCreateFailed": "Virtual Account Create Failed",
-    "NoVirtualAccounts": "No Virtual Accounts"
+    "NoVirtualAccounts": "No Virtual Accounts",
+    "FailedToUpdateVaName": "Failed to update VA name, please check the name is valid"
   }
 }

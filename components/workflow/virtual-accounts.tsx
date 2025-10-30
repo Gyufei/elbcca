@@ -191,7 +191,10 @@ function VaRow({
           setIsEditName(false);
         },
         onError: () => {
-          toast({ title: T("GlobalError"), variant: "destructive" });
+          toast({
+            title: T("FailedToUpdateVaName"),
+            variant: "destructive",
+          });
           setIsEditName(false);
           setNewName(vaData.va_name);
         },
