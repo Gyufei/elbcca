@@ -21,6 +21,7 @@ export function useUpdateNote() {
         content: string;
         img_list: string[];
         wallet: string;
+        chain_id: number;
       };
     },
   ) => {
@@ -29,6 +30,7 @@ export function useUpdateNote() {
       content: arg.content,
       img_list: arg.img_list,
       user_name: activeUser?.email,
+      chain_id: arg.chain_id,
     };
 
     const res = await fetcher(url, {

@@ -92,7 +92,7 @@ export function NoteBtnDialog({ wallet }: { wallet: string }) {
         className="w-[440px] gap-0 !pb-0"
         showClose={T("Close")}
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col max-h-[90vh]">
           {notes?.length > 0 && (
             <NoteList
               notes={notes || []}

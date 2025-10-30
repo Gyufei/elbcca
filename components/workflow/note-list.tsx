@@ -115,7 +115,7 @@ export default function NoteList({
   };
 
   return (
-    <div className="flex max-h-[500px] flex-col gap-0 overflow-y-auto border-b border-[#d6d6d6] px-5">
+    <div className="flex max-h-[60vh] flex-col gap-0 overflow-y-auto border-b border-[#d6d6d6] px-5">
       {notes.map((note, index) => (
         /* 笔记内容 */
         <div key={note.id} className="flex items-start gap-3 pt-5">
