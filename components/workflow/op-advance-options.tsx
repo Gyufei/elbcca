@@ -37,8 +37,8 @@ export interface IAdvanceOptions {
   no_check_gas: boolean;
   routing: string | null;
   minimum_received: string | null;
-  priority_fee: number | null;
-  execution_delays: number | null;
+  priority_fee: string | null;
+  execution_delays: string | null;
   min_spending: string | null;
   max_spending: string | null;
 }
@@ -161,7 +161,7 @@ export default function OpAdvanceOptions({
           <FormItem title={T("PriorityFee")}>
             <Input
               value={options.priority_fee || ""}
-              onChange={(v) => onChange({ priority_fee: Number(v) })}
+              onChange={(v) => onChange({ priority_fee: v })}
               placeholder={String(priorityFee) || "0"}
               type="number"
             />
@@ -234,7 +234,7 @@ export default function OpAdvanceOptions({
             <FormItem title={T("ExecutionDelay(s)")}>
               <Input
                 value={options.execution_delays || ""}
-                onChange={(v) => onChange({ execution_delays: Number(v) })}
+                onChange={(v) => onChange({ execution_delays: v })}
                 placeholder="1800"
                 type="number"
                 noDecimals
