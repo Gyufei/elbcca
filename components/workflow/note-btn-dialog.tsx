@@ -89,10 +89,10 @@ export function NoteBtnDialog({ wallet }: { wallet: string }) {
       </DialogTrigger>
       <DialogContent
         title={`Note on: ${displayText(wallet, 6, 6)}`}
-        className="w-[440px] gap-0 !pb-0"
+        className="w-[460px] gap-0 !pb-0"
         showClose={T("Close")}
       >
-        <div className="flex flex-col max-h-[90vh] max-w-[438px]">
+        <div className="flex flex-col max-h-[90vh] max-w-[458px]">
           {notes?.length > 0 && (
             <NoteList
               notes={notes || []}
