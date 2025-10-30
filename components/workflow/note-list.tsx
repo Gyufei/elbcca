@@ -240,7 +240,7 @@ export default function NoteList({
                               ),
                             })
                           }
-                          className="absolute -right-2 -top-2 text-red-400"
+                          className="bg-white rounded-full absolute -right-2 -top-2 text-red-400"
                         >
                           <XCircle className="h-4 w-4" />
                         </button>
