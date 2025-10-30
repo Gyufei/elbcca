@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +14,7 @@ import { cn } from "@/lib/utils";
 import NetworkOp, { NoteNetLogoConfig } from "./note-network-select";
 import { NoteImageUpload } from "./note-image-upload";
 import { XCircle } from "lucide-react";
+import useIndexStore from "@/lib/state";
 
 // Note类型定义
 interface Note {
@@ -37,13 +39,28 @@ export default function NoteList({
 }: NoteListProps) {
   const T = useTranslations("Common");
 
+  const curTimezoneStr = useIndexStore((state) => state.curTimezoneStr());
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [deletingNoteId, setDeletingNoteId] = useState<number | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // 格式化时间显示
-  const formatTimestamp = (timestamp: Date) => {
-    return format(timestamp, "HH:mm a MMM dd, yyyy");
+  // 格式化时间显示（将 UTC 时间按当前时区转换并格式化）
+  const formatNoteDate = (utcInput: Date | string | number) => {
+    let dateObj: Date;
+    if (typeof utcInput === "string") {
+      const s = utcInput.trim();
+      // 处理形如 "yyyy-MM-dd HH:mm:ss" 的 UTC 字符串
+      const simpleUtc = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+      if (simpleUtc.test(s)) {
+        dateObj = new Date(`${s.replace(" ", "T")}Z`);
+      } else {
+        dateObj = new Date(s);
+      }
+    } else {
+      dateObj = new Date(utcInput);
+    }
+    const zonedDate = utcToZonedTime(dateObj, curTimezoneStr);
+    return format(zonedDate, "HH:mm a MMM dd, yyyy");
   };
 
   // 开始编辑
@@ -113,7 +130,7 @@ export default function NoteList({
   const handleCancelDelete = () => {
     setDeletingNoteId(null);
   };
-
+  
   return (
     <div className="flex max-h-[60vh] flex-col gap-0 overflow-y-auto border-b border-[#d6d6d6] px-5">
       {notes.map((note, index) => (
@@ -155,7 +172,7 @@ export default function NoteList({
                   {note.account}
                 </span>
                 <span className="text-sm text-gray-500">
-                  {formatTimestamp(new Date(note.create_at))}
+                  {formatNoteDate(note.create_at)}
                 </span>
               </div>
 
