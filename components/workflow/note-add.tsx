@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { CornerDownLeft } from "lucide-react";
+import { CornerDownLeft, XCircle } from "lucide-react";
 
 interface NoteAddProps {
   dialogOpen: boolean;
@@ -87,20 +87,30 @@ export default function NoteAdd({ dialogOpen, onAddNote }: NoteAddProps) {
             value={note}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            className="min-h-[40px] flex-1 resize-none leading-5 outline-none"
+            className="flex-1 min-h-[40px] w-full resize-none leading-5 outline-none"
             placeholder={T("EnterNewNote")}
             style={{ height: "40px" }}
           />
           {images.length > 0 && (
             <div className="grid grid-cols-4 gap-2">
-              {images.map((image) => (
-                <Image
-                  key={image}
-                  src={image}
-                  alt="note"
-                  width={88}
-                  height={88}
-                />
+              {images.map((image, idx) => (
+                <div key={`${image}-${idx}`} className="relative">
+                  <button
+                    onClick={() =>
+                      setImages((prev) => prev.filter((_, i) => i !== idx))
+                    }
+                    className="absolute -right-2 -top-2 text-red-400"
+                  >
+                    <XCircle className="h-4 w-4" />
+                  </button>
+                  <Image
+                    src={image}
+                    alt="note image"
+                    width={88}
+                    height={88}
+                    className="rounded border"
+                  />
+                </div>
               ))}
             </div>
           )}

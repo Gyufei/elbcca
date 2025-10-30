@@ -288,7 +288,7 @@ export default function NoteList({
             ) : (
               <>
                 <div
-                  className={`cursor-pointer rounded-md text-base leading-relaxed text-[#333] transition-colors hover:bg-[#f6f7f8]`}
+                  className={`cursor-pointer rounded-md text-base leading-relaxed text-[#333] transition-colors hover:bg-[#f6f7f8] break-words`}
                   onClick={() => handleStartEdit(note)}
                 >
                   {note.content}
