@@ -81,6 +81,11 @@ export default function NoteList({
     }
   };
 
+  // 取消编辑（不保存修改）
+  const handleCancelEdit = () => {
+    setEditingNote(null);
+  };
+
   // 处理回车键保存
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -273,16 +278,28 @@ export default function NoteList({
                       }
                     />
                   </div>
-                  <button
-                    title={T("Save")}
-                    onClick={handleSaveEdit}
-                    className={cn(
-                      "flex h-10 cursor-pointer items-center justify-center rounded-full border border-primary px-6 transition-all duration-200",
-                      "bg-primary text-white disabled:cursor-not-allowed disabled:opacity-50",
-                    )}
-                  >
-                    {T("Save")}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      title={T("Cancel")}
+                      onClick={handleCancelEdit}
+                      className={cn(
+                        "flex h-10 cursor-pointer items-center justify-center rounded-full border px-6 text-gray-700 transition-all duration-200",
+                        "hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50",
+                      )}
+                    >
+                      {T("Cancel")}
+                    </button>
+                    <button
+                      title={T("Save")}
+                      onClick={handleSaveEdit}
+                      className={cn(
+                        "flex h-10 cursor-pointer items-center justify-center rounded-full border border-primary px-6 transition-all duration-200",
+                        "bg-primary text-white disabled:cursor-not-allowed disabled:opacity-50",
+                      )}
+                    >
+                      {T("Save")}
+                    </button>
+                  </div>
                 </div>
               </>
             ) : (

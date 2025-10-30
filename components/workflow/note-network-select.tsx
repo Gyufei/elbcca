@@ -47,6 +47,14 @@ export default function NetworkOp({
     return selectOptions.find((item) => item.value === value);
   }, [value, selectOptions]);
 
+  const selectedLabel = (selectedOp as Record<string, any>)?.["label"] ?? "";
+  const selectedFontClass = useMemo(() => {
+    const len = (selectedLabel as string).length;
+    if (len <= 12) return "text-sm";
+    if (len <= 20) return "text-xs";
+    return "text-[10px]";
+  }, [selectedLabel]);
+
   return (
     <Select value={value.toString()} onValueChange={(e) => onChange(Number(e))}>
       <SelectTrigger className="w-fit gap-2 p-2">
@@ -61,13 +69,15 @@ export default function NetworkOp({
                   alt="logo"
                 />
               )}
-              <span className="ml-1">
+              <span className={`ml-1 whitespace-nowrap max-w-[70px] overflow-hidden text-ellipsis ${selectedFontClass}`}>
                 {(selectedOp as Record<string, any>)?.["label"]}
               </span>
             </div>
           ) : (
             <div className="flex items-center">
-              <span className="ml-1">
+              <span
+                className={`ml-1 max-w-[70px] overflow-hidden text-ellipsis whitespace-nowrap ${selectedFontClass}`}
+              >
                 {(selectedOp as Record<string, any>)?.["label"]}
               </span>
             </div>
