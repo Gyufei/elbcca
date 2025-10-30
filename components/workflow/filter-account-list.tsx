@@ -188,7 +188,7 @@ export default function FilterAccountList({
       rand32 = Math.floor(Math.random() * 0xffffffff);
     }
     const salt = ((now & 0x7fffffff) ^ (perf & 0xfffff) ^ rand32).toString(36);
-    return `VA-${salt}`;
+    return `VA${salt.startsWith("-") ? "" : "-"}${salt}`;
   }
 
   function handleCreateVa() {
