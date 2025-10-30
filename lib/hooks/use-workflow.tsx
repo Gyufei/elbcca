@@ -65,7 +65,7 @@ export function useWorkflow({
           ...(advanceOptions || {}),
           min_spending: advanceOptions?.min_spending || "60",
           max_spending: advanceOptions?.max_spending || "100",
-          execution_delays: advanceOptions?.executionDelays || "1800",
+          execution_delays: advanceOptions?.execution_delays || "1800",
           minimum_received: "0",
           swap_router: params?.spender,
           gas: advanceOptions?.gas
@@ -122,7 +122,7 @@ export function useWorkflow({
         "priority_fee",
         "slippage",
         "routing",
-        "token"
+        "token",
       ];
       deleteKeys.forEach((key) => {
         delete (paramsAfter as any)[key];

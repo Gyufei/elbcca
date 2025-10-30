@@ -38,7 +38,7 @@ export interface IAdvanceOptions {
   routing: string | null;
   minimum_received: string | null;
   priority_fee: number | null;
-  executionDelays: number | null;
+  execution_delays: number | null;
   min_spending: string | null;
   max_spending: string | null;
 }
@@ -233,8 +233,8 @@ export default function OpAdvanceOptions({
             <div></div>
             <FormItem title={T("ExecutionDelay(s)")}>
               <Input
-                value={options.executionDelays || ""}
-                onChange={(v) => onChange({ executionDelays: Number(v) })}
+                value={options.execution_delays || ""}
+                onChange={(v) => onChange({ execution_delays: Number(v) })}
                 placeholder="1800"
                 type="number"
                 noDecimals
