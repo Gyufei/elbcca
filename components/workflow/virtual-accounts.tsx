@@ -11,6 +11,8 @@ import { IVaData, useGetVa } from "@/lib/hooks/use-get-va";
 import { IToken } from "@/lib/types/token";
 import { useGetSubVa } from "@/lib/hooks/use-get-sub-va";
 import { Input } from "../ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { VaContext } from "@/lib/providers/va-provider";
 import { useDeleteVa } from "@/lib/hooks/use-delete-va";
 import { useUpdateVaName } from "@/lib/hooks/use-edit-va-name";
@@ -111,6 +113,7 @@ function VaRow({
   const [isEditName, setIsEditName] = useState(false);
   const [newName, setNewName] = useState(vaData.va_name);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [deletingOpen, setDeletingOpen] = useState(false);
   const { trigger: deleteVa } = useDeleteVa();
   const { trigger: updateVaName, isMutating: updatingName } = useUpdateVaName();
   const { network } = useContext(NetworkContext);
@@ -213,9 +216,11 @@ function VaRow({
       {
         onSuccess: () => {
           toast({ title: T("VaDeleted") });
+          setDeletingOpen(false);
         },
         onError: () => {
           toast({ title: T("VaDeleteFailed"), variant: "destructive" });
+          setDeletingOpen(false);
         },
       },
     );
@@ -303,7 +308,7 @@ function VaRow({
               />
             </div>
             <button
-              onClick={handleDelete}
+              onClick={() => setDeletingOpen(true)}
               className="rounded p-1 transition-colors hover:bg-gray-100"
               title="delete"
             >
@@ -403,6 +408,25 @@ function VaRow({
           )}
         </div>
       )}
+      {/* 删除确认对话框 */}
+      <Dialog open={deletingOpen} onOpenChange={(open) => !open && setDeletingOpen(false)}>
+        <DialogContent className="w-[400px]">
+          <DialogHeader>
+            <DialogTitle>{T("ConfirmDeleteVa")}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-gray-600">{T("DeleteVaConfirmMessage")}</p>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setDeletingOpen(false)}>
+                {T("Cancel")}
+              </Button>
+              <Button variant="destructive" onClick={handleDelete}>
+                {T("Confirm")}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

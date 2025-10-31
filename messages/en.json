@@ -177,6 +177,8 @@
     "EnterNewNote": "Enter new note information",
     "ConfirmDelete": "Confirm Delete",
     "DeleteNoteConfirmMessage": "Are you sure you want to delete this note? This action cannot be undone.",
+    "ConfirmDeleteVa": "Confirm Virtual Account Deletion",
+    "DeleteVaConfirmMessage": "Are you sure you want to delete this virtual account? This action cannot be undone.",
     "UploadImage": "Upload Image",
     "ImageFormatError": "File Format Error",
     "ImageFormatErrorDesc": "Please select a valid image file (supported formats: JPG, PNG, GIF, WebP)",
