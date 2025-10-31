@@ -42,11 +42,13 @@ export function useParseTasks() {
           const curTimezoneDate = utcToZonedTime(utcDate, curTimezoneStr);
           const date = format(curTimezoneDate, "YYY-MM-dd HH:mm");
 
-          const opType = opList.find((op: Record<string, any>) => {
-            return op.op_id === t.op;
-          })?.op_name || "";
-      
+          const opType =
+            opList.find((op: Record<string, any>) => {
+              return op.op_id === t.op;
+            })?.op_name || "";
+
           return {
+            ...t,
             id: t.id,
             account: t.account,
             gasUsed: t.gas_used,

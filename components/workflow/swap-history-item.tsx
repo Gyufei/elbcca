@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import { ChevronDown, ExternalLink } from "lucide-react";
 import Image from "next/image";
 
-import { ITask } from "@/lib/types/task";
+import { ITask, StatusEnum } from "@/lib/types/task";
 import TruncateText from "@/components/shared/trunc-text";
 import SwapHistoryItemStatus from "./swap-history-items-status";
 import { NetworkContext } from "@/lib/providers/network-provider";
@@ -46,12 +46,16 @@ export default function SwapHistoryItem({
   const total_txs = task.total_txs || 0;
 
   const vaExecutedText = useMemo(() => {
-    if (total_txs === 0) return "";
-    if (executed_txs === 0) return `Queued: ${total_txs}`;
-    if (executed_txs === total_txs) return `Executed: ${total_txs}`;
-    if (executed_txs < total_txs)
+    if (task.status === StatusEnum.queue) {
+      return `Queued: ${total_txs}`;
+    } else if (task.status === StatusEnum.pending) {
       return `Executing: ${executed_txs}/${total_txs}`;
-  }, [executed_txs, total_txs]);
+    } else if (task.status === StatusEnum.finished) {
+      return `Executed: ${executed_txs}/${total_txs}`;
+    }
+
+    return "";
+  }, [task.status, executed_txs, total_txs]);
 
   const fetchSubTasks = async (): Promise<Array<ITask> | undefined> => {
     if (!isVa || !isCanParse) return;

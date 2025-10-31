@@ -64,7 +64,6 @@ export default function OpAdvanceOptions({
   fromAddress: string;
   isVa: boolean;
 }) {
-  console.log(options, params);
   const { networkName } = useContext(NetworkContext);
 
   const advanceShowKey = useMemo(() => {

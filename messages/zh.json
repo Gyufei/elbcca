@@ -195,7 +195,7 @@
     "VaCreated": "虚拟账户创建成功",
     "VaCreateFailed": "虚拟账户创建失败",
     "NoVirtualAccounts": "无虚拟账户",
-    "FailedToUpdateVaName": "检测到重复名称。请输入另一个名称。",
+    "FailedToUpdateVaName": "名称已存在，请换一个。",
     "TokenRequired": "请选择代币",
     "TokenNumberRequired": "请输入代币数量",
     "VaNotFound": "虚拟账户不存在"

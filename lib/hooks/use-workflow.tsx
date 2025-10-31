@@ -163,7 +163,6 @@ export function useWorkflow({
         };
 
     if (isVa && isSwapOp) {
-      console.log(params);
       if (!(afterParams as any).token_in || !(afterParams as any).token_out) {
         toast({ title: T("TokenRequired"), variant: "default" });
         return;

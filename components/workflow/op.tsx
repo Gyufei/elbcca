@@ -89,7 +89,7 @@ export default function Op({
 
   const opOptions = useMemo(() => {
     if (isVa) {
-      return opOptionsData.filter((op: any) => op.op_id !== 3);
+      return opOptionsData.filter((op: any) => ![2, 3].includes(op.op_id));
     } else {
       return opOptionsData;
     }
