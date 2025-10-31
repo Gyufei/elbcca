@@ -154,7 +154,7 @@ export const Pagination = ({ ...paginationProps }: IPaginationProps) => {
     <PaginationContext.Provider value={pagination}>
       <div
         className={cn(
-          "my-4 flex w-full items-center justify-around px-3",
+          "my-4 flex w-full items-center justify-center gap-3 px-3",
           paginationProps.className,
         )}
       >
