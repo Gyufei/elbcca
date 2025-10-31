@@ -217,7 +217,7 @@ export default function OpAdvanceOptions({
               )}
             </button>
             <button
-              title={`${params.op.op_name} Without Gas Check`}
+              title="Send Without Gas Check"
               onClick={() => onChange({ no_check_gas: !options.no_check_gas })}
               className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-[11px] hover:bg-custom-bg-white"
             >
@@ -296,7 +296,7 @@ export default function OpAdvanceOptions({
                 />
               </FormItem>
               <button
-                title={`${params.op.op_name} Without Gas Check`}
+                title="Send Without Gas Check"
                 onClick={() =>
                   onChange({ no_check_gas: !options.no_check_gas })
                 }
