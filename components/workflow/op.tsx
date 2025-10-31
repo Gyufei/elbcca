@@ -258,18 +258,18 @@ export default function Op({
             </div>
           </FormItem>
         )}
-        {(!isVa && !isApproveOp && advanceShowKey.includes("toAddress")) ||
-          (isVa && advanceShowKey.includes("toAddress") && isTransferOp && (
-            <FormItem title={T("ToAddress")} className="px-3">
-              <Input
-                value={toAddress}
-                onChange={(v: string) => setToAddress(v)}
-                placeholder={
-                  networkName === NetworkChainType.SOLANA ? "" : "0x11111111111"
-                }
-              />
-            </FormItem>
-          ))}
+        {((!isVa && !isApproveOp && advanceShowKey.includes("toAddress")) ||
+          (isVa && advanceShowKey.includes("toAddress") && isTransferOp)) && (
+          <FormItem title={T("ToAddress")} className="px-3">
+            <Input
+              value={toAddress}
+              onChange={(v: string) => setToAddress(v)}
+              placeholder={
+                networkName === NetworkChainType.SOLANA ? "" : "0x11111111111"
+              }
+            />
+          </FormItem>
+        )}
         <OpAdvanceOptions
           isVa={isVa}
           routings={routings}
