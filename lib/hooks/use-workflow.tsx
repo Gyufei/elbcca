@@ -9,6 +9,9 @@ import { IToken } from "../types/token";
 import fetcher from "../fetcher";
 import { IAdvanceOptions } from "@/components/workflow/op-advance-options";
 import { TokenContext } from "../providers/token-provider";
+import { toast } from "@/components/ui/use-toast";
+import { useTranslations } from "next-intl";
+import { useGetVa } from "./use-get-va";
 
 export function useWorkflow({
   isVa,
@@ -31,6 +34,7 @@ export function useWorkflow({
   advanceOptions: IAdvanceOptions;
   transferAmount: string;
 }) {
+  const T = useTranslations("Common");
   const { networkId } = useContext(NetworkContext);
   const { gasToken } = useContext(TokenContext);
   const activeUser = useEffectStore(useIndexStore, (state) =>
@@ -45,6 +49,8 @@ export function useWorkflow({
     isSwapOp,
     opApproveSendUrl,
   } = useWorkflowParams(params, isVa);
+
+  const { data: vaData } = useGetVa();
 
   const getCommonParams = () => {
     const account = fromAddress;
@@ -155,6 +161,24 @@ export function useWorkflow({
           amount: token0Num,
           is_exact_input: true,
         };
+
+    if (isVa && isSwapOp) {
+      console.log(params);
+      if (!(afterParams as any).token_in || !(afterParams as any).token_out) {
+        toast({ title: T("TokenRequired"), variant: "default" });
+        return;
+      }
+
+      if (!(afterParams as any).amount) {
+        toast({ title: T("TokenNumberRequired"), variant: "default" });
+        return;
+      }
+
+      if (!vaData?.find((v) => v.va_name === (afterParams as any).va_name)) {
+        toast({ title: T("VaNotFound"), variant: "default" });
+        return;
+      }
+    }
 
     if (
       !afterParams.keystore ||

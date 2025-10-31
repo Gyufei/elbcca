@@ -193,6 +193,9 @@
     "VaCreated": "Virtual Account Created Successfully",
     "VaCreateFailed": "Virtual Account Create Failed",
     "NoVirtualAccounts": "No Virtual Accounts",
-    "FailedToUpdateVaName": "Failed to update VA name, please check the name is valid"
+    "FailedToUpdateVaName": "Duplicate name detected. Please enter another one.",
+    "TokenRequired": "Token Required",
+    "TokenNumberRequired": "Token Number Required",
+    "VaNotFound": "Virtual Account Not Exist"
   }
 }

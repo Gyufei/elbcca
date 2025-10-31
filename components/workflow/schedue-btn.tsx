@@ -121,12 +121,14 @@ export const ScheduleBtn = forwardRef(function ScheduleBtn(
   async function sendQuery() {
     setLoading(true);
     try {
-      await sendAction();
-      setSendTxResult({
-        type: "success",
-        message: T("ScheduleSuccess"),
-      });
-      onAfterAction();
+      const res = await sendAction();
+      if (res) {
+        setSendTxResult({
+          type: "success",
+          message: T("ScheduleSuccess"),
+        });
+        onAfterAction();
+      }
     } catch (e: any) {
       setSendTxResult({
         type: "error",

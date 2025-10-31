@@ -32,7 +32,7 @@ export interface IAdvanceOptions {
   timeout: number | null;
   slippage: string | null;
   nonce?: number | null;
-  gas: number | null;
+  gas: string | null;
   fixed_gas: boolean;
   no_check_gas: boolean;
   routing: string | null;
@@ -199,7 +199,7 @@ export default function OpAdvanceOptions({
             <FormItem title={"Gas(gwei)"} className="flex-1">
               <Input
                 value={options.gas || ""}
-                onChange={(v) => onChange({ gas: Number(v) })}
+                onChange={(v) => onChange({ gas: v })}
                 placeholder={String(gasPrice)}
                 type="number"
               />
@@ -247,7 +247,8 @@ export default function OpAdvanceOptions({
                   onChange={(v) =>
                     onChange({
                       min_spending:
-                        Number(v) > Number(options.max_spending)
+                        Number(options.max_spending) > 0 &&
+                        Number(v) >= Number(options.max_spending)
                           ? Number(options.max_spending) - 1 + ""
                           : v,
                     })
@@ -288,7 +289,7 @@ export default function OpAdvanceOptions({
               <FormItem title={"MaxGasPrice(gwei)"} className="flex-1">
                 <Input
                   value={options.gas || ""}
-                  onChange={(v) => onChange({ gas: Number(v) })}
+                  onChange={(v) => onChange({ gas: v })}
                   placeholder={String(gasPrice)}
                   type="number"
                 />
