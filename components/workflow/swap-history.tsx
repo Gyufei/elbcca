@@ -24,6 +24,7 @@ import { useParseTasks } from "@/lib/hooks/use-parse-task";
 import { useTranslations } from "next-intl";
 import { NetworkContext } from "@/lib/providers/network-provider";
 import { VaContext } from "@/lib/providers/va-provider";
+import { zonedTimeToUtc } from "date-fns-tz";
 
 const SwapHistory = forwardRef((props: any, ref: any) => {
   const T = useTranslations("Common");
@@ -60,9 +61,23 @@ const SwapHistory = forwardRef((props: any, ref: any) => {
 
   const { parsedTaskFunc, isCanParse } = useParseTasks();
 
+  const curTimezoneStr = useIndexStore((state) => state.curTimezoneStr());
+
   const getQueryStr = () => {
-    let max = new Date(filterTaskDate.max || "").getTime();
-    let min = new Date(filterTaskDate.min || "").getTime();
+    const toZonedStartUtcMs = (d: Date | null) => {
+      if (!d) return 0;
+      const startOfDayZoned = setSeconds(setMinutes(setHours(d, 0), 0), 0);
+      return zonedTimeToUtc(startOfDayZoned, curTimezoneStr).getTime();
+    };
+
+    const toZonedEndUtcMs = (d: Date | null) => {
+      if (!d) return 0;
+      const endOfDayZoned = setSeconds(setMinutes(setHours(d, 23), 59), 59);
+      return zonedTimeToUtc(endOfDayZoned, curTimezoneStr).getTime();
+    };
+
+    let min = toZonedStartUtcMs(filterTaskDate.min);
+    let max = toZonedEndUtcMs(filterTaskDate.max);
     if (max < min) {
       [max, min] = [min, max];
     }

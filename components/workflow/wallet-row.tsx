@@ -5,6 +5,9 @@ import { NoteBtnDialog } from "./note-btn-dialog";
 import AmountTooltipDisplay from "./amount-tooltip-display";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { NetworkContext } from "@/lib/providers/network-provider";
+import { useContext } from "react";
+import { NetworkChainType } from "@/lib/types/network";
 
 export default function WalletRow({
   index,
@@ -27,6 +30,8 @@ export default function WalletRow({
   indexClx?: string;
   clx?: string;
 }) {
+  const { networkName } = useContext(NetworkContext);
+
   return (
     <div
       className={cn(
@@ -55,7 +60,9 @@ export default function WalletRow({
                 </span>
               )}
             </TruncateText>
-            <NonceFlag className="ml-4" nonce={accData.nonce} />
+            {networkName !== NetworkChainType.SOLANA && (
+              <NonceFlag className="ml-4" nonce={accData.nonce} />
+            )}
           </div>
           <NoteBtnDialog wallet={accData.account} />
         </div>
