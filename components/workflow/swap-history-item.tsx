@@ -196,7 +196,7 @@ export default function SwapHistoryItem({
         <div className="flex items-center justify-center">
           <ChevronDown
             className={cn(
-              "h-4 w-4 cursor-pointer text-primary",
+              "h-4 w-4 cursor-pointer text-[#7E8899]",
               subOpenTaskId === task.id ? "rotate-180" : "",
             )}
             onClick={onSubToggle}
