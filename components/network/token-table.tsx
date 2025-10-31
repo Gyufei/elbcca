@@ -42,6 +42,9 @@ export const TokenTable = function TokenTable({ chainId, list = [], onRefresh}: 
     try {
       await fetcher(SystemEndPointPathMap.upTopToken + `?chain_id=${chainId}`, {
         method: "POST",
+        headers: {
+          contentType: "application/json",
+        },
         body: JSON.stringify(params),
       });
       onRefresh()
