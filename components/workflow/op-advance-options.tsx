@@ -64,6 +64,7 @@ export default function OpAdvanceOptions({
   fromAddress: string;
   isVa: boolean;
 }) {
+  console.log(options, params);
   const { networkName } = useContext(NetworkContext);
 
   const advanceShowKey = useMemo(() => {
@@ -216,7 +217,7 @@ export default function OpAdvanceOptions({
               )}
             </button>
             <button
-              title="no check gas"
+              title={`${params.op.op_name} Without Gas Check`}
               onClick={() => onChange({ no_check_gas: !options.no_check_gas })}
               className="flex h-10 cursor-pointer items-center justify-center rounded-md border px-[11px] hover:bg-custom-bg-white"
             >
@@ -295,7 +296,7 @@ export default function OpAdvanceOptions({
                 />
               </FormItem>
               <button
-                title="no check gas"
+                title={`${params.op.op_name} Without Gas Check`}
                 onClick={() =>
                   onChange({ no_check_gas: !options.no_check_gas })
                 }
