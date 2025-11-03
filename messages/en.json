@@ -172,6 +172,7 @@
     "UsdcBridgeChainWay": "ChainWay",
     "Wallets": "Wallets",
     "VirtualAccounts": "Virtual Accounts",
+    "VirtualAccount": "Virtual Account",
     "SelectAll": "Select All",
     "CreateVirtualAccount": "Create Virtual Account",
     "EnterNewNote": "Enter new note information",

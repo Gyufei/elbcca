@@ -115,13 +115,20 @@ export default function QueryAccountBalance({
 
   return (
     <>
-      <FormItem title={isVa ? T("From") : T("FromAddress")} className="px-3">
+      <FormItem
+        title={isVa ? T("VirtualAccount") : T("FromAddress")}
+        className="px-3"
+      >
         <div className="flex justify-between gap-x-2">
           <Input
             value={fromAddress || ""}
             onChange={(e: any) => handleAccountChange(e.target.value)}
             placeholder={
-              networkName === NetworkChainType.SOLANA ? "" : "0x11111111111"
+              isVa
+                ? "Virtual Account"
+                : networkName === NetworkChainType.SOLANA
+                ? ""
+                : "0x11111111111"
             }
             onKeyDown={handleKeyDown}
           />
