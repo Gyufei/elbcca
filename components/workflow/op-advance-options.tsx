@@ -249,7 +249,9 @@ export default function OpAdvanceOptions({
                       min_spending:
                         Number(options.max_spending) > 0 &&
                         Number(v) >= Number(options.max_spending)
-                          ? Number(options.max_spending) - 1 + ""
+                          ? Number(options.max_spending) + ""
+                          : Number(v) > 100
+                          ? "100"
                           : v,
                     })
                   }
@@ -277,7 +279,9 @@ export default function OpAdvanceOptions({
                 <div className="relative">
                   <Input
                     value={options.slippage || ""}
-                    onChange={(v) => onChange({ slippage: v })}
+                    onChange={(v) =>
+                      onChange({ slippage: Number(v) > 100 ? "100" : v })
+                    }
                     placeholder="0"
                     type="number"
                   />
