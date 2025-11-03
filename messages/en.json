@@ -173,6 +173,7 @@
     "Wallets": "Wallets",
     "VirtualAccounts": "Virtual Accounts",
     "VirtualAccount": "Virtual Account",
+    "VirtualAccountName": "Virtual Account Name",
     "SelectAll": "Select All",
     "CreateVirtualAccount": "Create Virtual Account",
     "EnterNewNote": "Enter new note information",

@@ -125,7 +125,7 @@ export default function QueryAccountBalance({
             onChange={(e: any) => handleAccountChange(e.target.value)}
             placeholder={
               isVa
-                ? "Virtual Account"
+                ? T("VirtualAccountName")
                 : networkName === NetworkChainType.SOLANA
                 ? ""
                 : "0x11111111111"
