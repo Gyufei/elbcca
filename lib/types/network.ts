@@ -17,7 +17,9 @@ export enum NetworkChainType {
   SOLANA = "SOL",
   BNB = "BNB",
   ETH = "ETH",
-  USDC = "USDC"
+  USDC = "USDC",
+  MONAD = "MON",
+  TBNB = "TBNB",
 }
 
 export enum USDCOpType {
@@ -26,5 +28,5 @@ export enum USDCOpType {
   CANCELOFFER = 6,
   WITHDRAW = 7,
   CREATEACCOUNT = 8,
-  BRIDGE = 9
+  BRIDGE = 9,
 }

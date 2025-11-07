@@ -25,6 +25,18 @@ export const networkConfigs = {
     logo: "/icons/eth.svg",
     chainId: "4",
   },
+  [NetworkChainType.MONAD]: {
+    name: "Monad",
+    chainType: NetworkChainType.MONAD,
+    logo: "/icons/monad.svg",
+    chainId: "5",
+  },
+  [NetworkChainType.TBNB]: {
+    name: "TBNB",
+    chainType: NetworkChainType.TBNB,
+    logo: "/icons/BNBChain.svg",
+    chainId: "6",
+  },
 };
 
 export const networkRouting = {
